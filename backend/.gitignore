@@ -1,2 +1,11 @@
-node_modules
+# Node modules
+node_modules/
+
+# Compiled output
+dist/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Environment variables
 .env
