@@ -4,7 +4,7 @@ import User from '../models/user.schema';
 import ApiError from '../utils/ApiError'; // Import the ApiError class
 import bcrypt from 'bcryptjs'; // For password hashing
 import { isValidEmail } from '../utils/isEmailValid';
-import { userService } from '../services/user.services'
+import { userService } from '../services/user.service'
 import { checkPasswordStrength } from '../utils/checkPasswordStrength';
 
 
