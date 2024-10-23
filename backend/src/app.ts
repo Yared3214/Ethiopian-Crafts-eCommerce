@@ -1,8 +1,10 @@
 // src/app.ts
 import express from 'express';
 import connectDB from './config/db';
-import userRoutes from './routes/user.routes'; // Adjust based on your routes
+import userRoutes from './routes/user.routes';
+import authRoutes from './routes/auth.routes'
 import colors from 'colors';
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,6 +17,7 @@ connectDB();
 
 // Use routes
 app.use('/api/users', userRoutes);
+app.use('/api/auth', authRoutes);
 
 // Start the server
 app.listen(PORT, () => {
