@@ -1,6 +1,8 @@
 // src/models/user.schema.ts
 import { Schema, model, Document } from 'mongoose';
 
+
+
 export interface IUser extends Document {
     fullName: string;
     email: string;
