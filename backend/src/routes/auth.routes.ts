@@ -2,12 +2,25 @@
 import express from 'express';
 import { authLimiter } from '../middlewares/auth.limiter';
 
-const { loginUser } = require("../controllers/auth.controller")
+const { loginUser, refreshToken, forgotPassword, resetPassword } = require("../controllers/auth.controller")
 const router = express.Router();
 
 // Register a new user
 router.post('/login', authLimiter, loginUser);
+router.post(
+    "/refresh-token", refreshToken);
 
-// Other routes can be added here
+router.post(
+    "/forgot-password",
+    forgotPassword
+);
+
+router.post(
+    "/reset-password/:token",
+    resetPassword
+);
+
+
+
 
 export default router;
