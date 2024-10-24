@@ -10,13 +10,13 @@ class UserService {
     }
 
     // Get a user by email
-    async getUserByEmail(email: string): Promise<IUser | null> {
+    async getUserByEmail(email: string): Promise<any> {
         const user = await User.findOne({ email });
         return user;
     }
 
     // Get a user by ID
-    async getUserById(userId: string): Promise<IUser | null> {
+    async getUserById(userId: string): Promise<any> {
         const user = await User.findById(userId);
         return user;
     }
@@ -28,11 +28,9 @@ class UserService {
     }
 
     // Delete a user
-    async deleteUser(userId: string): Promise<void> {
+    async deleteUser(userId: string): Promise<any> {
         const result = await User.findByIdAndDelete(userId);
-        if (!result) {
-            throw new ApiError(404, 'User not found');
-        }
+        return result;
     }
 }
 

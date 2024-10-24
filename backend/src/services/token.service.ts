@@ -35,7 +35,7 @@ class TokenService {
     }
 
     async generateAuthTokens(userId: string): Promise<AuthTokens> {
-        
+
         const accessTokenExpires = dayjs().add(1, 'hour');
         const accessToken = this.generateToken(userId, accessTokenExpires, tokenTypes.ACCESS);
 
@@ -79,7 +79,7 @@ class TokenService {
         return user;
     }
 
-    async verifyToken(token: string, type: string): Promise<IUser | null> {
+    async verifyToken(token: string, type: string): Promise<any> {
         try {
             const payload = jwt.verify(token, this.jwtSecret) as jwt.JwtPayload;
             if (payload.type === type) {
