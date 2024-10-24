@@ -5,6 +5,11 @@ export const config = {
         maxAttemptsPerDay: 15,
         maxAttemptsByIpUsername: 5,
     },
+    companyInfo: {
+        service: process.env.EMAIL_SERVICE,
+        email: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    },
 };
 
 // Optionally, you can define a type for the configuration if needed
