@@ -3,6 +3,8 @@ import express from 'express';
 import connectDB from './config/db';
 import userRoutes from './routes/user.routes';
 import authRoutes from './routes/auth.routes'
+import artisanRoutes from './routes/artisan.routes'
+
 import colors from 'colors';
 
 
@@ -18,6 +20,7 @@ connectDB();
 // Use routes
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/artisan', artisanRoutes);
 
 // Start the server
 app.listen(PORT, () => {
