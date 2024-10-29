@@ -1,5 +1,4 @@
 import User, { IUser } from '../models/user.schema'; // Assuming IUser is the interface for User schema
-import ApiError from '../utils/ApiError';
 
 class UserService {
     // Create a new user
