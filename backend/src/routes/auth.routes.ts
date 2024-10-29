@@ -7,6 +7,7 @@ const router = express.Router();
 
 // Register a new user
 router.post('/login', authLimiter, loginUser);
+
 router.post(
     "/refresh-token", refreshToken);
 

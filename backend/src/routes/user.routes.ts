@@ -5,6 +5,7 @@ const { userRegister, getMyProfile, deleteMyAccount, updateMyAccount } = require
 const router = express.Router();
 
 // Register a new user
+
 router.post('/register', userRegister);
 router.get('/my-profile', requireSignIn, getMyProfile)
 router.delete('/delete', requireSignIn, deleteMyAccount);
