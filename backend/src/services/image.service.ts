@@ -3,6 +3,8 @@ import cloudinary from "../config/cloudinary";
 
 
 export const uploadImage = (imageBuffer: Buffer): Promise<string> => {
+    console.log("the buffer", imageBuffer)
+    
     return new Promise((resolve, reject) => {
         cloudinary.v2.uploader.upload_stream(
             {
