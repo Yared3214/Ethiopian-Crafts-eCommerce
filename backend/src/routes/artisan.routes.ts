@@ -1,6 +1,6 @@
 // src/routes/artisan.routes.ts
 import express from 'express';
-import upload from '../middlewares/upload'; // Adjust the path as necessary
+import upload from '../middlewares/upload';
 import { createArtisan, getAllArtisans, getSingleArtisan, updateArtisan, deleteArtisan } from '../controllers/artisan.controller';
 
 
@@ -17,7 +17,7 @@ router.get('/get/all', getAllArtisans);
 router.get('/:slug', getSingleArtisan);
 
 // update artisan
-router.put('/update/:slug', upload.single("profilePic"), updateArtisan);
+router.put('/update/:slug', upload.single('profilePic'), updateArtisan);
 
 // delete artisan
 
