@@ -65,7 +65,8 @@ export const login = async (email: string, password: string, ipAddr: string, res
             return; // Explicitly return void after sending the response
         }
 
-        return user; // Login success, return the user
+        const { password: _, ...userWithoutPassword } = user.toObject ? user.toObject() : user; // Use toObject() for Mongoose documents
+        return userWithoutPassword;
     } catch (error) {
         console.error('Error in login function:', error);
 
