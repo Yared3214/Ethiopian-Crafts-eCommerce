@@ -1,17 +1,42 @@
-import React from 'react';
+"use client"
+
+import React, { useState } from 'react';
+import useAuth from '@/hooks/userAuth'; // Import your useAuth hook
+import { useRouter } from 'next/navigation'
 
 const SignUp = () => {
+  const router = useRouter();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const { registerUser, error } = useAuth();
+
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault(); // Prevent the default form submission behavior
+    try {
+      const response = await registerUser(name, email, password, confirmPassword); // Call the login function from the useAuth hook
+      if (response.success) {
+        router.push("/signin")
+      }
+    }
+    catch (error: any) {
+      console.error("error while registering the user ", error)
+    }
+  };
+
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       {/* Left Image Section */}
       <div className="md:w-1/2 flex justify-center items-center bg-gradient-to-b from-yellow-50 to-yellow-200">
-        <img
+        {/* <img
           src="https://cdn.gamma.app/m3rdunp6aj4a2ph/generated-images/-pnWGG6HoRihzcI_ywwk-.jpg" // Change to a cultural image
           alt="Cultural Art"
           className="hidden md:block object-cover h-full w-full md:w-5/6"
-        />
+        /> */}
       </div>
-
 
       {/* Right Form Section */}
       <div className="md:w-1/2 flex justify-center items-center p-6 md:p-12 bg-white">
@@ -23,8 +48,11 @@ const SignUp = () => {
             Explore a world of authentic, handmade crafts and support artisans globally.
           </p>
 
+          {/* Error Message */}
+          {error && <div className="text-red-500 text-center mb-4">{error}</div>}
+
           {/* Sign Up Form */}
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label className="block text-gray-700 font-medium mb-2" htmlFor="name">
                 Name
@@ -32,6 +60,8 @@ const SignUp = () => {
               <input
                 type="text"
                 id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-yellow-500 focus:border-yellow-500"
                 placeholder="Enter your full name"
                 required
@@ -45,6 +75,8 @@ const SignUp = () => {
               <input
                 type="email"
                 id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-yellow-500 focus:border-yellow-500"
                 placeholder="Enter your email"
                 required
@@ -58,6 +90,8 @@ const SignUp = () => {
               <input
                 type="password"
                 id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-yellow-500 focus:border-yellow-500"
                 placeholder="Create a password"
                 required
@@ -71,6 +105,8 @@ const SignUp = () => {
               <input
                 type="password"
                 id="confirmPassword"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-yellow-500 focus:border-yellow-500"
                 placeholder="Confirm your password"
                 required

@@ -1,6 +1,29 @@
-import React from 'react';
+"use client"
 
-const Login = () => {
+import React, { useState } from 'react';
+import useAuth from '@/hooks/userAuth'; // Import your useAuth hook
+import { useRouter } from 'next/navigation'
+
+const Login: React.FC = () => {
+  const { loginUser, error } = useAuth(); // Get the login function and error from the hook
+  const [email, setEmail] = useState<string>(''); // State for email
+  const [password, setPassword] = useState<string>(''); // State for password
+  const router = useRouter();
+
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault(); // Prevent the default form submission behavior
+    try {
+      const response = await loginUser(email, password); // Call the login function from the useAuth hook
+      if (response) {
+        // Redirect to dashboard on successful login
+        router.push("/dashboard")
+      }
+    } catch (error: any) {
+      console.error("error while logging in the user ", error)
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       {/* Left Image Section - Hidden on small screens */}
@@ -23,7 +46,7 @@ const Login = () => {
           </p>
 
           {/* Login Form */}
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label className="block text-gray-700 font-medium mb-2" htmlFor="email">
                 Email
@@ -31,6 +54,8 @@ const Login = () => {
               <input
                 type="email"
                 id="email"
+                value={email} // Bind the email state
+                onChange={(e) => setEmail(e.target.value)} // Update state on change
                 className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-yellow-500 focus:border-yellow-500"
                 placeholder="Enter your email"
                 required
@@ -44,6 +69,8 @@ const Login = () => {
               <input
                 type="password"
                 id="password"
+                value={password} // Bind the password state
+                onChange={(e) => setPassword(e.target.value)} // Update state on change
                 className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-yellow-500 focus:border-yellow-500"
                 placeholder="Enter your password"
                 required
@@ -64,6 +91,9 @@ const Login = () => {
               Log In
             </button>
           </form>
+
+          {/* Display error message if login fails */}
+          {error && <p className="text-red-500 text-center mt-4">{error}</p>}
 
           <p className="text-center text-gray-600 mt-6">
             Don’t have an account?{' '}

@@ -12,17 +12,30 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store/store'
 
 const Home: React.FC = () => {
 
-  const [isOpen1, setIsOpen1] = useState(false);
-  const [isOpen2, setIsOpen2] = useState(false);
+  
+  const { user, isLoggedIn } = useSelector((state: RootState) => state.user);
 
+  console.log("userDDDDdddata", user)
 
   return (
+
+
     <div>
       {/* Hero Section */}
+
+      <div>
+        {isLoggedIn ? (
+          <h1 className='text-red-400 text-4xl'>Welcome,{user?.user?.fullName}</h1>
+        ) : (
+          <h1>Please log in.</h1>
+        )}
+      </div>
+
       <div
         className="relative h-[80vh] bg-cover bg-center"
         style={{ backgroundImage: "url('https://cdn.gamma.app/m3rdunp6aj4a2ph/generated-images/BMYV5xTrAe_b5ae6vN-1p.jpg')" }}
@@ -68,95 +81,95 @@ const Home: React.FC = () => {
 
       {/* Features Section */}
       <div className="flex flex-col md:flex-row items-center justify-center py-16 bg-[#f8ede3]">
-  {/* Left Side - Image */}
-  <div className="w-full md:w-1/2 mb-8 md:mb-0">
-    <img
-      src="https://cdn.gamma.app/m3rdunp6aj4a2ph/generated-images/liy3fUWyThnmn-k07Pc_e.jpg"
-      alt="Ethiopian Art"
-      className="rounded-lg shadow-lg w-full h-full object-cover"
-    />
-  </div>
+        {/* Left Side - Image */}
+        <div className="w-full md:w-1/2 mb-8 md:mb-0">
+          <img
+            src="https://cdn.gamma.app/m3rdunp6aj4a2ph/generated-images/liy3fUWyThnmn-k07Pc_e.jpg"
+            alt="Ethiopian Art"
+            className="rounded-lg shadow-lg w-full h-full object-cover"
+          />
+        </div>
 
-  {/* Right Side - Content */}
-  <motion.div className="w-full md:w-1/2 md:pl-12 pl-10 text-[#5C3D2E] pt-24">
-    <h2 className="text-4xl md:text-5xl font-bold mb-6 text-[#8B4513] font-serif">
-      Explore Ethiopian Culture
-    </h2>
+        {/* Right Side - Content */}
+        <motion.div className="w-full md:w-1/2 md:pl-12 pl-10 text-[#5C3D2E] pt-24">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-[#8B4513] font-serif">
+            Explore Ethiopian Culture
+          </h2>
 
-    {/* Numbered list */}
-    <ol className="space-y-10 py-8">
-      {/* Item 1 */}
-      <motion.li
-        className="flex items-start"
-        whileInView={{ opacity: [0, 1], y: [50, 0] }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-      >
-        {/* Number with border */}
-        <div className="flex-shrink-0 bg-[#f5e5c1] border border-[#8B4513] text-[#8B4513] font-bold w-10 h-10 flex items-center justify-center rounded-full mr-4">
-          1
-        </div>
-        {/* Content */}
-        <div className="flex flex-col">
-          <strong className="mb-2 text-lg">Handmade Artifacts</strong>
-          <p className="text-base">
-            Beautifully crafted items inspired by rich cultural traditions.
-          </p>
-        </div>
-      </motion.li>
+          {/* Numbered list */}
+          <ol className="space-y-10 py-8">
+            {/* Item 1 */}
+            <motion.li
+              className="flex items-start"
+              whileInView={{ opacity: [0, 1], y: [50, 0] }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              {/* Number with border */}
+              <div className="flex-shrink-0 bg-[#f5e5c1] border border-[#8B4513] text-[#8B4513] font-bold w-10 h-10 flex items-center justify-center rounded-full mr-4">
+                1
+              </div>
+              {/* Content */}
+              <div className="flex flex-col">
+                <strong className="mb-2 text-lg">Handmade Artifacts</strong>
+                <p className="text-base">
+                  Beautifully crafted items inspired by rich cultural traditions.
+                </p>
+              </div>
+            </motion.li>
 
-      {/* Item 2 */}
-      <motion.li
-        className="flex items-start"
-        whileInView={{ opacity: [0, 1], y: [50, 0] }}
-        transition={{ duration: 0.6, delay: 0.4 }}
-      >
-        <div className="flex-shrink-0 bg-[#f5e5c1] border border-[#8B4513] text-[#8B4513] font-bold w-10 h-10 flex items-center justify-center rounded-full mr-4">
-          2
-        </div>
-        <div className="flex flex-col">
-          <strong className="mb-2 text-lg">Unique Designs</strong>
-          <p className="text-base">
-            Each piece is one of a kind, reflecting the heritage of Ethiopian artisans.
-          </p>
-        </div>
-      </motion.li>
+            {/* Item 2 */}
+            <motion.li
+              className="flex items-start"
+              whileInView={{ opacity: [0, 1], y: [50, 0] }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <div className="flex-shrink-0 bg-[#f5e5c1] border border-[#8B4513] text-[#8B4513] font-bold w-10 h-10 flex items-center justify-center rounded-full mr-4">
+                2
+              </div>
+              <div className="flex flex-col">
+                <strong className="mb-2 text-lg">Unique Designs</strong>
+                <p className="text-base">
+                  Each piece is one of a kind, reflecting the heritage of Ethiopian artisans.
+                </p>
+              </div>
+            </motion.li>
 
-      {/* Item 3 */}
-      <motion.li
-        className="flex items-start"
-        whileInView={{ opacity: [0, 1], y: [50, 0] }}
-        transition={{ duration: 0.6, delay: 0.6 }}
-      >
-        <div className="flex-shrink-0 bg-[#f5e5c1] border border-[#8B4513] text-[#8B4513] font-bold w-10 h-10 flex items-center justify-center rounded-full mr-4">
-          3
-        </div>
-        <div className="flex flex-col">
-          <strong className="mb-2 text-lg">Sustainable Materials</strong>
-          <p className="text-base">
-            Eco-friendly products made from locally sourced materials.
-          </p>
-        </div>
-      </motion.li>
+            {/* Item 3 */}
+            <motion.li
+              className="flex items-start"
+              whileInView={{ opacity: [0, 1], y: [50, 0] }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+            >
+              <div className="flex-shrink-0 bg-[#f5e5c1] border border-[#8B4513] text-[#8B4513] font-bold w-10 h-10 flex items-center justify-center rounded-full mr-4">
+                3
+              </div>
+              <div className="flex flex-col">
+                <strong className="mb-2 text-lg">Sustainable Materials</strong>
+                <p className="text-base">
+                  Eco-friendly products made from locally sourced materials.
+                </p>
+              </div>
+            </motion.li>
 
-      {/* Item 4 */}
-      <motion.li
-        className="flex items-start"
-        whileInView={{ opacity: [0, 1], y: [50, 0] }}
-        transition={{ duration: 0.6, delay: 0.8 }}
-      >
-        <div className="flex-shrink-0 bg-[#f5e5c1] border border-[#8B4513] text-[#8B4513] font-bold w-10 h-10 flex items-center justify-center rounded-full mr-4">
-          4
-        </div>
-        <div className="flex flex-col">
-          <strong className="mb-2 text-lg">Support Local Artisans</strong>
-          <p className="text-base">
-            Every purchase directly supports skilled craftsmen and women in Ethiopia.
-          </p>
-        </div>
-      </motion.li>
-    </ol>
-  </motion.div>
-</div>
+            {/* Item 4 */}
+            <motion.li
+              className="flex items-start"
+              whileInView={{ opacity: [0, 1], y: [50, 0] }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+            >
+              <div className="flex-shrink-0 bg-[#f5e5c1] border border-[#8B4513] text-[#8B4513] font-bold w-10 h-10 flex items-center justify-center rounded-full mr-4">
+                4
+              </div>
+              <div className="flex flex-col">
+                <strong className="mb-2 text-lg">Support Local Artisans</strong>
+                <p className="text-base">
+                  Every purchase directly supports skilled craftsmen and women in Ethiopia.
+                </p>
+              </div>
+            </motion.li>
+          </ol>
+        </motion.div>
+      </div>
 
 
 
