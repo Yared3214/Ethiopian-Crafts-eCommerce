@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link'; // Import Next.js Link for navigation
-import Image from 'next/image'; // Import Next.js Image for optimized images
+import { useSelector } from 'react-redux'; // Import useSelector hook from react-redux
+import { RootState } from '@/store/store'; // Import RootState type
 
 const Header: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false); // State to manage mobile menu visibility
@@ -10,6 +11,8 @@ const Header: React.FC = () => {
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen); // Toggle menu open/closed
     };
+
+    const { isLoggedIn } = useSelector((state: RootState) => state.user);
 
     return (
         <header className="bg-white shadow-md">
@@ -32,12 +35,25 @@ const Header: React.FC = () => {
                     <Link href="/products" passHref>
                         <span className="text-gray-600 hover:text-gray-900 cursor-pointer">Products</span>
                     </Link>
-                    <Link href="/signup" passHref>
-                        <span className="text-gray-600 hover:text-gray-900 cursor-pointer">Sign up</span>
-                    </Link>
-                    <Link href="/signin" passHref>
-                        <span className="text-gray-600 hover:text-gray-900 cursor-pointer">Login</span>
-                    </Link>
+                    {isLoggedIn ? (
+                        <Link href="/dashboard" passHref>
+                            <span className="text-gray-600 hover:text-gray-900 cursor-pointer">Dashboard</span>
+                        </Link>
+                    ) :
+                        (
+                            <div>
+                                <Link href="/signup" passHref>
+                                    <span className="text-gray-600 hover:text-gray-900 cursor-pointer">Sign up</span>
+                                </Link>
+                                <Link href="/signin" passHref>
+                                    <span className="text-gray-600 hover:text-gray-900 cursor-pointer">Login</span>
+                                </Link>
+                            </div>
+                            )
+                    }
+
+
+
                 </nav>
 
                 {/* Mobile Menu Button (visible on smaller screens) */}
