@@ -2,7 +2,7 @@
 
 import { useDispatch } from 'react-redux';
 import { login, logout } from '../store/feature/user/userSlice';
-import { loginUser, registerUser, forgetPassword } from '../api/user/userAPI';
+import { loginUser, registerUser, forgetPassword, resetPassword } from '../api/user/userAPI';
 import { AuthResponse } from '../types/user';
 import { useState } from 'react';
 
@@ -66,11 +66,29 @@ const useAuth = () => {
 
     }
 
+    //reset password
+    const resetPasswordHandler = async (token: string, password: string, confirmPassword: string) => {
+        try {
+            if (password !== confirmPassword) {
+                setError('Passwords do not match');
+                return;
+            }
+
+            const data = await resetPassword(token, password);
+            return data;
+        } catch (error) {
+            setError((error as any).message || 'Reset failed');
+        }
+    }
+
+
+
     return {
         loginUser: loginUserHandler,
         registerUser: registerUserHandler,
         logoutUser: logoutUserHandler,
         forgetPassword: forgotPasswordHandler,
+        resetPassword: resetPasswordHandler,
         error, // Expose error state
     };
 };
