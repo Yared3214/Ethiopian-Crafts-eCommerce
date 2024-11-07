@@ -45,3 +45,17 @@ export const forgetPassword = async (email: string): Promise<any> => {
         throw error.response ? error.response.data : new Error('Network error');
     }
 }
+
+
+//function to reset the password
+export const resetPassword = async (token: string, password: string): Promise<any> => {
+    try {
+        const response = await axios.post(`${API_URL}/auth/reset-password/${token}`, { password });
+        console.log('reset', response.data)
+        return response.data; // Assuming the response contains user and tokens
+    } catch (error: any) {
+        console.log("error while reset", error)
+        // Throwing error to be caught in the hook
+        throw error.response ? error.response.data : new Error('Network error');
+    }
+}
