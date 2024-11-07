@@ -2,7 +2,7 @@
 
 import { useDispatch } from 'react-redux';
 import { login, logout } from '../store/feature/user/userSlice';
-import { loginUser, registerUser } from '../api/user/userAPI';
+import { loginUser, registerUser, forgetPassword } from '../api/user/userAPI';
 import { AuthResponse } from '../types/user';
 import { useState } from 'react';
 
@@ -49,10 +49,28 @@ const useAuth = () => {
         dispatch(logout()); // Dispatch the logout action
     };
 
+
+    //forgot password
+
+    const forgotPasswordHandler = async (email: string) => {
+        console.log("email", { email })
+
+        try {
+            const data = await forgetPassword(email);
+            return data;
+        }
+        catch (error: any) {
+            console.log("error while forgetting the password", error)
+            setError((error as any).message || 'Forgetting failed');
+        }
+
+    }
+
     return {
         loginUser: loginUserHandler,
         registerUser: registerUserHandler,
         logoutUser: logoutUserHandler,
+        forgetPassword: forgotPasswordHandler,
         error, // Expose error state
     };
 };
