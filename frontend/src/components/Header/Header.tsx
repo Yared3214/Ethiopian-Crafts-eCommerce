@@ -42,9 +42,6 @@ const Header: React.FC = () => {
                     ) :
                         (
                             <div>
-                                <Link href="/signup" passHref>
-                                    <span className="text-gray-600 hover:text-gray-900 cursor-pointer">Sign up</span>
-                                </Link>
                                 <Link href="/signin" passHref>
                                     <span className="text-gray-600 hover:text-gray-900 cursor-pointer">Login</span>
                                 </Link>
