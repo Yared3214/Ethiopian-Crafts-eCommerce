@@ -31,3 +31,17 @@ export const registerUser = async (fullName: string, email: string, password: st
         throw error.response ? error.response.data : new Error('Network error');
     }
 };
+
+
+//function to forget the password
+export const forgetPassword = async (email: string): Promise<any> => {
+    try {
+        const response = await axios.post(`${API_URL}/auth/forgot-password`, { email });
+        console.log('forget', response.data)
+        return response.data; // Assuming the response contains user and tokens
+    } catch (error: any) {
+        console.log("error while forget", error)
+        // Throwing error to be caught in the hook
+        throw error.response ? error.response.data : new Error('Network error');
+    }
+}
