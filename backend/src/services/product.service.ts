@@ -15,16 +15,18 @@ class ProductService {
         return await Product.find().sort({ createdAt: -1 });
     }
 
-
+    
     //get artisan's product 
     async getArtisanProducts(createdBy: string) {
         return await Product.find({ createdBy }).sort({ createdAt: -1 });
     }
 
     //get a single product by slug
-    async getProductBySlug(slug: string) {
-        return await Product.find({ slug });
+    async getProductBySlug(slug: string): Promise<IProduct | null> {
+        // Use findOne instead of find to get a single product by slug
+        return await Product.findOne({ slug });
     }
+
 
     //get a product by id
     async getProductById(productID: string) {
@@ -50,6 +52,16 @@ class ProductService {
 
         return updatedProduct;
     }
+    // get related products
+
+    async getRelatedProducts(category: string, productId: string) {
+        return Product.find({
+            category,
+            _id: { $ne: new Types.ObjectId(productId) } // Exclude the specified ID
+        }).limit(4);
+    }
+
+
 
 
 

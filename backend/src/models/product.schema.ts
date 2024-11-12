@@ -7,7 +7,7 @@ export interface IProduct extends Document {
     images: string[];
     description: string;
     materials: string[];
-    createdBy: Types.ObjectId | IArtisan;      // Reference to the Artisan
+    createdBy: string;      // Reference to the Artisan
     category: string;
     price: number;
     rating: number;

@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import ApiError from '../utils/ApiError';
 import { artisanservice } from '../services/artisan.service';
 import { uploadImage } from '../services/image.service';
+import { productService } from '../services/product.service';
 
 
 
@@ -62,8 +63,6 @@ export const createArtisan = async (req: Request, res: Response): Promise<any> =
 
 
 //get all artisans
-
-
 export const getAllArtisans = async (req: Request, res: Response): Promise<any> => {
     try {
         const artisans = await artisanservice.getAllArtisans();
@@ -80,25 +79,33 @@ export const getAllArtisans = async (req: Request, res: Response): Promise<any> 
 
 
 //get single artisan
-
 export const getSingleArtisan = async (req: Request, res: Response): Promise<any> => {
     try {
         const { slug } = req.params;
-        const artisan = await artisanservice.getSingleArtisan(slug);
+
+        // Fetch artisan and products concurrently for better performance
+        const [artisan, products] = await Promise.all([
+            artisanservice.getSingleArtisan(slug),
+            productService.getArtisanProducts(slug)
+        ]);
+
         if (!artisan) {
             return new ApiError(404, 'Artisan not found').send(res);
         }
+
         res.status(200).json({
             status: 'success',
             message: 'Artisan retrieved successfully',
-            artisan,
+            data: {
+                artisan,
+                products
+            }
         });
     } catch (error) {
         console.error('Error getting artisan:', error);
         return new ApiError(500, 'Internal server error').send(res);
     }
-}
-
+};
 
 //update artisan
 

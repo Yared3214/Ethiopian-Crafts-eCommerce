@@ -3,6 +3,7 @@ import { productService } from "../services/product.service";
 import { uploadImage } from "../services/image.service";
 import ApiError from "../utils/ApiError";
 import { artisanservice } from "../services/artisan.service";
+import { reviewService } from "../services/review.service";
 
 
 
@@ -37,7 +38,7 @@ export const createProduct = async (req: Request, res: Response): Promise<any> =
 
         //check if there another product exits with that slug
         const existingProductWithSlug = await productService.getProductBySlug(title.split(' ').join('-').toLowerCase());
-        if (existingProductWithSlug.length) {
+        if (existingProductWithSlug) {
             return new ApiError(400, 'A product with this title already exists.').send(res);
         }
 
@@ -229,6 +230,53 @@ export const updateProduct = async (req: Request, res: Response): Promise<any> =
         }
     } catch (error) {
         console.error('Error updating product:', error);
+        return new ApiError(500, 'Internal server error').send(res);
+    }
+};
+
+
+
+
+// get a single product using a slug
+export const getSingleProduct = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const { slug } = req.params;
+
+        // Fetch the product by slug (single product)
+        const product = await productService.getProductBySlug(slug);
+
+        if (!product) {
+            return new ApiError(400, 'Product not found').send(res);
+        }
+
+        // Fetch artisan info based on createdBy slug (artisan's slug is stored in product)
+        const artisan = await artisanservice.getSingleArtisan(product.createdBy);
+
+        if (!artisan) {
+            return new ApiError(400, 'Artisan not found').send(res);
+        }
+
+        // Fetch reviews for the product
+        const reviews = await reviewService.getReviewsByProductId((product as any)._id?.toString());
+
+        // getting related products
+        const relatedProducts = await productService.getRelatedProducts(product.category, (product as any)._id?.toString());
+
+
+        // Combine all the data (Product, Artisan, and Reviews)
+        return res.status(200).json({
+            status: 'success',
+            message: 'Product, Artisan, and Reviews retrieved successfully',
+            data: {
+                product,
+                artisan,
+                reviews,
+                relatedProducts
+            }
+        });
+
+    } catch (error) {
+        console.error('Error getting single product:', error);
         return new ApiError(500, 'Internal server error').send(res);
     }
 };
