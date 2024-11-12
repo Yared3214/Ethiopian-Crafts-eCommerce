@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux'
 import { Product } from '@/types/product'
 import { useState } from 'react'
-import { fetchProducts } from '@/api/product/productAPI'
+import { fetchProducts, fetchAsingleProduct } from '@/api/product/productAPI'
 import { setProducts } from '@/store/feature/product/productSlice'
 
 const useProduct = () => {
@@ -23,7 +23,20 @@ const useProduct = () => {
         }
     }
 
-    return { error, loading, fetchProductsHandler }
+    const fetchProductBySlugHandler = async (slug: string) => {
+        setError(null)
+        setLoading(true)  // Set loading to true before fetching
+        try {
+            const data = await fetchAsingleProduct(slug)  // Expecting an array of Product
+            return data;
+        } catch (error) {
+            setError((error as any).message || 'Failed to fetch product')
+        } finally {
+            setLoading(false)  // Set loading to false after fetching
+        }
+    }
+
+    return { error, loading, fetchProductsHandler, fetchProductBySlugHandler }
 }
 
 export default useProduct
