@@ -10,6 +10,7 @@ import useProduct from '@/hooks/useProduct';
 
 
 const ProductListingPage = () => {
+  
   const { fetchProductsHandler, error, loading } = useProduct();
   const products = useSelector((state: RootState) => state.product.products);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
