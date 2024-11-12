@@ -1,8 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Product } from '@/types/product';
-import { Skeleton } from "@/components/ui/skeleton"
-
+import ProductSkelton from '../Loader/ProductSkeleton'
 
 interface ProductCardProps {
   product: Product;
@@ -10,18 +9,13 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, loading }) => {
+
   if (loading) {
     return (
-      <div className="flex flex-col space-y-3">
-        <Skeleton className="h-[125px] bg-gray-300 w-[250px] rounded-xl" />
-        <div className="space-y-2">
-          <Skeleton className="h-4  bg-gray-300 w-[250px]" />
-          <Skeleton className="h-4  bg-gray-300 w-[200px]" />
-        </div>
-      </div>
+      <ProductSkelton />
     );
   }
-
+  
   return (
     <div className="border border-yellow-500 bg-white p-4 rounded-md shadow-lg transition-transform duration-300 hover:shadow-2xl hover:scale-105 transform hover:bg-amber-50">
       {/* Product Image */}

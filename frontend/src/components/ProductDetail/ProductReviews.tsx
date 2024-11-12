@@ -1,14 +1,18 @@
 import { useState } from 'react';
 import { FaStar } from 'react-icons/fa';  // Font Awesome icons for stars
+import { Review } from '@/types/product'
 
 interface ProductReviewsProps {
-  reviews: { user: string; rating: number; comment: string }[];
+  reviews: Review[]
+
 }
 
 const ProductReviews: React.FC<ProductReviewsProps> = ({ reviews }) => {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [comment, setComment] = useState('');
+
+  console.log("the reviews", reviews)
 
   const handleSubmitReview = () => {
     // Handle the form submission logic here (e.g., post review to API)
@@ -21,9 +25,9 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ reviews }) => {
   return (
     <div className="space-y-6 mb-12">
       <h3 className="text-2xl font-semibold mb-6 text-gray-800">User Reviews</h3>
-      
+
       {/* Display Existing Reviews */}
-      {reviews.length > 0 ? (
+      {reviews?.length > 0 ? (
         reviews.map((review, index) => (
           <div key={index} className="border-l-4 border-yellow-600 p-4 rounded-md shadow-md bg-white mb-4">
             <p className="text-red-700 font-semibold">{review.user}</p>
