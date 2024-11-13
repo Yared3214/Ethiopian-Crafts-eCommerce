@@ -10,6 +10,7 @@ import store from "@/store/store"; // Adjust the path to your Redux store
 import localFont from "next/font/local";
 import "./globals.css";
 import { setUserFromCookie } from "@/store/feature/user/userSlice"; // Import the action
+import { Toaster } from "@/components/ui/sonner"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -41,9 +42,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Provider store={store}>
-          <InitializeUser /> {/* Add the component to initialize user state */}
+          <InitializeUser />
           <Header />
           {children}
+          <Toaster />
           <Footer />
         </Provider>
       </body>

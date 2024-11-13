@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import useAuth from '@/hooks/userAuth'; // Import your useAuth hook
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 
 const SignUp = () => {
   const router = useRouter();
@@ -10,7 +11,7 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const { registerUser, error } = useAuth();
+  const { registerUser, error, isLoading } = useAuth();
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -18,6 +19,16 @@ const SignUp = () => {
     try {
       const response = await registerUser(name, email, password, confirmPassword); // Call the login function from the useAuth hook
       if (response.success) {
+        toast("Registration successful!", {
+          style: {
+            backgroundColor: "#22c55e", // Green background for success
+            color: "#ffffff", // White text color
+            fontWeight: "bold",
+            padding: "1rem",
+            borderRadius: "0.5rem",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)", // Shadow for depth
+          },
+        });
         router.push("/signin")
       }
     }
@@ -115,9 +126,10 @@ const SignUp = () => {
 
             <button
               type="submit"
-              className="w-full bg-yellow-800 text-white py-3 rounded-lg hover:bg-yellow-700 transition duration-200"
+              disabled={isLoading}
+              className={isLoading ? `cursor-not-allowed w-full bg-yellow-800 text-white py-3 rounded-lg hover:bg-yellow-700 transition duration-200` : `cursor-pointer w-full bg-yellow-800 text-white py-3 rounded-lg hover:bg-yellow-700 transition duration-200`}
             >
-              Create Account
+              {isLoading ? "Creating" : "Create Account"}
             </button>
           </form>
 
@@ -129,7 +141,7 @@ const SignUp = () => {
           </p>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

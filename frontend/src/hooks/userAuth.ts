@@ -7,13 +7,18 @@ import { AuthResponse } from '../types/user';
 import { useState } from 'react';
 
 
+
+
 const useAuth = () => {
     const dispatch = useDispatch();
     const [error, setError] = useState<string | null>(null); // State to hold error messages
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
+    
     const loginUserHandler = async (email: string, password: string) => {
         console.log("login", { email, password })
         setError(null); // Reset error state
+        setIsLoading(true);
         try {
             const data: AuthResponse = await loginUser(email, password);
             dispatch(login(data)); // Dispatch the login action with user data
@@ -21,6 +26,8 @@ const useAuth = () => {
         } catch (error) {
             // Set error message in state
             setError((error as any).message || 'Login failed');
+        } finally {
+            setIsLoading(false)
         }
     };
 
@@ -29,7 +36,7 @@ const useAuth = () => {
         console.log('register', { fullName, email, password, confirmPassword });
 
         setError(null); // Reset error state
-
+        setIsLoading(true)
         if (password !== confirmPassword) {
             setError('Passwords do not match');
             return;
@@ -42,6 +49,8 @@ const useAuth = () => {
         } catch (error) {
             // Set error message in state
             setError((error as any).message || 'Registration failed');
+        } finally {
+            setIsLoading(false)
         }
     };
 
@@ -54,7 +63,8 @@ const useAuth = () => {
 
     const forgotPasswordHandler = async (email: string) => {
         console.log("email", { email })
-
+        setError(null)
+        setIsLoading(true)
         try {
             const data = await forgetPassword(email);
             return data;
@@ -62,12 +72,16 @@ const useAuth = () => {
         catch (error: any) {
             console.log("error while forgetting the password", error)
             setError((error as any).message || 'Forgetting failed');
+        } finally {
+            setIsLoading(false)
         }
 
     }
 
     //reset password
     const resetPasswordHandler = async (token: string, password: string, confirmPassword: string) => {
+        setError(null)
+        setIsLoading(true)
         try {
             if (password !== confirmPassword) {
                 setError('Passwords do not match');
@@ -78,6 +92,8 @@ const useAuth = () => {
             return data;
         } catch (error) {
             setError((error as any).message || 'Reset failed');
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -89,7 +105,8 @@ const useAuth = () => {
         logoutUser: logoutUserHandler,
         forgetPassword: forgotPasswordHandler,
         resetPassword: resetPasswordHandler,
-        error, // Expose error state
+        error,
+        isLoading
     };
 };
 

@@ -3,9 +3,10 @@
 import React, { useState } from 'react';
 import useAuth from '@/hooks/userAuth'; // Import your useAuth hook
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 
 const Login: React.FC = () => {
-  const { loginUser, error } = useAuth(); // Get the login function and error from the hook
+  const { loginUser, error, isLoading } = useAuth(); // Get the login function and error from the hook
   const [email, setEmail] = useState<string>(''); // State for email
   const [password, setPassword] = useState<string>(''); // State for password
   const router = useRouter();
@@ -13,16 +14,30 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent the default form submission behavior
+
+
+
     try {
       const response = await loginUser(email, password); // Call the login function from the useAuth hook
       if (response) {
-        // Redirect to dashboard on successful login
+        toast("Login successful!", {
+          style: {
+            backgroundColor: "#22c55e", // Green background for success
+            color: "#ffffff", // White text color
+            fontWeight: "bold",
+            padding: "1rem",
+            borderRadius: "0.5rem",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)", // Shadow for depth
+          },
+        });
         router.push("/dashboard")
       }
     } catch (error: any) {
       console.error("error while logging in the user ", error)
     }
   };
+
+
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
@@ -85,10 +100,11 @@ const Login: React.FC = () => {
             </div>
 
             <button
+              disabled={isLoading}
               type="submit"
-              className="w-full bg-yellow-800 text-white py-3 rounded-lg hover:bg-yellow-700 transition duration-200"
+              className={isLoading ? `cursor-not-allowed w-full bg-yellow-800 text-white py-3 rounded-lg hover:bg-yellow-700 transition duration-200` : `cursor-pointer w-full bg-yellow-800 text-white py-3 rounded-lg hover:bg-yellow-700 transition duration-200`}
             >
-              Log In
+              {isLoading ? "Logging" : "Login"}
             </button>
           </form>
 
@@ -103,6 +119,7 @@ const Login: React.FC = () => {
           </p>
         </div>
       </div>
+
     </div>
   );
 };

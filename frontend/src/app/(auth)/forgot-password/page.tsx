@@ -6,7 +6,7 @@ import { ResetSuccess } from '@/components/ResetSuccess/reset-success'
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState<string>('');
-  const { forgetPassword, error } = useAuth();
+  const { forgetPassword, error, isLoading } = useAuth();
 
   const [successMessage, setSuccessMessage] = useState<boolean>(false);
 
@@ -71,9 +71,9 @@ const ForgotPassword = () => {
 
               <button
                 type="submit"
-                className="w-full bg-yellow-800 text-white py-3 rounded-lg hover:bg-yellow-700 transition duration-200"
-              >
-                Send Reset Instructions
+                disabled={isLoading}
+                className={isLoading ? `cursor-not-allowed w-full bg-yellow-800 text-white py-3 rounded-lg hover:bg-yellow-700 transition duration-200` : `cursor-pointer w-full bg-yellow-800 text-white py-3 rounded-lg hover:bg-yellow-700 transition duration-200`}>
+                {isLoading ? "Sending" : "Send Reset Instructions"}
               </button>
             </form>
 
