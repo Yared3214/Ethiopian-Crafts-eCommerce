@@ -18,7 +18,7 @@ const CartSchema = new Schema<ICart>({
     totalPrice: { type: Number, default: 0.00 },
     items: [
         {
-            ProductItem: { type: Schema.Types.ObjectId, ref: 'Menu', required: true },
+            ProductItem: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
             ProductName: { type: String, required: true },
             quantity: { type: Number, required: true, min: 1, default: 1 },
             price: { type: Number, required: true }

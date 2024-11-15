@@ -9,7 +9,7 @@ interface DecodedToken {
     exp: number;
 }
 
-interface authenticatedRequest extends Request {
+export interface authenticatedRequest extends Request {
     user?: any
 }
 
