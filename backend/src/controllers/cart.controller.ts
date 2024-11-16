@@ -79,24 +79,47 @@ export const deleteCart = async (req: authenticatedRequest, res: Response): Prom
 
 
 export const removeItem = async (req: authenticatedRequest, res: Response): Promise<any> => {
-    // Retrieve the user's cart
-    const userId = req.user._id
-    const { productId } = req.params
+    try {
+        // Retrieve the user's cart
+        const userId = req.user._id
+        const { productId } = req.params
 
-    const cart = await cartService.getCartByUserId(userId);
-    if (!cart) {
-        return new ApiError(400, "Cart not found").send(res)
+        const cart = await cartService.getCartByUserId(userId);
+        if (!cart) {
+            return new ApiError(400, "Cart not found").send(res)
+        }
+
+        // Find the index of the item to be removed
+        const itemIndex = cart.items.findIndex((item) => item.ProductItem.toString() === productId);
+
+        if (itemIndex === -1) {
+            return new ApiError(400, "Item not found in the cart").send(res)
+        }
+
+        const newCart = await cartService.removeItem(userId, itemIndex)
+        if (newCart) {
+            return res.status(200).json({ message: "Item successfully removed from the cart.", newCart })
+        }
+    } catch (error) {
+        console.error('error while removing an item from the cart', error)
+        return new ApiError(400, 'Internal server error.')
     }
+}
 
-    // Find the index of the item to be removed
-    const itemIndex = cart.items.findIndex((item) => item.ProductItem.toString() === productId);
 
-    if (itemIndex === -1) {
-        return new ApiError(400, "Item not found in the cart").send(res)
-    }
+export const getMyCart = async (req: authenticatedRequest, res: Response): Promise<any> => {
+    try {
+        // Retrieve the user's cart
+        const userId = req.user._id
+        const cart = await cartService.getCartByUserId(userId);
+        if (!cart) {
+            return new ApiError(400, "cart not found.").send(res)
+        }
 
-    const newCart = await cartService.removeItem(userId, itemIndex)
-    if (newCart) {
-        return res.status(200).json({ message: "Item successfully removed from the cart.", newCart })
+        return res.status(200).json(cart)
+
+    } catch (error) {
+        console.error('error while fetching the cart', error)
+        return new ApiError(400, 'Internal server error.').send(res)
     }
 }
