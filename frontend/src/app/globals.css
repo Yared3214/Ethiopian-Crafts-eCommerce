@@ -6,7 +6,9 @@
 
 :root {
   --textcolor: #5C3D2E;
-  --background: #fff5dbfe;
+  /* --background: #fff5dbfe; */
+  --background: #ffffffff;
+
 }
 
 body {

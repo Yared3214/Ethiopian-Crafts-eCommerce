@@ -2,7 +2,6 @@
 
 // Import React and Framer Motion
 import React from 'react';
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faScissors, faCoffee, faRing, faBasketShopping } from '@fortawesome/free-solid-svg-icons'; // Import alternative icons
@@ -14,13 +13,157 @@ import {
 } from "@/components/ui/accordion"
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
+import { AuroraBackground } from "@/components/ui/aurora-background";
+import { ContainerScroll } from "@/components/ui/container-scroll-animation";
+import Image from "next/image";
+import AppleCardsCarousel from '@/components/Carousel/carousel'
+import { HeroParallax } from "@/components/ui/hero-parallax";
+import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
+import Link from "next/link";
+import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards";
+
+
 
 const Home: React.FC = () => {
 
-  
+
   const { user, isLoggedIn } = useSelector((state: RootState) => state.user);
 
-  console.log("userDDDDdddata", user)
+  const products = [
+    {
+      title: "Moonbeam",
+      link: "https://gomoonbeam.com",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/moonbeam.png",
+    },
+    {
+      title: "Cursor",
+      link: "https://cursor.so",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/cursor.png",
+    },
+    {
+      title: "Rogue",
+      link: "https://userogue.com",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/rogue.png",
+    },
+
+    {
+      title: "Editorially",
+      link: "https://editorially.org",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/editorially.png",
+    },
+    {
+      title: "Editrix AI",
+      link: "https://editrix.ai",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/editrix.png",
+    },
+    {
+      title: "Pixel Perfect",
+      link: "https://app.pixelperfect.quest",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/pixelperfect.png",
+    },
+
+    {
+      title: "Algochurn",
+      link: "https://algochurn.com",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/algochurn.png",
+    },
+    {
+      title: "Aceternity UI",
+      link: "https://ui.aceternity.com",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/aceternityui.png",
+    },
+    {
+      title: "Tailwind Master Kit",
+      link: "https://tailwindmasterkit.com",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/tailwindmasterkit.png",
+    },
+    {
+      title: "SmartBridge",
+      link: "https://smartbridgetech.com",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/smartbridge.png",
+    },
+    {
+      title: "Renderwork Studio",
+      link: "https://renderwork.studio",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/renderwork.png",
+    },
+
+    {
+      title: "Creme Digital",
+      link: "https://cremedigital.com",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/cremedigital.png",
+    },
+    {
+      title: "Golden Bells Academy",
+      link: "https://goldenbellsacademy.com",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/goldenbellsacademy.png",
+    },
+    {
+      title: "Invoker Labs",
+      link: "https://invoker.lol",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/invoker.png",
+    },
+    {
+      title: "E Free Invoice",
+      link: "https://efreeinvoice.com",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/efreeinvoice.png",
+    },
+  ];
+
+  const testimonials = [
+    {
+      name: "Handwoven Textiles",
+      title: "Traditional Ethiopian Weavings",
+      image: "https://cdn.gamma.app/m3rdunp6aj4a2ph/generated-images/ukBdpjyMRidArq0arvhLI.jpg", // Replace with actual image URL
+      description:
+        "Beautifully handwoven fabrics, showcasing intricate patterns and vibrant colors, representing the diverse cultures across Ethiopia.",
+    },
+    {
+      name: "Ethiopian Pottery",
+      title: "Handcrafted Ceramics",
+      image: "https://cdn.gamma.app/m3rdunp6aj4a2ph/generated-images/ukBdpjyMRidArq0arvhLI.jpg", // Replace with actual image URL
+      description:
+        "Authentic, handmade pottery, each piece uniquely designed, often inspired by traditional Ethiopian motifs and natural elements.",
+    },
+    {
+      name: "Beaded Jewelry",
+      title: "Traditional Ethiopian Jewelry",
+      image: "https://cdn.gamma.app/m3rdunp6aj4a2ph/generated-images/ukBdpjyMRidArq0arvhLI.jpg", // Replace with actual image URL
+      description:
+        "Exquisite beaded jewelry crafted by artisans, representing Ethiopia’s rich cultural heritage, with designs passed down through generations.",
+    },
+    {
+      name: "Ethiopian Carvings",
+      title: "Wooden Sculptures and Carvings",
+      image: "https://cdn.gamma.app/m3rdunp6aj4a2ph/generated-images/wGZH4ULoQZthoq3ANZ_b-.jpg", // Replace with actual image URL
+      description:
+        "Hand-carved wooden sculptures, ranging from religious figures to symbolic animals, showcasing the artistic craftsmanship of Ethiopian artisans.",
+    },
+    {
+      name: "Ethiopian Basketry",
+      title: "Handcrafted Baskets",
+      image: "https://cdn.gamma.app/m3rdunp6aj4a2ph/generated-images/wGZH4ULoQZthoq3ANZ_b-.jpg", // Replace with actual image URL
+      description:
+        "Crafted from natural fibers, these traditional Ethiopian baskets are both functional and decorative, often used in daily life or as home decor.",
+    },
+  ];
+
+
 
   return (
 
@@ -28,24 +171,37 @@ const Home: React.FC = () => {
     <div>
       {/* Hero Section */}
 
-      <div>
-        {isLoggedIn ? (
-          <h1 className='text-red-400 text-4xl'>Welcome,{user?.user?.fullName}</h1>
-        ) : (
-          <h1>Please log in.</h1>
-        )}
-      </div>
+      <AuroraBackground>
+        <motion.div
+          initial={{ opacity: 0.0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{
+            delay: 0.3,
+            duration: 0.8,
+            ease: "easeInOut",
+          }}
+          className="relative flex flex-col gap-4 items-center justify-center px-4"
+        >
+          <div className="text-3xl md:text-7xl font-bold dark:text-white text-center">
+            Celebrate Ethiopian artistry and cultural heritage.
+          </div>
+          <div className="font-extralight text-base md:text-4xl dark:text-neutral-200 py-4">
+            Authentic Ethiopian Artistry
+          </div>
+          <button className="bg-black dark:bg-white rounded-full w-fit text-white dark:text-black px-4 py-2">
+            Shop now
+          </button>
+        </motion.div>
+      </AuroraBackground>
 
-      <div
+
+      {/* <div
         className="relative h-[80vh] bg-cover bg-center"
         style={{ backgroundImage: "url('https://cdn.gamma.app/m3rdunp6aj4a2ph/generated-images/BMYV5xTrAe_b5ae6vN-1p.jpg')" }}
       >
-        {/* Overlay */}
         <div className="absolute inset-0 bg-black bg-opacity-80 backdrop-blur-sm"></div>
 
-        {/* Text Container */}
         <div className="relative z-10 flex flex-col ml-8 sm:ml-16 md:ml-24 lg:ml-32 pt-12 sm:pt-24 md:pt-32 lg:pt-36 text-white">
-          {/* Title Animation */}
           <motion.h1
             className="text-5xl md:text-7xl max-w-2xl mb-4"
             whileInView={{ opacity: [0, 1], y: [-50, 0] }}
@@ -54,7 +210,6 @@ const Home: React.FC = () => {
             Celebrate Ethiopian Artistry
           </motion.h1>
 
-          {/* Paragraph Animation */}
           <motion.p
             className="max-w-2xl mb-8"
             whileInView={{ opacity: [0, 1], y: [20, 0] }}
@@ -63,7 +218,6 @@ const Home: React.FC = () => {
             Explore a rich selection of hand-crafted Ethiopian artifacts, made by local artisans, and inspired by centuries of culture and tradition.
           </motion.p>
 
-          {/* Buttons Animation */}
           <motion.div
             className="flex space-x-4"
             whileInView={{ opacity: [0, 1] }}
@@ -77,11 +231,16 @@ const Home: React.FC = () => {
             </button>
           </motion.div>
         </div>
-      </div>
+      </div> */}
 
-      {/* Features Section */}
+      <HeroParallax products={products} />;
+
+
+      <div className='mt-10'>
+        <AppleCardsCarousel />
+      </div>
+      {/* 
       <div className="flex flex-col md:flex-row items-center justify-center py-16 bg-[#f8ede3]">
-        {/* Left Side - Image */}
         <div className="w-full md:w-1/2 mb-8 md:mb-0">
           <img
             src="https://cdn.gamma.app/m3rdunp6aj4a2ph/generated-images/liy3fUWyThnmn-k07Pc_e.jpg"
@@ -90,25 +249,20 @@ const Home: React.FC = () => {
           />
         </div>
 
-        {/* Right Side - Content */}
         <motion.div className="w-full md:w-1/2 md:pl-12 pl-10 text-[#5C3D2E] pt-24">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-[#8B4513] font-serif">
             Explore Ethiopian Culture
           </h2>
 
-          {/* Numbered list */}
           <ol className="space-y-10 py-8">
-            {/* Item 1 */}
             <motion.li
               className="flex items-start"
               whileInView={{ opacity: [0, 1], y: [50, 0] }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              {/* Number with border */}
               <div className="flex-shrink-0 bg-[#f5e5c1] border border-[#8B4513] text-[#8B4513] font-bold w-10 h-10 flex items-center justify-center rounded-full mr-4">
                 1
               </div>
-              {/* Content */}
               <div className="flex flex-col">
                 <strong className="mb-2 text-lg">Handmade Artifacts</strong>
                 <p className="text-base">
@@ -117,7 +271,6 @@ const Home: React.FC = () => {
               </div>
             </motion.li>
 
-            {/* Item 2 */}
             <motion.li
               className="flex items-start"
               whileInView={{ opacity: [0, 1], y: [50, 0] }}
@@ -134,7 +287,6 @@ const Home: React.FC = () => {
               </div>
             </motion.li>
 
-            {/* Item 3 */}
             <motion.li
               className="flex items-start"
               whileInView={{ opacity: [0, 1], y: [50, 0] }}
@@ -151,7 +303,6 @@ const Home: React.FC = () => {
               </div>
             </motion.li>
 
-            {/* Item 4 */}
             <motion.li
               className="flex items-start"
               whileInView={{ opacity: [0, 1], y: [50, 0] }}
@@ -169,19 +320,107 @@ const Home: React.FC = () => {
             </motion.li>
           </ol>
         </motion.div>
-      </div>
+      </div> */}
 
 
 
-      <div className="py-10 bg-[#fff5db] text-[#5C3D2E]">
-        {/* Common Heading */}
+
+
+
+      {/* <div className="flex justify-center items-center flex-col">
+        <h2 className="text-4xl py-4 md:text-5xl text-center font-bold font-serif text-[#5C3D2E]">
+          Handmade Treasures: Unique Artisanal Products
+        </h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 lg:gap-6">
+          <CardContainer className="inter-var">
+            <CardBody className="bg-gray-50 relative group/card dark:hover:shadow-lg dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-80 h-auto rounded-lg p-4 border">
+              <CardItem
+                translateZ="50"
+                className="text-lg font-semibold text-neutral-600 dark:text-white"
+              >
+                Textiles
+              </CardItem>
+              <CardItem
+                as="p"
+                translateZ="60"
+                className="text-neutral-500 text-sm max-w-xs mt-2 dark:text-neutral-300"
+              >
+                Intricate weavings, bold patterns, and soft cotton fabrics.
+              </CardItem>
+              <CardItem translateZ="100" className="w-full mt-4">
+                <Image
+                  src="https://cdn.gamma.app/m3rdunp6aj4a2ph/generated-images/ukBdpjyMRidArq0arvhLI.jpg"
+                  height="500"
+                  width="500"
+                  className="h-40 w-full object-cover rounded-lg group-hover/card:shadow-lg"
+                  alt="thumbnail"
+                />
+              </CardItem>
+            </CardBody>
+          </CardContainer>
+          <CardContainer className="inter-var">
+            <CardBody className="bg-gray-50 relative group/card dark:hover:shadow-lg dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-80 h-auto rounded-lg p-4 border">
+              <CardItem
+                translateZ="50"
+                className="text-lg font-semibold text-neutral-600 dark:text-white"
+              >
+                Pottery
+              </CardItem>
+              <CardItem
+                as="p"
+                translateZ="60"
+                className="text-neutral-500 text-sm max-w-xs mt-2 dark:text-neutral-300"
+              >
+                Beautifully glazed ceramics, from delicate vases to rustic tableware.
+              </CardItem>
+              <CardItem translateZ="100" className="w-full mt-4">
+                <Image
+                  src="https://cdn.gamma.app/m3rdunp6aj4a2ph/generated-images/wGZH4ULoQZthoq3ANZ_b-.jpg"
+                  height="500"
+                  width="500"
+                  className="h-40 w-full object-cover rounded-lg group-hover/card:shadow-lg"
+                  alt="thumbnail"
+                />
+              </CardItem>
+            </CardBody>
+          </CardContainer>
+          <CardContainer className="inter-var">
+            <CardBody className="bg-gray-50 relative group/card dark:hover:shadow-lg dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-80 h-auto rounded-lg p-4 border">
+              <CardItem
+                translateZ="50"
+                className="text-lg font-semibold text-neutral-600 dark:text-white"
+              >
+                Jewelry
+              </CardItem>
+              <CardItem
+                as="p"
+                translateZ="60"
+                className="text-neutral-500 text-sm max-w-xs mt-2 dark:text-neutral-300"
+              >
+                Unique metal and beaded designs, crafted with ancient techniques.
+              </CardItem>
+              <CardItem translateZ="100" className="w-full mt-4">
+                <Image
+                  src="https://cdn.gamma.app/m3rdunp6aj4a2ph/generated-images/-pnWGG6HoRihzcI_ywwk-.jpg"
+                  height="500"
+                  width="500"
+                  className="h-40 w-full object-cover rounded-lg group-hover/card:shadow-lg"
+                  alt="thumbnail"
+                />
+              </CardItem>
+            </CardBody>
+          </CardContainer>
+        </div>
+      </div> */}
+
+
+      {/* <div className="py-10 ">
         <h2 className="text-4xl py-4 md:text-5xl text-center font-bold mb-10 font-serif text-[#5C3D2E]">
           Handmade Treasures: Unique Artisanal Products
         </h2>
 
-        {/* Flex Container for Cards */}
         <div className="flex flex-wrap justify-around space-y-10 sm:space-y-0">
-          {/* Card 1: Textiles */}
           <motion.div
             className="rounded-lg shadow-lg md:max-w-xs w-full p-6 bg-white border-2 border-[#D09E30] flex flex-col"
             whileInView={{ opacity: [0, 1], y: [50, 0] }}
@@ -198,7 +437,6 @@ const Home: React.FC = () => {
             />
           </motion.div>
 
-          {/* Card 2: Pottery */}
           <motion.div
             className="rounded-lg shadow-lg md:max-w-xs w-full p-6 bg-white border-2 border-[#D09E30] flex flex-col"
             whileInView={{ opacity: [0, 1], y: [50, 0] }}
@@ -215,7 +453,6 @@ const Home: React.FC = () => {
             />
           </motion.div>
 
-          {/* Card 3: Jewelry */}
           <motion.div
             className="rounded-lg shadow-lg md:max-w-xs w-full p-6 bg-white border-2 border-[#D09E30] flex flex-col"
             whileInView={{ opacity: [0, 1], y: [50, 0] }}
@@ -232,19 +469,53 @@ const Home: React.FC = () => {
             />
           </motion.div>
         </div>
+      </div> */}
+
+    <div className="flex -mt-48 flex-col overflow-hidden">
+        <ContainerScroll
+          titleComponent={
+            <>
+              <h1 className="text-4xl font-semibold text-black dark:text-white">
+                Celebrate
+                <br />
+                <span className="text-4xl md:text-[6rem] font-bold mt-1 leading-none">
+                  Ethiopian artistry.
+                </span>
+              </h1>
+            </>
+          }
+        >
+          <Image
+            src={`https://cdn.gamma.app/m3rdunp6aj4a2ph/generated-images/BMYV5xTrAe_b5ae6vN-1p.jpg`}
+            alt="hero"
+            height={720}
+            width={1400}
+            className="mx-auto rounded-2xl object-cover h-full object-left-top"
+            draggable={false}
+          />
+        </ContainerScroll>
+      </div>
+
+      <div className="h-[40rem] -mt-52 rounded-md flex flex-col antialiased bg-white items-center justify-center relative overflow-hidden">
+        <h2 className="text-4xl py-4 md:text-5xl text-center font-bold mb-10 font-serif text-[#5C3D2E]">
+          Handmade Treasures: Unique Artisanal Products
+        </h2>
+
+        <InfiniteMovingCards
+          items={testimonials}
+          direction="right"
+          speed="slow"
+        />
       </div>
 
 
 
-      <div className="py-20 text-[#5C3D2E]">
-        {/* Common Heading */}
+      {/* <div className="py-20 text-[#5C3D2E]">
         <h2 className="text-4xl py-4 md:text-5xl text-center font-bold mb-10 font-serif text-[#5C3D2E]">
           Meet the Talented Ethiopian Artisans
         </h2>
 
-        {/* Flex Container for Cards */}
         <div className="flex flex-wrap justify-around space-y-10 sm:space-y-0">
-          {/* Card 1: Master Weavers */}
           <motion.div
             className="rounded-lg shadow-lg md:max-w-xs w-full p-6 bg-white border-2 border-[#D09E30] flex flex-col items-center"
             whileInView={{ opacity: [0, 1], y: [50, 0] }}
@@ -257,7 +528,6 @@ const Home: React.FC = () => {
             </p>
           </motion.div>
 
-          {/* Card 2: Skilled Potters */}
           <motion.div
             className="rounded-lg shadow-lg md:max-w-xs w-full p-6 bg-white border-2 border-[#D09E30] flex flex-col items-center"
             whileInView={{ opacity: [0, 1], y: [50, 0] }}
@@ -270,7 +540,6 @@ const Home: React.FC = () => {
             </p>
           </motion.div>
 
-          {/* Card 3: Jewelry Artisans */}
           <motion.div
             className="rounded-lg shadow-lg md:max-w-xs w-full p-6 bg-white border-2 border-[#D09E30] flex flex-col items-center"
             whileInView={{ opacity: [0, 1], y: [50, 0] }}
@@ -283,7 +552,6 @@ const Home: React.FC = () => {
             </p>
           </motion.div>
 
-          {/* Card 4: Basket Weavers */}
           <motion.div
             className="rounded-lg shadow-lg md:max-w-xs w-full p-6 bg-white border-2 border-[#D09E30] flex flex-col items-center"
             whileInView={{ opacity: [0, 1], y: [50, 0] }}
@@ -296,16 +564,11 @@ const Home: React.FC = () => {
             </p>
           </motion.div>
         </div>
-      </div>
+      </div> */}
 
 
 
       <div className="flex flex-col md:flex-row items-center justify-center py-16"> {/* Adjusted padding */}
-
-        {/* Left Side - Image */}
-
-
-        {/* Right Side - Content */}
         <motion.div
           className="w-full md:w-1/2 md:pl-12 pl-10 text-[#5C3D2E] pt-24"
         >
@@ -428,58 +691,6 @@ const Home: React.FC = () => {
           </div>
         </div>
       </div>
-
-
-
-
-
-
-
-      <div className="flex flex-col md:flex-row bg-[#fff5dbfe] text-[#5C3D2E] p-8">
-        {/* Text and Table Section */}
-        <div className="w-full py-20 md:w-2/3">
-          <h2 className="text-3xl md:text-4xl font-bold mb-10 font-serif">
-            Connect with a Global Community of Craft Enthusiasts
-          </h2>
-          <table className="min-w-full table-auto border-collapse text-lg font-light">
-            <tbody>
-              <tr className="bg-[#D09E30] text-white">
-                <td className="border border-[#5C3D2E] px-6 py-6">Share Your Passion</td>
-                <td className="border border-[#5C3D2E] px-6 py-6">Discover New Favorites</td>
-                <td className="border border-[#5C3D2E] px-6 py-6">Engage with Artisans</td>
-              </tr>
-              <tr>
-                <td className="border border-[#5C3D2E] px-6 py-6">Showcase your collection</td>
-                <td className="border border-[#5C3D2E] px-6 py-6">Explore unique creations</td>
-                <td className="border border-[#5C3D2E] px-6 py-6">Connect directly with makers</td>
-              </tr>
-              <tr className="bg-[#f9e2b8]">
-                <td className="border border-[#5C3D2E] px-6 py-6">Connect with like-minded fans</td>
-                <td className="border border-[#5C3D2E] px-6 py-6">Learn about different techniques</td>
-                <td className="border border-[#5C3D2E] px-6 py-6">Support ethical, sustainable practices</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        {/* Image Section */}
-        <div className="ml-0 mt-6 md:ml-10 md:mt-0 w-full md:w-1/3 flex justify-center">
-          <img
-            src="https://cdn.gamma.app/m3rdunp6aj4a2ph/generated-images/1LRi0tYFfMTo6UffkBnnm.jpg"
-            alt="Craft Image"
-            className="border-4 border-[#D09E30] rounded-lg shadow-lg w-full md:w-auto max-w-xs"
-          />
-        </div>
-      </div>
-
-
-
-
-
-
-
-
-
 
 
     </div>
