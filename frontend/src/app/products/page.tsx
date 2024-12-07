@@ -12,7 +12,42 @@ import useProduct from '@/hooks/useProduct';
 const ProductListingPage = () => {
   
   const { fetchProductsHandler, error, loading } = useProduct();
-  const products = useSelector((state: RootState) => state.product.products);
+  // const products = useSelector((state: RootState) => state.product.products);
+ 
+  const products = [
+    {
+      _id: '1',
+      title: 'Handmade Pottery Vase',
+      images: ['https://example.com/image1.jpg', 'https://example.com/image2.jpg'],
+      description: 'A beautiful handmade pottery vase.',
+      materials: ['Clay', 'Glaze'],
+      createdBy: 'artisan-slug-1',
+      category: 'Pottery',
+      price: 45.99,
+      rating: 4.5,
+      slug: 'handmade-pottery-vase',
+      createdAt: '2023-01-01T00:00:00Z',
+      updatedAt: '2023-01-01T00:00:00Z',
+      __v: 0,
+    },
+    {
+      _id: '2',
+      title: 'Woven Basket',
+      images: ['https://example.com/image3.jpg', 'https://example.com/image4.jpg'],
+      description: 'A sturdy and decorative woven basket.',
+      materials: ['Straw', 'Dye'],
+      createdBy: 'artisan-slug-2',
+      category: 'Home Decor',
+      price: 25.99,
+      rating: 4.7,
+      slug: 'woven-basket',
+      createdAt: '2023-02-01T00:00:00Z',
+      updatedAt: '2023-02-01T00:00:00Z',
+      __v: 0,
+    },
+  ];
+  
+
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [sortOption, setSortOption] = useState<string>('price-asc');
 

@@ -99,11 +99,11 @@ export const InfiniteMovingCards = ({
               <p className="mt-2 text-sm text-gray-600 text-center">{item.title}</p>
 
               {/* Image */}
-              <div className="mt-4 w-full h-40 relative">
+              <div className="mt-4 w-full h-72 relative">
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="w-full h-full object-cover rounded-lg"
+                  className="w-full h-72 object-cover rounded-lg"
                 />
               </div>
             </div>
