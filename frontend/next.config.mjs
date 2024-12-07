@@ -21,6 +21,12 @@ const nextConfig = {
           port: '', // Leave empty for default port
           pathname: '/**', // Allow all paths under the hostname
         },
+        {
+          protocol: 'https',
+          hostname: 'example.com',
+          port: '', // Leave empty for default port
+          pathname: '/**', // Allow all paths under the hostname
+        },
       ],
     },
   };
