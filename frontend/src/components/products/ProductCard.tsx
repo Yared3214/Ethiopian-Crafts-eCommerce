@@ -1,60 +1,68 @@
-import React from 'react';
-import Link from 'next/link';
-import { Product } from '@/types/product';
-import ProductSkelton from '../Loader/ProductSkeleton';
-import { BsCartPlus } from 'react-icons/bs';
+"use client";
+
+import Image from "next/image";
+import React from "react";
+import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
+import Link from "next/link";
+import { Product } from "@/types/product";
 
 interface ProductCardProps {
   product: Product;
   loading: boolean;
-  // onAddToCart: (product: Product) => void; // Function to handle adding to cart
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, loading }) => {
-
-
-
-  if (loading) {
-    return <ProductSkelton />;
-  }
-
   return (
-    <div className="border border-yellow-500 bg-white p-4 rounded-md shadow-lg transition-transform duration-300 hover:shadow-2xl hover:scale-105 transform hover:bg-amber-50">
-      {/* Product Image */}
-      <div className="overflow-hidden rounded-md">
-        <img
-          src={product.images[0]}
-          alt={`Image of ${product.title}`}
-          className="w-full h-48 object-cover transition-transform duration-300 hover:scale-110"
-        />
-      </div>
-
-      {/* Product Title with Link */}
-      <Link href={`/product-details/${product.slug}`}>
-        <h3 className="text-2xl line-clamp-1 font-semibold mt-4 cursor-pointer hover:underline transition-colors duration-300 font-serif text-gray-800 hover:text-red-600">
+    <CardContainer className="w-full">
+      <CardBody className="bg-gray-50 relative group/card dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-full h-auto rounded-xl p-4 sm:p-6 border">
+        <CardItem
+          translateZ="50"
+          className="text-lg sm:text-xl font-bold text-neutral-600 dark:text-white"
+        >
           {product.title}
-        </h3>
-      </Link>
-
-      {/* Product Description */}
-      <p className="text-sm text-gray-700 mt-2 line-clamp-1 font-serif italic">
-        {product.description}
-      </p>
-
-      {/* Product Price */}
-      <p className="text-lg font-bold text-red-700 mt-4 font-mono tracking-wide">
-        ${product.price}
-      </p>
-
-      {/* Add to Cart Button */}
-      <button
-        // onClick={() => onAddToCart(product)}
-        className="flex items-center justify-center w-full mt-4 px-4 py-2 bg-green-500 text-white rounded-md font-semibold hover:bg-green-600 transition-colors duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-300"
-      >
-        <BsCartPlus className="mr-2 text-lg" />
-        Add to Cart
-      </button>
-    </div>
+        </CardItem>
+        <CardItem
+          as="p"
+          translateZ="60"
+          className="text-neutral-500 text-sm sm:text-base mt-2 dark:text-neutral-300 line-clamp-2 font-serif italic"
+        >
+          {product.description}
+        </CardItem>
+        <CardItem translateZ="100" className="w-full mt-4">
+          <Image
+            src={product.images[0]}
+            height={400}
+            width={400}
+            className="h-48 sm:h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"
+            alt={`Image of ${product.title}`}
+          />
+        </CardItem>
+        <div className="flex justify-between items-center mt-6">
+          <CardItem
+            translateZ={20}
+            as={Link}
+            href={`/product-details/${product.slug}`}
+            className="px-3 py-1 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-normal dark:text-white hover:text-indigo-600 transition-colors"
+          >
+            View Details →
+          </CardItem>
+          <CardItem
+            translateZ={20}
+            as="button"
+            className="px-3 py-1 sm:px-4 sm:py-2 rounded-lg bg-black dark:bg-white dark:text-black text-white text-xs sm:text-sm font-bold hover:shadow-lg hover:scale-105 hover:bg-black/80 transition-all duration-300"
+          >
+            Add to Cart
+          </CardItem>
+        </div>
+        <CardItem
+          translateZ="30"
+          as="span"
+          className="block mt-4 text-sm sm:text-base font-bold text-neutral-600 dark:text-neutral-300"
+        >
+          Price: ${product.price}
+        </CardItem>
+      </CardBody>
+    </CardContainer>
   );
 };
 
