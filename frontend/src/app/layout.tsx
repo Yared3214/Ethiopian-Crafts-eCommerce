@@ -46,7 +46,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Header />
           {children}
           <Toaster />
-          <Footer />
+          {/* <Footer /> */}
         </Provider>
       </body>
     </html>
