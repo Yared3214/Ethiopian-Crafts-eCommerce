@@ -7,7 +7,7 @@ import ProductReviews from '@/components/ProductDetail/ProductReviews';
 import { ProductWithDetails, Artisan, Review, Product } from '@/types/product';
 import ProductCard from '@/components/products/ProductCard'
 import useProduct from '@/hooks/useProduct';
-
+import ReviwAndArtisanTabs from '@/components/ProductDetail/ReviewAndArtisanTabs';
 
 const ProductDetailPage = ({ params }: { params: { slug: string } }) => {
   const { slug } = params;
@@ -85,18 +85,18 @@ const ProductDetailPage = ({ params }: { params: { slug: string } }) => {
       </div>
 
       {/* Artisan Info */}
-      <ArtisanInfo artisan={product?.artisan as Artisan} />
-
+      {/* <ArtisanInfo artisan={product?.artisan as Artisan} /> */}
+      <ReviwAndArtisanTabs />
       {/* Product Reviews */}
-      <ProductReviews reviews={product?.reviews as Review[]} />
+      {/* <ProductReviews reviews={product?.reviews as Review[]} /> */}
 
       {/* Related Products */}
-      <h1 className="text-3xl font-semibold text-gray-800 mb-4">Related Products</h1>
+      {/* <h1 className="text-3xl font-semibold text-gray-800 mb-4">Related Products</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
         {product?.relatedProducts.map((product) => (
           <ProductCard key={product.slug} product={product} loading={loading} />
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };
