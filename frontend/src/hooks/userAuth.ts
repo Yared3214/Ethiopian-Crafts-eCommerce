@@ -12,9 +12,9 @@ import { useState } from 'react';
 const useAuth = () => {
     const dispatch = useDispatch();
     const [error, setError] = useState<string | null>(null); // State to hold error messages
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(false); // State to hold loading status
 
-    
+
     const loginUserHandler = async (email: string, password: string) => {
         console.log("login", { email, password })
         setError(null); // Reset error state
@@ -32,15 +32,15 @@ const useAuth = () => {
     };
 
 
-    const registerUserHandler = async (fullName: string, email: string, password: string, confirmPassword: string) => {
-        console.log('register', { fullName, email, password, confirmPassword });
+    const registerUserHandler = async (fullName: string, email: string, password: string) => {
+        console.log('register', { fullName, email, password });
 
         setError(null); // Reset error state
         setIsLoading(true)
-        if (password !== confirmPassword) {
-            setError('Passwords do not match');
-            return;
-        }
+        // if (password !== confirmPassword) {
+        //     setError('Passwords do not match');
+        //     return;
+        // }
 
         try {
             const data = await registerUser(fullName, email, password);
