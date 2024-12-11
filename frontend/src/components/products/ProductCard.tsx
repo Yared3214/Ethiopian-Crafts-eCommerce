@@ -5,6 +5,8 @@ import React from "react";
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 import Link from "next/link";
 import { Product } from "@/types/product";
+import AddtoCart from '@/components/AddToCart/addToCart';
+
 
 interface ProductCardProps {
   product: Product;
@@ -46,13 +48,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, loading }) => {
           >
             View Details →
           </CardItem>
-          <CardItem
+          {/* <CardItem
             translateZ={20}
             as="button"
             className="px-3 py-1 sm:px-4 sm:py-2 rounded-lg bg-black dark:bg-white dark:text-black text-white text-xs sm:text-sm font-bold hover:shadow-lg hover:scale-105 hover:bg-black/80 transition-all duration-300"
           >
             Add to Cart
-          </CardItem>
+          </CardItem> */}
+
+          <AddtoCart product={product} />
+
         </div>
         <CardItem
           translateZ="30"
