@@ -4,7 +4,7 @@ import axios from 'axios';
 import { AuthResponse } from '../../types/user';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
+console.log("api url", API_URL)
 // Function to log in a user
 export const loginUser = async (email: string, password: string): Promise<AuthResponse> => {
     try {
