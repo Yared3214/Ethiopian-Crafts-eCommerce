@@ -124,13 +124,13 @@ const Navbar: React.FC = () => {
       link: "/products",
       icon: <IconPackage className="h-4 w-4 text-gray-500 hover:text-gray-700" />,
     },
-    {
-      name: "Cart",
-      link: "/cart",
-      icon: (
-        <IconShoppingCart className="h-4 w-4 text-gray-500 hover:text-gray-700" />
-      ),
-    },
+    // {
+    //   name: "Cart",
+    //   link: "/cart",
+    //   icon: (
+    //     <IconShoppingCart className="h-4 w-4 text-gray-500 hover:text-gray-700" />
+    //   ),
+    // },
   ];
 
   return (
