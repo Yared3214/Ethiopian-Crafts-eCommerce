@@ -7,73 +7,73 @@ import FilterSidebar from '@/components/products/FilterSidebar';
 import SortDropdown from '@/components/products/SortDropdown';
 import { RootState } from '@/store/store';
 import useProduct from '@/hooks/useProduct';
-
+import { SkeletonCard } from '@/components/Skeleton/Skeleton';
 
 const ProductListingPage = () => {
 
   const { fetchProductsHandler, error, loading } = useProduct();
-  // const products = useSelector((state: RootState) => state.product.products);
+  const products = useSelector((state: RootState) => state.product.products);
 
-  const products = [
-    {
-      _id: '1',
-      title: 'Handmade Pottery Vase',
-      images: ['https://res.cloudinary.com/dso7gnmps/image/upload/v1733309755/jewlery_fektgf.jpg', 'https://res.cloudinary.com/dso7gnmps/image/upload/v1733309755/jewlery_fektgf.jpg'],
-      description: 'A beautiful handmade pottery vase.',
-      materials: ['Clay', 'Glaze'],
-      createdBy: 'artisan-slug-1',
-      category: 'Pottery',
-      price: 45.99,
-      rating: 4.5,
-      slug: 'handmade-pottery-vase',
-      createdAt: '2023-01-01T00:00:00Z',
-      updatedAt: '2023-01-01T00:00:00Z',
-      __v: 0,
-    },
-    {
-      _id: '2',
-      title: 'Woven Basket',
-      images: ['https://res.cloudinary.com/dso7gnmps/image/upload/v1733309773/painting_atkfcf.jpg', 'https://res.cloudinary.com/dso7gnmps/image/upload/v1733309755/jewlery_fektgf.jpg'],
-      description: 'A sturdy and decorative woven basket.',
-      materials: ['Straw', 'Dye'],
-      createdBy: 'artisan-slug-2',
-      category: 'Home Decor',
-      price: 25.99,
-      rating: 4.7,
-      slug: 'woven-basket',
-      createdAt: '2023-02-01T00:00:00Z',
-      updatedAt: '2023-02-01T00:00:00Z',
-      __v: 0,
-    }, {
-      _id: '3',
-      title: 'Woven Basket',
-      images: ['https://res.cloudinary.com/dso7gnmps/image/upload/v1733309755/jewlery_fektgf.jpg', 'https://res.cloudinary.com/dso7gnmps/image/upload/v1733309755/jewlery_fektgf.jpg'],
-      description: 'A sturdy and decorative woven basket.',
-      materials: ['Straw', 'Dye'],
-      createdBy: 'artisan-slug-2',
-      category: 'Home Decor',
-      price: 25.99,
-      rating: 4.7,
-      slug: 'woven-basket',
-      createdAt: '2023-02-01T00:00:00Z',
-      updatedAt: '2023-02-01T00:00:00Z',
-      __v: 0,
-    }, {
-      _id: '4',
-      title: 'Woven Basket',
-      images: ['https://res.cloudinary.com/dso7gnmps/image/upload/v1733309773/painting_atkfcf.jpg', 'https://res.cloudinary.com/dso7gnmps/image/upload/v1733309755/jewlery_fektgf.jpg'],
-      description: 'A sturdy and decorative woven basket.',
-      materials: ['Straw', 'Dye'],
-      createdBy: 'artisan-slug-2',
-      category: 'Home Decor',
-      price: 25.99,
-      rating: 4.7,
-      slug: 'woven-basket',
-      createdAt: '2023-02-01T00:00:00Z',
-      updatedAt: '2023-02-01T00:00:00Z',
-      __v: 0,
-    },
-  ];
+  // const products = [
+  //   {
+  //     _id: '1',
+  //     title: 'Handmade Pottery Vase',
+  //     images: ['https://res.cloudinary.com/dso7gnmps/image/upload/v1733309755/jewlery_fektgf.jpg', 'https://res.cloudinary.com/dso7gnmps/image/upload/v1733309755/jewlery_fektgf.jpg'],
+  //     description: 'A beautiful handmade pottery vase.',
+  //     materials: ['Clay', 'Glaze'],
+  //     createdBy: 'artisan-slug-1',
+  //     category: 'Pottery',
+  //     price: 45.99,
+  //     rating: 4.5,
+  //     slug: 'handmade-pottery-vase',
+  //     createdAt: '2023-01-01T00:00:00Z',
+  //     updatedAt: '2023-01-01T00:00:00Z',
+  //     __v: 0,
+  //   },
+  //   {
+  //     _id: '2',
+  //     title: 'Woven Basket',
+  //     images: ['https://res.cloudinary.com/dso7gnmps/image/upload/v1733309773/painting_atkfcf.jpg', 'https://res.cloudinary.com/dso7gnmps/image/upload/v1733309755/jewlery_fektgf.jpg'],
+  //     description: 'A sturdy and decorative woven basket.',
+  //     materials: ['Straw', 'Dye'],
+  //     createdBy: 'artisan-slug-2',
+  //     category: 'Home Decor',
+  //     price: 25.99,
+  //     rating: 4.7,
+  //     slug: 'woven-basket',
+  //     createdAt: '2023-02-01T00:00:00Z',
+  //     updatedAt: '2023-02-01T00:00:00Z',
+  //     __v: 0,
+  //   }, {
+  //     _id: '3',
+  //     title: 'Woven Basket',
+  //     images: ['https://res.cloudinary.com/dso7gnmps/image/upload/v1733309755/jewlery_fektgf.jpg', 'https://res.cloudinary.com/dso7gnmps/image/upload/v1733309755/jewlery_fektgf.jpg'],
+  //     description: 'A sturdy and decorative woven basket.',
+  //     materials: ['Straw', 'Dye'],
+  //     createdBy: 'artisan-slug-2',
+  //     category: 'Home Decor',
+  //     price: 25.99,
+  //     rating: 4.7,
+  //     slug: 'woven-basket',
+  //     createdAt: '2023-02-01T00:00:00Z',
+  //     updatedAt: '2023-02-01T00:00:00Z',
+  //     __v: 0,
+  //   }, {
+  //     _id: '4',
+  //     title: 'Woven Basket',
+  //     images: ['https://res.cloudinary.com/dso7gnmps/image/upload/v1733309773/painting_atkfcf.jpg', 'https://res.cloudinary.com/dso7gnmps/image/upload/v1733309755/jewlery_fektgf.jpg'],
+  //     description: 'A sturdy and decorative woven basket.',
+  //     materials: ['Straw', 'Dye'],
+  //     createdBy: 'artisan-slug-2',
+  //     category: 'Home Decor',
+  //     price: 25.99,
+  //     rating: 4.7,
+  //     slug: 'woven-basket',
+  //     createdAt: '2023-02-01T00:00:00Z',
+  //     updatedAt: '2023-02-01T00:00:00Z',
+  //     __v: 0,
+  //   },
+  // ];
 
 
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -127,10 +127,15 @@ const ProductListingPage = () => {
 
         {/* Product Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {sortedProducts.map((product) => (
-            <ProductCard key={product.slug} product={product} loading={loading} />
-          ))}
+          {loading
+            ? Array.from({ length: 6 }).map((_, index) => (
+              <SkeletonCard key={index} />
+            ))
+            : sortedProducts.map((product) => (
+              <ProductCard key={product.slug} product={product} />
+            ))}
         </div>
+
       </div>
     </div>
   );
