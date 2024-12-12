@@ -1,44 +1,5 @@
-// "use client"
-
-// import React from 'react';
-// import { logout } from '@/store/feature/user/userSlice';
-// import { useDispatch } from 'react-redux';
-// import { useRouter } from 'next/navigation'
-
-// const DashboardPage: React.FC = () => {
-//     const dispatch = useDispatch();
-//     const router = useRouter();
-
-//     const logoutHandler = () => {
-//         dispatch(logout());
-//         router.push('/');
-//     }
-
-//     return (
-//         <div style={{ padding: '20px' }}>
-//             <h1>Dashboard</h1>
-//             <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: '20px' }}>
-//                 <div style={{ width: '30%', padding: '10px', border: '1px solid #ccc', borderRadius: '5px' }}>
-//                     <h2>Statistics</h2>
-//                     <p>Some statistics here...</p>
-//                 </div>
-//                 <div style={{ width: '30%', padding: '10px', border: '1px solid #ccc', borderRadius: '5px' }}>
-//                     <h2>Recent Orders</h2>
-//                     <p>List of recent orders...</p>
-//                 </div>
-//                 <div style={{ width: '30%', padding: '10px', border: '1px solid #ccc', borderRadius: '5px' }}>
-//                     <h2>Loogut here</h2>
-//                     <button className='cursor-pointer transition border border-red-200 rounded-md px-4 py-2 text-white bg-red-500 hover:bg-red-400' onClick={logoutHandler}>logout</button>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default DashboardPage;
-
-
 "use client";
+
 import React, { useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import {
@@ -51,6 +12,9 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { logout } from "@/store/feature/user/userSlice";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
 
 // Components for different sections
 const DashboardContent = () => (
@@ -76,7 +40,10 @@ const SettingsContent = () => (
 
 const DashboardPage: React.FC = () => {
     const [open, setOpen] = useState(false);
-    const [activeLink, setActiveLink] = useState("dashboard"); // track active link
+    const [activeLink, setActiveLink] = useState("dashboard"); // Track active link
+    const dispatch = useDispatch();
+    const router = useRouter();
+
 
     const links = [
         {
@@ -109,11 +76,22 @@ const DashboardPage: React.FC = () => {
             icon: (
                 <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
             ),
+            value: "logout",
         },
     ];
 
-    const handleLinkClick = (linkValue: string) => {
-        setActiveLink(linkValue);
+    const handleLinkClick = (linkValue: string, event?: React.MouseEvent) => {
+        if (linkValue === "logout") {
+            if (event) event.preventDefault(); // Prevent default link navigation
+            handleLogout(); // Call the logout logic
+        } else {
+            setActiveLink(linkValue);
+        }
+    };
+
+    const handleLogout = () => {
+        dispatch(logout());
+        router.replace('/signin');
     };
 
     return (
@@ -126,14 +104,13 @@ const DashboardPage: React.FC = () => {
             <Sidebar open={open} setOpen={setOpen}>
                 <SidebarBody className="justify-between gap-10">
                     <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-                        {/* {open ? <Logo /> : <LogoIcon />} */}
-                        <Link href='/'>E-Commerce</Link>
+                        <Link href="/">E-Commerce</Link>
                         <div className="mt-8 flex flex-col gap-2">
                             {links.map((link, idx) => (
                                 <SidebarLink
                                     key={idx}
                                     link={link}
-                                    onClick={() => handleLinkClick(link.value)} // handle click
+                                    onClick={(e) => handleLinkClick(link.value, e)} // Handle click
                                 />
                             ))}
                         </div>
@@ -165,7 +142,7 @@ const DashboardPage: React.FC = () => {
             </div>
         </div>
     );
-}
+};
 
 export default DashboardPage;
 
@@ -186,6 +163,7 @@ export const Logo = () => {
         </Link>
     );
 };
+
 export const LogoIcon = () => {
     return (
         <Link
