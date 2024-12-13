@@ -7,6 +7,7 @@ import artisanRoutes from './routes/artisan.routes';
 import productRoutes from './routes/product.routes';
 import reviewRoutes from './routes/review.routes';
 import cartRoutes from './routes/cart.routes'
+import blogRoutes from './routes/blog.routes'
 
 import cors from 'cors'; // Import CORS
 import colors from 'colors';
@@ -39,6 +40,7 @@ app.use('/api/artisan', artisanRoutes);
 app.use('/api/product', productRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/blog', blogRoutes);
 
 // Start the server
 app.listen(PORT, () => {
