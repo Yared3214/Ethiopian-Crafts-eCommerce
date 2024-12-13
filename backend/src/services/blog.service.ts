@@ -2,13 +2,13 @@ import Blog, { IBlog } from "../models/blog.schema";
 
 class BlogService {
     // Create a new blog
-    async createBlog(data: {
-        title: string;
-        slug: string;
-        description: string[];
-        images: string[];
-        badges: string[];
-        category: string;
+    async createBlog(data: { 
+        title: string; 
+        slug: string; 
+        category: string; 
+        description: string; 
+        image: string; 
+        badge: string; 
     }): Promise<IBlog> {
         const newBlog = new Blog(data);
         await newBlog.save();
@@ -26,16 +26,32 @@ class BlogService {
     }
 
     // Update a blog
-    async updateBlog(slug: string, data: {
-        title?: string;
-        description?: string[];
-        images?: string[];
-        badges?: string[];
-        category?: string;
-    }): Promise<IBlog | null> {
+    async updateBlog(
+        slug: string, 
+        data: { 
+            title?: string; 
+            category?: string; 
+            description?: string; 
+            image?: string; 
+            badge?: string; 
+        }
+    ): Promise<IBlog | null> {
+        const existingBlog = await Blog.findOne({ slug });
+
+        if (!existingBlog) {
+            throw new Error("Blog not found");
+        }
+
+        // Update blog fields with new values if provided
+        const updatedBlogData: any = {
+            ...existingBlog.toObject(),
+            ...data
+        };
+
+        // Update the blog in the database
         return await Blog.findOneAndUpdate(
             { slug },
-            data,
+            updatedBlogData,
             { new: true } // Return the updated document
         );
     }
