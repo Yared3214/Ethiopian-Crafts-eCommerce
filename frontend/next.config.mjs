@@ -33,6 +33,12 @@ const nextConfig = {
           port: '', // Leave empty for default port
           pathname: '/**', // Allow all paths under the hostname
         },
+        {
+          protocol: 'https',
+          hostname: 'images.unsplash.com',
+          port: '', // Leave empty for default port
+          pathname: '/**', // Allow all paths under the hostname
+        },
       ],
     },
   };

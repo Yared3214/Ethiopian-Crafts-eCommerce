@@ -1,153 +1,106 @@
-import { cn } from "@/lib/utils";
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
-import {
-  IconArrowWaveRightUp,
-  IconBoxAlignRightFilled,
-  IconBoxAlignTopLeft,
-  IconClipboardCopy,
-  IconFileBroken,
-  IconSignature,
-  IconTableColumn,
-} from "@tabler/icons-react";
+import { RootState } from "@/store/store";
+import useBlog from "@/hooks/useblog";
+import { useSelector } from "react-redux";
+import { IconArrowWaveRightUp } from "@tabler/icons-react";
+import { BlogSkeleton } from '@/components/BlogSkeleton/BlogSkelton';
 
 const BlogPage: React.FC = () => {
+  const { fetchBlogsHandler, error, loading } = useBlog();
+  const blogs = useSelector((state: RootState) => state.blog.blogs);
+
+  // State for selected category
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  // Fetch blogs on mount
+  useEffect(() => {
+    fetchBlogsHandler();
+  }, []);
+
+  // Categories derived from blog data
+  const categories = Array.from(
+    new Set(blogs.map((blog) => blog.category || "Uncategorized"))
+  );
+
+  // Filter blogs by selected category
+  const filteredBlogs =
+    selectedCategory === null
+      ? blogs
+      : blogs.filter((blog) => blog.category === selectedCategory);
+
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto p-6 rounded-lg">
-        <h1 className="text-5xl font-extrabold text-center text-yellow-600 mb-8">
+    <div className="max-w-6xl mx-auto px-4 py-10">
+      {/* Header Section */}
+      <div className="max-w-4xl mx-auto text-center mb-10">
+        <h1 className="text-5xl font-bold text-gray-900 dark:text-white">
           Ethiopian Crafts Blog
         </h1>
-        <p className="text-lg text-center text-gray-700 leading-relaxed mb-12">
-          Discover the vibrant traditions and stories behind Ethiopian crafts and artisans.
-          Dive into cultural practices, festivals, artisan highlights, and hands-on tutorials to explore the richness of Ethiopian heritage.
+        <p className="text-lg text-gray-600 dark:text-gray-300 mt-4">
+          Explore the vibrant traditions and stories behind Ethiopian crafts and artisans. Find inspiration, cultural insights, and much more.
         </p>
-{/* 
-        <div className="mb-12">
-          <h2 className="text-4xl font-bold text-yellow-600 text-center mb-6">
-            Explore by Category
-          </h2>
-          <ul className="flex flex-wrap justify-center gap-6">
-            <li className="bg-yellow-100 hover:bg-yellow-200 transition-all duration-300 shadow-md rounded-lg px-6 py-3 text-yellow-800 text-lg font-medium cursor-pointer">
-              Traditions
-            </li>
-            <li className="bg-yellow-100 hover:bg-yellow-200 transition-all duration-300 shadow-md rounded-lg px-6 py-3 text-yellow-800 text-lg font-medium cursor-pointer">
-              Festivals
-            </li>
-            <li className="bg-yellow-100 hover:bg-yellow-200 transition-all duration-300 shadow-md rounded-lg px-6 py-3 text-yellow-800 text-lg font-medium cursor-pointer">
-              Artisans
-            </li>
-            <li className="bg-yellow-100 hover:bg-yellow-200 transition-all duration-300 shadow-md rounded-lg px-6 py-3 text-yellow-800 text-lg font-medium cursor-pointer">
-              Tutorials
-            </li>
-          </ul>
-        </div> */}
       </div>
-      <BentoGrid className="max-w-4xl mx-auto">
-        {items.map((item, i) => (
-          <BentoGridItem
-            key={i}
-            title={item.title}
-            description={item.description}
-            header={item.header}
-            imageSrc={item.imageSrc}
-            slug={item.slug}
-            icon={item.icon}
-            className={i !== 0 && i % 3 === 0 ? "md:col-span-2" : ""}
-          />
-        ))}
-      </BentoGrid>
+
+      {/* Filter by Category */}
+      <div className="relative flex justify-center mb-12">
+        <div className="flex flex-wrap gap-4 items-center">
+          <button
+            onClick={() => setSelectedCategory(null)}
+            className={`px-6 py-2 text-sm md:text-base rounded-full transition-all duration-300 shadow-lg ${selectedCategory === null
+              ? "bg-gradient-to-r from-yellow-500 to-orange-600 text-white font-semibold"
+              : "bg-gray-100 hover:bg-gray-200 text-gray-800"
+              }`}
+          >
+            All
+          </button>
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`px-6 py-2 text-sm md:text-base rounded-full transition-all duration-300 shadow-lg ${selectedCategory === category
+                ? "bg-gradient-to-r from-yellow-500 to-orange-600 text-white font-semibold"
+                : "bg-gray-100 hover:bg-gray-200 text-gray-800"
+                }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Loader or Blog Grid */}
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <BlogSkeleton key={index} />  // Display SkeletonCards while loading
+          ))
+          }
+        </div>
+      ) : (
+        <BentoGrid className="max-w-6xl mx-auto">
+          {filteredBlogs.length > 0 ? (
+            filteredBlogs.map((item, i) => (
+              <BentoGridItem
+                key={i}
+                title={item.title}
+                description={item.description}
+                imageSrc={item.image}
+                slug={item.slug}
+                icon={<IconArrowWaveRightUp className="h-4 w-4 text-neutral-500" />}
+                className={i !== 0 && i % 3 === 0 ? "md:col-span-2" : ""}
+              />
+            ))
+          ) : (
+            <p className="text-center text-gray-500 col-span-full">
+              No blogs available for the selected category.
+            </p>
+          )}
+        </BentoGrid>
+      )}
     </div>
   );
-}
-const Skeleton = () => (
-  <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100"></div>
-);
-
-
-const items = [
-  {
-    title: "The Dawn of Innovation",
-    description: "Explore the birth of groundbreaking ideas and inventions.",
-    header: <Skeleton />,
-    icon: <IconClipboardCopy className="h-4 w-4 text-neutral-500" />,
-    imageSrc: "https://res.cloudinary.com/dso7gnmps/image/upload/v1733309755/jewlery_fektgf.jpg",
-    slug: "dawn-of-innovation",
-  },
-  {
-    title: "The Digital Revolution",
-    description: "Dive into the transformative power of technology.",
-    header: <Skeleton />,
-    icon: <IconFileBroken className="h-4 w-4 text-neutral-500" />,
-    imageSrc: "https://res.cloudinary.com/dso7gnmps/image/upload/v1733309773/painting_atkfcf.jpg",
-    slug: "digital-revolution",
-  },
-  {
-    title: "The Art of Design",
-    description: "Discover the beauty of thoughtful and functional design.",
-    header: <Skeleton />,
-    icon: <IconSignature className="h-4 w-4 text-neutral-500" />,
-    imageSrc: "https://res.cloudinary.com/dso7gnmps/image/upload/v1733309755/jewlery_fektgf.jpg",
-    slug: "art-of-design",
-  },
-  {
-    title: "The Power of Communication",
-    description: "Understand the impact of effective communication in our lives.",
-    header: <Skeleton />,
-    icon: <IconTableColumn className="h-4 w-4 text-neutral-500" />,
-    imageSrc: "https://res.cloudinary.com/dso7gnmps/image/upload/v1733309773/painting_atkfcf.jpg",
-    slug: "power-of-communication",
-  },
-  {
-    title: "The Pursuit of Knowledge",
-    description: "Join the quest for understanding and enlightenment.",
-    header: <Skeleton />,
-    icon: <IconArrowWaveRightUp className="h-4 w-4 text-neutral-500" />,
-    imageSrc: "https://res.cloudinary.com/dso7gnmps/image/upload/v1733309755/jewlery_fektgf.jpg",
-    slug: "pursuit-of-knowledge",
-  },
-  {
-    title: "The Joy of Creation",
-    description: "Experience the thrill of bringing ideas to life.",
-    header: <Skeleton />,
-    icon: <IconBoxAlignTopLeft className="h-4 w-4 text-neutral-500" />,
-    imageSrc: "https://res.cloudinary.com/dso7gnmps/image/upload/v1733309773/painting_atkfcf.jpg",
-    slug: "joy-of-creation",
-  },
-  {
-    title: "The Spirit of Adventure",
-    description: "Embark on exciting journeys and thrilling discoveries.",
-    header: <Skeleton />,
-    icon: <IconBoxAlignRightFilled className="h-4 w-4 text-neutral-500" />,
-    imageSrc: "https://res.cloudinary.com/dso7gnmps/image/upload/v1733309755/jewlery_fektgf.jpg",
-    slug: "spirit-of-adventure",
-  },
-  {
-    title: "The Pursuit of Knowledge",
-    description: "Join the quest for understanding and enlightenment.",
-    header: <Skeleton />,
-    icon: <IconArrowWaveRightUp className="h-4 w-4 text-neutral-500" />,
-    imageSrc: "https://res.cloudinary.com/dso7gnmps/image/upload/v1733309755/jewlery_fektgf.jpg",
-    slug: "pursuit-of-knowledge",
-  },
-  {
-    title: "The Joy of Creation",
-    description: "Experience the thrill of bringing ideas to life.",
-    header: <Skeleton />,
-    icon: <IconBoxAlignTopLeft className="h-4 w-4 text-neutral-500" />,
-    imageSrc: "https://res.cloudinary.com/dso7gnmps/image/upload/v1733309773/painting_atkfcf.jpg",
-    slug: "joy-of-creation",
-  },
-  {
-    title: "The Spirit of Adventure",
-    description: "Embark on exciting journeys and thrilling discoveries.",
-    header: <Skeleton />,
-    icon: <IconBoxAlignRightFilled className="h-4 w-4 text-neutral-500" />,
-    imageSrc: "https://res.cloudinary.com/dso7gnmps/image/upload/v1733309755/jewlery_fektgf.jpg",
-    slug: "spirit-of-adventure",
-  },
-];
-
-
+};
 
 export default BlogPage;
