@@ -50,7 +50,7 @@ As a **content writer** and **full-stack developer**, I blend technology and sto
 
 ## 📞 Contact Me
 📧 Email: [leojo](mailto:leojo1627@gmail.com)  
-💼 LinkedIn: [Yohannes](https://linkedin.com/in/linkedin.com/in/yohanneswalle)  
+💼 LinkedIn: [Yohannes](https://linkedin.com/in/yohanneswalle)  
 🌍 Portfolio: [Portfolio](https://leojo-portfolio.vercel.app/)
 
 
