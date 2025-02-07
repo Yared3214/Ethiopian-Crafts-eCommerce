@@ -49,9 +49,9 @@ As a **content writer** and **full-stack developer**, I blend technology and sto
 - SEO-optimized content
 
 ## 📞 Contact Me
-📧 Email: [your.email@example.com](mailto:leojo1627@gmail,com)  
-💼 LinkedIn: [Your LinkedIn Profile](https://linkedin.com/in/linkedin.com/in/yohanneswalle)  
-🌍 Portfolio: [Your Portfolio](https://leojo-portfolio.vercel.app/)
+📧 Email: [leojo](mailto:leojo1627@gmail,com)  
+💼 LinkedIn: [Yohannes](https://linkedin.com/in/linkedin.com/in/yohanneswalle)  
+🌍 Portfolio: [Portfolio](https://leojo-portfolio.vercel.app/)
 
 
 
