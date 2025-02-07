@@ -26,7 +26,7 @@ To run the project locally, follow these steps:
 git clone https://github.com/yourusername/ethiopian-artisan-marketplace.git
 
 # Navigate into the project
-dcd ethiopian-artisan-marketplace
+dcd ethiopian-crafts-ecommerce
 
 # Install dependencies
 npm install
