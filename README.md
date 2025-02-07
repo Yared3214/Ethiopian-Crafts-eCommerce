@@ -23,7 +23,7 @@ To run the project locally, follow these steps:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/ethiopian-artisan-marketplace.git
+git clone https://github.com/johnwalle/Ethiopian-Crafts-eCommerce.git
 
 # Navigate into the project
 dcd ethiopian-crafts-ecommerce
