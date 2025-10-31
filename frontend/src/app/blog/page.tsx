@@ -7,6 +7,8 @@ import useBlog from "@/hooks/useblog";
 import { useSelector } from "react-redux";
 import { IconArrowWaveRightUp } from "@tabler/icons-react";
 import { BlogSkeleton } from '@/components/BlogSkeleton/BlogSkelton';
+import * as cheerio from 'cheerio';
+
 
 const BlogPage: React.FC = () => {
   const { fetchBlogsHandler, error, loading } = useBlog();
@@ -20,10 +22,19 @@ const BlogPage: React.FC = () => {
     fetchBlogsHandler();
   }, []);
 
+  // const categories = Array.from(
+  //   new Set(sampleBlogs.map((blog) => blog.category || "Uncategorized"))
+  // );
+
   // Categories derived from blog data
   const categories = Array.from(
     new Set(blogs.map((blog) => blog.category || "Uncategorized"))
   );
+
+  // const filteredBlogs =
+  //   selectedCategory === null
+  //     ? sampleBlogs
+  //     : sampleBlogs.filter((blog) => blog.category === selectedCategory);
 
   // Filter blogs by selected category
   const filteredBlogs =
@@ -81,17 +92,22 @@ const BlogPage: React.FC = () => {
       ) : (
         <BentoGrid className="max-w-6xl mx-auto">
           {filteredBlogs.length > 0 ? (
-            filteredBlogs.map((item, i) => (
+            filteredBlogs.map((item, i) => {
+              const $ = cheerio.load(item.description || '');
+              const plainText = $.text().trim().slice(0, 200);
+
+              return (
               <BentoGridItem
                 key={i}
                 title={item.title}
-                description={item.description}
+                description={plainText}
                 imageSrc={item.image}
                 slug={item.slug}
                 icon={<IconArrowWaveRightUp className="h-4 w-4 text-neutral-500" />}
                 className={i !== 0 && i % 3 === 0 ? "md:col-span-2" : ""}
               />
-            ))
+              )
+            })
           ) : (
             <p className="text-center text-gray-500 col-span-full">
               No blogs available for the selected category.
