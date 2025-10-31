@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import {
     IconArrowLeft,
+    IconArticle,
     IconBrandTabler,
     IconShoppingBagPlus,
 } from "@tabler/icons-react";
@@ -15,6 +16,8 @@ import { logout } from "@/store/feature/user/userSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import AddProductForm from "@/components/AddProduct/addProduct";
+import { Icon } from "lucide-react";
+import AddBlogForm from "@/components/AddBlog/addBlog";
 
 // Components for different sections
 const DashboardContent = () => (
@@ -47,6 +50,15 @@ const DashboardPage: React.FC = () => {
                 <IconShoppingBagPlus className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
             ),
             value: "add-product",
+        },
+        {
+            label: "Add Blog",
+            href: "#",
+            icon: (
+                // <IconBrandTabler className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+                <IconArticle className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
+            ),
+            value: "add-blog",
         },
         {
             label: "Logout",
@@ -116,6 +128,7 @@ const DashboardPage: React.FC = () => {
                 {/* Conditionally render content based on the active link */}
                 {activeLink === "dashboard" && <DashboardContent />}
                 {activeLink === "add-product" && <AddProductForm/>}
+                {activeLink === "add-blog" && <AddBlogForm/>}
             </div>
         </div>
     );
