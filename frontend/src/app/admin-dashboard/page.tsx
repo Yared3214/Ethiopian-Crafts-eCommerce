@@ -6,6 +6,7 @@ import {
     IconArrowLeft,
     IconArticle,
     IconBrandTabler,
+    IconSettingsCog,
     IconShoppingBagPlus,
 } from "@tabler/icons-react";
 import Link from "next/link";
@@ -16,8 +17,8 @@ import { logout } from "@/store/feature/user/userSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import AddProductForm from "@/components/AddProduct/addProduct";
-import { Icon } from "lucide-react";
 import AddBlogForm from "@/components/AddBlog/addBlog";
+import ProductManager from "@/components/ManageProducts/manageProdcuts";
 
 // Components for different sections
 const DashboardContent = () => (
@@ -59,6 +60,14 @@ const DashboardPage: React.FC = () => {
                 <IconArticle className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
             ),
             value: "add-blog",
+        },
+        {
+            label: "Manage Products",
+            href: "#",
+            icon: (
+                <IconSettingsCog className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
+            ),
+            value: "manage-products",
         },
         {
             label: "Logout",
@@ -129,6 +138,7 @@ const DashboardPage: React.FC = () => {
                 {activeLink === "dashboard" && <DashboardContent />}
                 {activeLink === "add-product" && <AddProductForm/>}
                 {activeLink === "add-blog" && <AddBlogForm/>}
+                {activeLink === "manage-products" && <ProductManager/>}
             </div>
         </div>
     );
