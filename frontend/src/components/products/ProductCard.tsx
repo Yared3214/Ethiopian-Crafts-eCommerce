@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Product } from "@/types/product";
 import AddtoCart from '@/components/AddToCart/addToCart';
 import DeleteButton from "../DeleteButton/deleteButton";
+import { UpdateProductDialog } from "../UpdateProduct/updateProduct";
 
 
 interface ProductCardProps {
@@ -42,14 +43,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ role, product }) => {
           />
         </CardItem>
         <div className="flex justify-between items-center mt-6">
+          {role === 'user' ? 
           <CardItem
             translateZ={20}
             as={Link}
-            href={`/${role === 'user' ? 'product-details' : 'update-product'}/${product.slug}`}
+            href={`/product-details/${product.slug}`}
             className="px-3 py-1 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-normal dark:text-white hover:text-indigo-600 transition-colors"
           >
             View Details →
-          </CardItem>
+          </CardItem> : 
+          <UpdateProductDialog product={product}/>}
 
           { role === 'user' ? <AddtoCart product={product} />
           : <DeleteButton onClick={() => console.log(`Delete product with id: ${product._id}`)} /> }

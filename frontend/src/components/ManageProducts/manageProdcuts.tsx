@@ -182,6 +182,8 @@ export default function ProductManager() {
   const { fetchProductsHandler, error, loading } = useProduct();
   const products = useSelector((state: RootState) => state.product.products);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+
 
   const categories = ['All', 'Clothing', 'Pottery', 'Jewelry', 'Home Decor'];
 
@@ -191,9 +193,12 @@ export default function ProductManager() {
       }
     }, []); // Empty dependency array ensures it only runs on mount
 
-  const filteredProducts = sampleProducts.filter(
-      (product) => selectedCategory === 'All' || product.category === selectedCategory
+    const filteredProducts = sampleProducts.filter(
+      (product) =>
+        (selectedCategory === 'All' || product.category === selectedCategory) &&
+        product.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
+    
 
   return (
     <div className="flex-1 overflow-y-auto p-6">
@@ -205,6 +210,18 @@ export default function ProductManager() {
       </p>
     </div>
   </div>
+
+  {/* Search Bar */}
+<div className="mb-4">
+  <input
+    type="text"
+    placeholder="Search products..."
+    value={searchQuery}
+    onChange={(e) => setSearchQuery(e.target.value)}
+    className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+  />
+</div>
+
 
   {/* Category Filter */}
   <div className="mb-6 flex gap-3 overflow-x-auto pb-2">
