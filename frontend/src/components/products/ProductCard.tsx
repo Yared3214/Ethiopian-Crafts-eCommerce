@@ -6,13 +6,15 @@ import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 import Link from "next/link";
 import { Product } from "@/types/product";
 import AddtoCart from '@/components/AddToCart/addToCart';
+import DeleteButton from "../DeleteButton/deleteButton";
 
 
 interface ProductCardProps {
   product: Product;
+  role: string;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ role, product }) => {
 
   return (
     <CardContainer className="w-full">
@@ -43,20 +45,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <CardItem
             translateZ={20}
             as={Link}
-            href={`/product-details/${product.slug}`}
+            href={`/${role === 'user' ? 'product-details' : 'update-product'}/${product.slug}`}
             className="px-3 py-1 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-normal dark:text-white hover:text-indigo-600 transition-colors"
           >
             View Details →
           </CardItem>
-          {/* <CardItem
-            translateZ={20}
-            as="button"
-            className="px-3 py-1 sm:px-4 sm:py-2 rounded-lg bg-black dark:bg-white dark:text-black text-white text-xs sm:text-sm font-bold hover:shadow-lg hover:scale-105 hover:bg-black/80 transition-all duration-300"
-          >
-            Add to Cart
-          </CardItem> */}
 
-          <AddtoCart product={product} />
+          { role === 'user' ? <AddtoCart product={product} />
+          : <DeleteButton onClick={() => console.log(`Delete product with id: ${product._id}`)} /> }
 
         </div>
         <CardItem
