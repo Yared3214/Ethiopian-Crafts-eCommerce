@@ -6,6 +6,7 @@ import {
     IconArrowLeft,
     IconArticle,
     IconBrandTabler,
+    IconEdit,
     IconSettingsCog,
     IconShoppingBagPlus,
 } from "@tabler/icons-react";
@@ -16,9 +17,10 @@ import { cn } from "@/lib/utils";
 import { logout } from "@/store/feature/user/userSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
-import AddProductForm from "@/components/AddProduct/addProduct";
-import AddBlogForm from "@/components/AddBlog/addBlog";
 import ProductManager from "@/components/ManageProducts/manageProdcuts";
+import AddProduct from "@/components/AddProduct/addProduct";
+import BlogManager from "@/components/ManageBlogs/manageBlogs";
+import AddBlog from "@/components/AddBlog/addBlog";
 
 // Components for different sections
 const DashboardContent = () => (
@@ -68,6 +70,14 @@ const DashboardPage: React.FC = () => {
                 <IconSettingsCog className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
             ),
             value: "manage-products",
+        },
+        {
+            label: "Manage Blogs",
+            href: "#",
+            icon: (
+                <IconEdit className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
+            ),
+            value: "manage-blogs",
         },
         {
             label: "Logout",
@@ -136,9 +146,10 @@ const DashboardPage: React.FC = () => {
             <div className="flex flex-1">
                 {/* Conditionally render content based on the active link */}
                 {activeLink === "dashboard" && <DashboardContent />}
-                {activeLink === "add-product" && <AddProductForm/>}
-                {activeLink === "add-blog" && <AddBlogForm/>}
+                {activeLink === "add-product" && <AddProduct/>}
+                {activeLink === "add-blog" && <AddBlog/>}
                 {activeLink === "manage-products" && <ProductManager/>}
+                {activeLink === "manage-blogs" && <BlogManager/>}
             </div>
         </div>
     );
