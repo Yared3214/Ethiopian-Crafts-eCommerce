@@ -80,20 +80,19 @@ export default function ProductForm({
     <div className="w-full h-full flex justify-center items-start overflow-y-auto bg-gray-50 p-8">
       <div className="w-full max-w-3xl">
         <Card className="border border-gray-200 shadow-sm rounded-2xl bg-white">
+          { !isEdit && 
           <CardHeader>
-            { !isEdit &&
-              <div>
-                <h2 className="text-2xl font-semibold text-gray-800">
-              Add New Product
-            </h2>
-            <p className="text-gray-500 text-sm">
-            Fill in the product details below.
-            </p>
-              </div>
-              }
-          </CardHeader>
+              <h2 className="text-2xl font-semibold text-gray-800">
+            Add New Product
+          </h2>
+          <p className="text-gray-500 text-sm">
+          Fill in the product details below.
+          </p>
+        </CardHeader>
+        }
+          
 
-          <form onSubmit={submitForm}>
+          <form onSubmit={submitForm} className="pt-5">
             <CardContent className="space-y-6">
               {/* Title */}
               <div className="grid gap-2">
