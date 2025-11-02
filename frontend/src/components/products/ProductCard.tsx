@@ -6,16 +6,13 @@ import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 import Link from "next/link";
 import { Product } from "@/types/product";
 import AddtoCart from '@/components/AddToCart/addToCart';
-import DeleteButton from "../DeleteButton/deleteButton";
-import { UpdateProductDialog } from "../UpdateProduct/updateProduct";
 
 
 interface ProductCardProps {
   product: Product;
-  role: string;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ role, product }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   return (
     <CardContainer className="w-full">
@@ -43,7 +40,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ role, product }) => {
           />
         </CardItem>
         <div className="flex justify-between items-center mt-6">
-          {role === 'user' ? 
           <CardItem
             translateZ={20}
             as={Link}
@@ -51,11 +47,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ role, product }) => {
             className="px-3 py-1 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-normal dark:text-white hover:text-indigo-600 transition-colors"
           >
             View Details →
-          </CardItem> : 
-          <UpdateProductDialog product={product}/>}
+          </CardItem>
 
-          { role === 'user' ? <AddtoCart product={product} />
-          : <DeleteButton onClick={() => console.log(`Delete product with id: ${product._id}`)} /> }
+          <AddtoCart product={product} />
 
         </div>
         <CardItem
