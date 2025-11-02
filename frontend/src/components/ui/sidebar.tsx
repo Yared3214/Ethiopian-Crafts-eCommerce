@@ -159,11 +159,13 @@ export const SidebarLink = ({
   link,
   className = "", // Default to an empty string if no className is passed
   onClick, // Accept the onClick handler as an optional prop
+  isActive = false, // ✅ default to false,
   ...props
 }: {
   link: Links;
   className?: string;
   onClick?: () => void; // Define onClick as an optional function
+  isActive?: boolean; // ✅ add this
   props?: LinkProps;
 }) => {
   const { open, animate } = useSidebar();
@@ -173,6 +175,9 @@ export const SidebarLink = ({
       href={link.href}
       className={cn(
         "flex items-center justify-start gap-2 group/sidebar py-2",
+        isActive
+    ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-semibold shadow-sm"
+    : "hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200",
         className
       )}
       {...props}
