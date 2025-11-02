@@ -1,4 +1,3 @@
-import { Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   AlertDialog,
@@ -11,30 +10,43 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog"
+import { Product } from "@/types/product";
+import { IconTrash } from "@tabler/icons-react";
 
-const DeleteButton = ({ onClick }: { onClick: () => void }) => (
+const DeleteButton = ({product}: {product: Product}) => {
+  const onClick = () => {
+    // Placeholder for delete functionality
+    console.log(`Delete product with id: ${product._id}`);
+  }
+  return(
   <AlertDialog>
-    <AlertDialogTrigger asChild>
-  <Button variant="destructive" size="icon" onClick={onClick}>
-    <Trash2 className="h-4 w-4" />
-  </Button>
-  </AlertDialogTrigger>
-  <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the product.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="destructive" className="rounded-xl px-3">
+                      <IconTrash size={18} />
+                    </Button>
+                  </AlertDialogTrigger>
 
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onClick}>
-            Yes, delete
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-  </AlertDialog>
-);
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Confirm Delete</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Are you sure you want to delete this blog? This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel className="rounded-xl">
+                        Cancel
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => onClick}
+                        className="rounded-xl"
+                      >
+                        Delete
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+  )
+};
 
 export default DeleteButton;

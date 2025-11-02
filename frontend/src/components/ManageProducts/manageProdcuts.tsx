@@ -4,6 +4,10 @@ import ProductCard from "../products/ProductCard";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import useProduct from "@/hooks/useProduct";
+import DeleteButton from "../DeleteButton/deleteButton";
+import { UpdateProductDialog } from "../UpdateProduct/updateProduct";
+import Image from "next/image";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export const sampleProducts = [
   {
@@ -242,16 +246,44 @@ export default function ProductManager() {
   </div>
 
   {/* Product Grid */}
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-    {loading
-      ? Array.from({ length: 6 }).map((_, index) => (
-          <SkeletonCard key={index} />
-        ))
-      : filteredProducts.map((product) => (
-          <ProductCard role={"admin"} key={product.slug} product={product} />
-        ))}
-  </div>
-</div>
+  <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {filteredProducts.map((product) => (
+          <Card key={product._id} className="rounded-2xl shadow-sm bg-white overflow-hidden">
+            
+            {/* Image */}
+            <div className="relative h-40 w-full">
+              <Image
+                src={product.images[0]}
+                alt={product.title}
+                fill
+                className="object-cover"
+              />
+              {/* <span className="absolute top-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-full">
+                {blog.badge}
+              </span> */}
+            </div>
 
+            <CardHeader>
+              <h3 className="text-lg font-semibold leading-tight line-clamp-2">
+                {product.title}
+              </h3>
+              <p className="text-xs text-gray-500">{product.category}</p>
+            </CardHeader>
+
+            <CardContent className="space-y-3">
+              <p className="text-sm text-gray-600 line-clamp-3">
+                {product.description}
+              </p>
+
+              <div className="flex gap-2 justify-end">
+                <UpdateProductDialog product={product}/>
+
+                <DeleteButton product={product} />
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+</div>
+</div>
   );
 }
