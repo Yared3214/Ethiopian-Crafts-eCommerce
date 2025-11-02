@@ -9,6 +9,7 @@ import {
     IconEdit,
     IconSettingsCog,
     IconShoppingBagPlus,
+    IconUsers,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -21,14 +22,16 @@ import ProductManager from "@/components/ManageProducts/manageProdcuts";
 import AddProduct from "@/components/AddProduct/addProduct";
 import BlogManager from "@/components/ManageBlogs/manageBlogs";
 import AddBlog from "@/components/AddBlog/addBlog";
+import AdminAnalyticsDashboard from "@/components/AdminDashboardContent/adminDashboardContent";
+import UserManager from "@/components/ManageUsers/manageUsers";
 
 // Components for different sections
-const DashboardContent = () => (
-    <div className="p-2 md:p-10 rounded-tl-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 flex flex-col gap-2 flex-1 w-full h-full">
-        <h2>Dashboard Content</h2>
-        <p>Here is some content for the dashboard.</p>
-    </div>
-);
+// const DashboardContent = () => (
+//     <div className="p-2 md:p-10 rounded-tl-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 flex flex-col gap-2 flex-1 w-full h-full">
+//         <h2>Dashboard Content</h2>
+//         <p>Here is some content for the dashboard.</p>
+//     </div>
+// );
 
 const DashboardPage: React.FC = () => {
     const [open, setOpen] = useState(false);
@@ -80,6 +83,14 @@ const DashboardPage: React.FC = () => {
             value: "manage-blogs",
         },
         {
+            label: "Manage Users",
+            href: "#",
+            icon: (
+                <IconUsers  className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
+            ),
+            value: "manage-users",
+        },
+        {
             label: "Logout",
             href: "#",
             icon: (
@@ -117,9 +128,10 @@ const DashboardPage: React.FC = () => {
                         <div className="mt-8 flex flex-col gap-2">
                             {links.map((link, idx) => (
                                 <SidebarLink
-                                    key={idx}
-                                    link={link}
-                                    onClick={(e) => handleLinkClick(link.value, e)} // Handle click
+                                key={idx}
+                                link={link}
+                                isActive={activeLink === link.value} // ✅ Pass active flag
+                                onClick={(e) => handleLinkClick(link.value, e)}
                                 />
                             ))}
                         </div>
@@ -145,11 +157,12 @@ const DashboardPage: React.FC = () => {
             </Sidebar>
             <div className="flex flex-1">
                 {/* Conditionally render content based on the active link */}
-                {activeLink === "dashboard" && <DashboardContent />}
+                {activeLink === "dashboard" && <AdminAnalyticsDashboard />}
                 {activeLink === "add-product" && <AddProduct/>}
                 {activeLink === "add-blog" && <AddBlog/>}
                 {activeLink === "manage-products" && <ProductManager/>}
                 {activeLink === "manage-blogs" && <BlogManager/>}
+                {activeLink === "manage-users" && <UserManager/>}
             </div>
         </div>
     );
