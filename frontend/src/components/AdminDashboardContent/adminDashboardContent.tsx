@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, ShoppingBag, Globe, TrendingUp, Award, Activity } from "lucide-react";
+import { Users, ShoppingBag, Globe, TrendingUp, Activity } from "lucide-react";
 import {
   BarChart,
   Bar,
@@ -10,8 +10,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  LineChart,
-  Line,
   PieChart,
   Pie,
   Cell,
