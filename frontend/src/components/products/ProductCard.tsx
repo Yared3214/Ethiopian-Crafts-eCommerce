@@ -48,13 +48,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           >
             View Details →
           </CardItem>
-          {/* <CardItem
-            translateZ={20}
-            as="button"
-            className="px-3 py-1 sm:px-4 sm:py-2 rounded-lg bg-black dark:bg-white dark:text-black text-white text-xs sm:text-sm font-bold hover:shadow-lg hover:scale-105 hover:bg-black/80 transition-all duration-300"
-          >
-            Add to Cart
-          </CardItem> */}
 
           <AddtoCart product={product} />
 

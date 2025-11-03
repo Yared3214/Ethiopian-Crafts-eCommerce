@@ -20,7 +20,7 @@ interface ProductCardProps {
     product: Product;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
     const [quantity, setQuantity] = useState(1); // State for quantity
     const [isDialogOpen, setIsDialogOpen] = useState(false); // State for dialog visibility
@@ -61,7 +61,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 <DialogHeader>
                     <DialogTitle>Add to Cart</DialogTitle>
                     <DialogDescription>
-                        Specify the quantity of the item you wish to add to your cart. Click "Add" when done.
+                        Specify the quantity of the item you wish to add to your cart. Click `&quot`Add`&quot` when done.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
