@@ -48,7 +48,7 @@ const topArtisans = [
 
 export default function AdminAnalyticsDashboard() {
   return (
-    <div className="p-6 space-y-6 w-full bg-gray-50 min-h-screen overflow-y-auto">
+    <div className="p-6 space-y-6 w-full bg-gray-50 min-h-screen">
       <h2 className="text-2xl font-bold mb-4">Admin Dashboard Analytics</h2>
 
       {/* Stat Cards */}
