@@ -189,7 +189,7 @@ export default function ProductManager() {
   const [searchQuery, setSearchQuery] = useState<string>('');
 
 
-  const categories = ['All', 'Clothing', 'Pottery', 'Jewelry', 'Home Decor'];
+  const categories = ['All', 'Art', 'Craft', 'Fashion', 'Home Decor', 'Jewelry', 'Others'];
 
   useEffect(() => {
       if (products.length === 0) {

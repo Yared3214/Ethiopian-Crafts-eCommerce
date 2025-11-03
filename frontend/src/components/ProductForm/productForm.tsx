@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { Plus, Trash2, Upload } from "lucide-react";
 
 export interface ProductFormValues {
@@ -18,6 +19,27 @@ export interface ProductFormValues {
   materials: string[];
   images: File[];
 }
+
+const textFields = [
+  {
+    label: "Created By",
+    name: "createdBy",
+    placeholder: "Enter creator's name",
+  },
+  {
+    label: "Category",
+    name: "category",
+    placeholder: "Select product category",
+  },
+  {
+    label: "Price",
+    name: "price",
+    placeholder: "Enter product price",
+  },
+];
+
+const categories = ['Art', 'Craft', 'Fashion', 'Home Decor', 'Jewelry', 'Others'];
+ 
 
 export default function ProductForm({
   initialData,
@@ -66,6 +88,10 @@ export default function ProductForm({
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormData({ ...formData,[e.target.name]: e.target.value });
+  }
+
   const submitForm = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({ ...formData, materials, images });
@@ -97,7 +123,7 @@ export default function ProductForm({
               {/* Title */}
               <div className="grid gap-2">
                 <Label>Title</Label>
-                <Input name="title" value={formData.title} onChange={handleChange} required />
+                <Input placeholder="Enter product title" name="title" value={formData.title} onChange={handleChange} required />
               </div>
 
               {/* Description */}
@@ -105,6 +131,7 @@ export default function ProductForm({
                 <Label>Description</Label>
                 <Textarea
                   name="description"
+                  placeholder="Enter product description"
                   value={formData.description}
                   onChange={handleChange}
                   required
@@ -135,7 +162,7 @@ export default function ProductForm({
                 <Label>Materials</Label>
                 {materials.map((mat, idx) => (
                   <div key={idx} className="flex gap-2 items-center">
-                    <Input value={mat} onChange={(e) => handleMaterialChange(idx, e.target.value)} />
+                    <Input placeholder="Enter the materials product made from" value={mat} onChange={(e) => handleMaterialChange(idx, e.target.value)} />
                     <Button variant="ghost" size="icon" onClick={() => removeMaterial(idx)} disabled={materials.length === 1}>
                       <Trash2 size={16} />
                     </Button>
@@ -147,12 +174,34 @@ export default function ProductForm({
               </div>
 
               {/* Text fields */}
-              {["createdBy", "category", "price", "slug"].map((field) => (
-                <div className="grid gap-2" key={field}>
-                  <Label>{field}</Label>
-                  <Input name={field} value={(formData as any)[field]} onChange={handleChange} required />
-                </div>
-              ))}
+              {textFields.map((field) => (
+  <div className="grid gap-2" key={field.name}>
+    <Label>{field.label}</Label>
+
+    {/* If field is category, show Select instead of Input */}
+    {field.name === "category" ? (
+      <select
+      name="category"
+      className="border rounded-md p-2 bg-white"
+      value={(formData as any)[field.name]}
+      onChange={(e) => handleSelectChange(e)}
+    >
+      <option value="">Select Category</option>
+      {categories.map((c) => (
+        <option key={c} value={c}>{c}</option>
+      ))}
+    </select>
+    ) : (
+      <Input
+        placeholder={field.placeholder}
+        name={field.name}
+        value={(formData as any)[field.name]}
+        onChange={handleChange}
+        required
+      />
+    )}
+  </div>
+))}
             </CardContent>
 
             <CardFooter className="flex justify-end">
