@@ -4,79 +4,64 @@ import React, { useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import {
     IconArrowLeft,
-    IconBrandTabler,
-    IconSettings,
-    IconUserBolt,
+    IconHeart,
+    IconLayoutDashboard,
+    IconPackage,
+    IconUser,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { logout } from "@/store/feature/user/userSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
-
-// Components for different sections
-const DashboardContent = () => (
-    <div className="p-2 md:p-10 rounded-tl-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 flex flex-col gap-2 flex-1 w-full h-full">
-        <h2>Dashboard Content</h2>
-        <p>Here is some content for the dashboard.</p>
-    </div>
-);
-
-const ProfileContent = () => (
-    <div className="p-2 md:p-10 rounded-tl-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 flex flex-col gap-2 flex-1 w-full h-full">
-        <h2>Profile Content</h2>
-        <p>Manage your profile settings here.</p>
-    </div>
-);
-
-const SettingsContent = () => (
-    <div className="p-2 md:p-10 rounded-tl-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 flex flex-col gap-2 flex-1 w-full h-full">
-        <h2>Settings Content</h2>
-        <p>Update your account and app settings here.</p>
-    </div>
-);
+import ProductManager from "@/components/ManageProducts/manageProdcuts";
+import BlogManager from "@/components/ManageBlogs/manageBlogs";
+import UserManager from "@/components/ManageUsers/manageUsers";
+import CustomerDashboardContent from "@/components/CustomerDashboardContent/customerDashboardContent";
+import PurchasedProducts from "@/components/CustomerOrders/customerOrders";
+import SavedProducts from "@/components/CustomerSavedProducts/customerSavedProducts";
+import CustomerProfile from "@/components/CustomerProfile/customerProfile";
 
 const DashboardPage: React.FC = () => {
     const [open, setOpen] = useState(false);
-    const [activeLink, setActiveLink] = useState("dashboard"); // Track active link
+    const [activeLink, setActiveLink] = useState("overview"); // Track active link
     const dispatch = useDispatch();
     const router = useRouter();
 
 
     const links = [
         {
-            label: "Dashboard",
+            label: "Overiview",
             href: "#",
             icon: (
-                <IconBrandTabler className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+                <IconLayoutDashboard className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
             ),
-            value: "dashboard",
+            value: "overview",
+        },
+        {
+            label: "Orders",
+            href: "#",
+            icon: (
+                <IconPackage className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
+            ),
+            value: "orders",
+        },
+        {
+            label: "Saved",
+            href: "#",
+            icon: (
+                <IconHeart className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
+            ),
+            value: "saved",
         },
         {
             label: "Profile",
             href: "#",
             icon: (
-                <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+                <IconUser className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
             ),
             value: "profile",
-        },
-        {
-            label: "Settings",
-            href: "#",
-            icon: (
-                <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-            ),
-            value: "settings",
-        },
-        {
-            label: "Logout",
-            href: "#",
-            icon: (
-                <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-            ),
-            value: "logout",
         },
     ];
 
@@ -96,51 +81,61 @@ const DashboardPage: React.FC = () => {
 
     return (
         <div
-            className={cn(
-                "rounded-md flex flex-col md:flex-row bg-gray-100 dark:bg-neutral-800 w-full flex-1 mx-auto border border-neutral-200 dark:border-neutral-700 overflow-hidden",
-                "h-[99.5vh]"
-            )}
+        className={cn(
+          "flex flex-col md:flex-row w-full h-[99.5vh] overflow-hidden",
+          "bg-gradient-to-br from-gray-50 to-gray-100 dark:from-neutral-900 dark:to-neutral-950"
+        )}
+>
+  <Sidebar open={open} setOpen={setOpen}>
+    <SidebarBody className="justify-between gap-8 p-4">
+      <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+        <Link 
+          href="/" 
+          className="text-lg font-semibold tracking-tight text-neutral-800 dark:text-neutral-200"
         >
-            <Sidebar open={open} setOpen={setOpen}>
-                <SidebarBody className="justify-between gap-10">
-                    <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-                        <Link href="/">E-Commerce</Link>
-                        <div className="mt-8 flex flex-col gap-2">
-                            {links.map((link, idx) => (
-                                <SidebarLink
-                                    key={idx}
-                                    link={link}
-                                    onClick={(e) => handleLinkClick(link.value, e)} // Handle click
-                                />
-                            ))}
-                        </div>
-                    </div>
-                    <div>
-                        <SidebarLink
-                            link={{
-                                label: "Manu Arora",
-                                href: "#mydash",
-                                icon: (
-                                    <Image
-                                        src="https://assets.aceternity.com/manu.png"
-                                        className="h-7 w-7 flex-shrink-0 rounded-full"
-                                        width={50}
-                                        height={50}
-                                        alt="Avatar"
-                                    />
-                                ),
-                            }}
-                        />
-                    </div>
-                </SidebarBody>
-            </Sidebar>
-            <div className="flex flex-1">
-                {/* Conditionally render content based on the active link */}
-                {activeLink === "dashboard" && <DashboardContent />}
-                {activeLink === "profile" && <ProfileContent />}
-                {activeLink === "settings" && <SettingsContent />}
-            </div>
+          E-Commerce
+        </Link>
+
+        <div className="mt-6 flex flex-col gap-1.5">
+          {links.map((link, idx) => (
+            <SidebarLink
+              key={idx}
+              link={link}
+              isActive={activeLink === link.value}
+              onClick={(e) => handleLinkClick(link.value, e)}
+            />
+          ))}
         </div>
+      </div>
+
+      {/* Footer / Profile */}
+      <div className="pt-3 border-t border-neutral-200/60 dark:border-neutral-700/50">
+        <SidebarLink
+          link={{
+            label: "Logout",
+            href: "#",
+            icon: (
+                <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+            ),
+          }}
+        />
+      </div>
+    </SidebarBody>
+  </Sidebar>
+
+  {/* Content Area */}
+  <div 
+    className="flex flex-1 bg-white dark:bg-neutral-900 
+    border-l border-neutral-200 dark:border-neutral-800 
+    shadow-inner rounded-l-2xl overflow-y-auto"
+  >
+    {activeLink === "overview" && <CustomerDashboardContent />}
+    {activeLink === "orders" && <PurchasedProducts />}
+    {activeLink === "saved" && <SavedProducts />}
+    {activeLink === "profile" && <CustomerProfile />}
+  </div>
+</div>
+
     );
 };
 
