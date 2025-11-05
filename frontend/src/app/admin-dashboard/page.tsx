@@ -90,14 +90,6 @@ const DashboardPage: React.FC = () => {
             ),
             value: "manage-users",
         },
-        {
-            label: "Logout",
-            href: "#",
-            icon: (
-                <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-            ),
-            value: "logout",
-        },
     ];
 
     const handleLinkClick = (linkValue: string, event?: React.MouseEvent) => {
@@ -116,55 +108,63 @@ const DashboardPage: React.FC = () => {
 
     return (
         <div
-            className={cn(
-                "rounded-md flex flex-col md:flex-row bg-gray-100 dark:bg-neutral-800 w-full flex-1 mx-auto border border-neutral-200 dark:border-neutral-700 overflow-hidden",
-                "h-[99.5vh]"
-            )}
+        className={cn(
+          "flex flex-col md:flex-row w-full h-[99.5vh] overflow-hidden",
+          "bg-gradient-to-br from-gray-50 to-gray-100 dark:from-neutral-900 dark:to-neutral-950"
+        )}
+>
+  <Sidebar open={open} setOpen={setOpen}>
+    <SidebarBody className="justify-between gap-8 p-4">
+      <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+        <Link 
+          href="/" 
+          className="text-lg font-semibold tracking-tight text-neutral-800 dark:text-neutral-200"
         >
-            <Sidebar open={open} setOpen={setOpen}>
-                <SidebarBody className="justify-between gap-10">
-                    <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-                        <Link href="/">E-Commerce</Link>
-                        <div className="mt-8 flex flex-col gap-2">
-                            {links.map((link, idx) => (
-                                <SidebarLink
-                                key={idx}
-                                link={link}
-                                isActive={activeLink === link.value} // ✅ Pass active flag
-                                onClick={(e) => handleLinkClick(link.value, e)}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                    <div>
-                        <SidebarLink
-                            link={{
-                                label: "Manu Arora",
-                                href: "#mydash",
-                                icon: (
-                                    <Image
-                                        src="https://assets.aceternity.com/manu.png"
-                                        className="h-7 w-7 flex-shrink-0 rounded-full"
-                                        width={50}
-                                        height={50}
-                                        alt="Avatar"
-                                    />
-                                ),
-                            }}
-                        />
-                    </div>
-                </SidebarBody>
-            </Sidebar>
-            <div className="flex flex-1">
-                {/* Conditionally render content based on the active link */}
-                {activeLink === "dashboard" && <AdminAnalyticsDashboard />}
-                {activeLink === "add-product" && <AddProduct/>}
-                {activeLink === "add-blog" && <AddBlog/>}
-                {activeLink === "manage-products" && <ProductManager/>}
-                {activeLink === "manage-blogs" && <BlogManager/>}
-                {activeLink === "manage-users" && <UserManager/>}
-            </div>
+          E-Commerce
+        </Link>
+
+        <div className="mt-6 flex flex-col gap-1.5">
+          {links.map((link, idx) => (
+            <SidebarLink
+              key={idx}
+              link={link}
+              isActive={activeLink === link.value}
+              onClick={(e) => handleLinkClick(link.value, e)}
+            />
+          ))}
         </div>
+      </div>
+
+      {/* Footer / Profile */}
+      <div className="pt-3 border-t border-neutral-200/60 dark:border-neutral-700/50">
+        <SidebarLink
+          link={{
+            label: "Logout",
+            href: "#",
+            icon: (
+                <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+            ),
+          }}
+        />
+      </div>
+    </SidebarBody>
+  </Sidebar>
+
+  {/* Content Area */}
+  <div 
+    className="flex flex-1 bg-white dark:bg-neutral-900 
+    border-l border-neutral-200 dark:border-neutral-800 
+    shadow-inner rounded-l-2xl overflow-y-auto"
+  >
+    {activeLink === "dashboard" && <AdminAnalyticsDashboard />}
+    {activeLink === "add-product" && <AddProduct />}
+    {activeLink === "add-blog" && <AddBlog />}
+    {activeLink === "manage-products" && <ProductManager />}
+    {activeLink === "manage-blogs" && <BlogManager />}
+    {activeLink === "manage-users" && <UserManager />}
+  </div>
+</div>
+
     );
 };
 

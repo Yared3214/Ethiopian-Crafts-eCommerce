@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, ShoppingBag, Globe, TrendingUp, Award, Activity } from "lucide-react";
+import { Users, ShoppingBag, Globe, TrendingUp, Activity } from "lucide-react";
 import {
   BarChart,
   Bar,
@@ -10,8 +10,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  LineChart,
-  Line,
   PieChart,
   Pie,
   Cell,
@@ -48,7 +46,7 @@ const topArtisans = [
 
 export default function AdminAnalyticsDashboard() {
   return (
-    <div className="p-6 space-y-6 w-full bg-gray-50 min-h-screen overflow-y-auto">
+    <div className="p-6 space-y-6 w-full bg-gray-50 min-h-screen">
       <h2 className="text-2xl font-bold mb-4">Admin Dashboard Analytics</h2>
 
       {/* Stat Cards */}

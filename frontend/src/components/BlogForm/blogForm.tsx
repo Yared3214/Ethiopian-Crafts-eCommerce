@@ -163,19 +163,6 @@ export default function BlogForm(
                   required
                 />
               </div>
-
-              {/* Slug */}
-              <div className="grid gap-2">
-                <Label htmlFor="slug">Slug (unique)</Label>
-                <Input
-                  id="slug"
-                  name="slug"
-                  placeholder="e.g., how-to-build-a-nextjs-app"
-                  value={formData.slug}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
             </CardContent>
 
             <CardFooter className="flex justify-end">
