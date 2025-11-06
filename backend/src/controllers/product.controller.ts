@@ -9,9 +9,11 @@ import { reviewService } from "../services/review.service";
 
 //create products
 export const createProduct = async (req: Request, res: Response): Promise<any> => {
-    console.log("Request body: ", req.body);
+    //console.log("Request body of the : ", req.body);
     try {
         const { title, description, materials, category, price } = req.body;
+        // console.log("the title", title)
+
 
         // Validate required fields
         if (!title || !description || !materials || !category || !price) {
@@ -141,7 +143,7 @@ export const getArtisanProducts = async (req: Request, res: Response): Promise<a
 export const deleteProduct = async (req: Request, res: Response): Promise<any> => {
     try {
         const { productID } = req.params
-
+        
         //check if the product is found or not
         const isProductExist = await productService.getProductById(productID)
         if (!isProductExist) {

@@ -1,16 +1,18 @@
 
 // types.ts
 export interface Blog {
-    _id: string;
-    title: string;
-    description: string;
-    image: string;
-    badge : string;
-    category: string;
-    slug: string;
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
+  title: string;
+  description: string;
+  category: string;
+  badge: string;
+  image: File;
 }
 
-
+export interface BlogResponse {
+  title: string;
+  description: string;
+  category: string;
+  badge: string;
+  image: string;
+  slug: string;
+}
