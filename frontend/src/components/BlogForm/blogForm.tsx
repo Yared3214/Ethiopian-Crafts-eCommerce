@@ -6,25 +6,23 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { IconArticle, IconUpload } from "@tabler/icons-react";
+import { IconArticle, IconUpload, IconLoader2 } from "@tabler/icons-react";
+import { Blog } from "@/types/blog";
 
-export interface BlogFormValues {
-  title: string;
-  description: string;
-  category: string;
-  badge: string;
-  slug: string;
-  image: File;
+interface BlogFormProps {
+  initialData?: Partial<Blog>;
+  onSubmit: (data: Blog) => void;
+  loading?: boolean;
+  error?: string | null;
 }
-export default function BlogForm(
-  {
-    initialData,
-    onSubmit,
-  }: {
-    initialData?: Partial<BlogFormValues>;
-    onSubmit: (data: BlogFormValues) => void;
-  }
-) {
+
+export default function BlogForm({
+  initialData,
+  onSubmit,
+  loading = false,
+  error = null,
+}: BlogFormProps) {
+
   const [image, setImage] = useState<File>(initialData?.image || {} as File);
   const [preview, setPreview] = useState<string>({} as string);
   const [formData, setFormData] = useState({
@@ -32,15 +30,14 @@ export default function BlogForm(
     description: initialData?.description || "",
     badge: initialData?.badge || "",
     category: initialData?.category || "",
-    slug: initialData?.slug || "",
   });
 
   useEffect(() => {
-      if (initialData?.image) {
-        const url = typeof initialData.image === "string" ? initialData.image : URL.createObjectURL(initialData.image);
-        setPreview(url);
-      }
-    }, [initialData]);
+    if (initialData?.image) {
+      const url = typeof initialData.image === "string" ? initialData.image : URL.createObjectURL(initialData.image);
+      setPreview(url);
+    }
+  }, [initialData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -57,7 +54,6 @@ export default function BlogForm(
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({ ...formData, image });
-    alert("Blog submitted! Check console for details.");
   };
 
   const isEdit = Boolean(initialData);
@@ -66,18 +62,18 @@ export default function BlogForm(
     <div className="w-full h-full flex justify-center items-start overflow-y-auto bg-gray-50 p-8">
       <div className="w-full max-w-3xl">
         <Card className="border border-gray-200 shadow-sm rounded-2xl bg-white">
-          { !isEdit &&
-          <CardHeader>
-          <div className="flex items-center gap-2">
-            <IconArticle size={24} className="text-blue-600" />
-            <h2 className="text-2xl font-semibold text-gray-800">Add New Blog</h2>
-          </div>
-          <p className="text-gray-500 text-sm mt-1">
-            Write a new article and publish it to your blog.
-          </p>
-        </CardHeader> 
+          {!isEdit &&
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <IconArticle size={24} className="text-blue-600" />
+                <h2 className="text-2xl font-semibold text-gray-800">Add New Blog</h2>
+              </div>
+              <p className="text-gray-500 text-sm mt-1">
+                Write a new article and publish it to your blog.
+              </p>
+            </CardHeader>
           }
-          
+
 
           <form onSubmit={handleSubmit} className="pt-5">
             <CardContent className="space-y-6">
@@ -163,15 +159,28 @@ export default function BlogForm(
                   required
                 />
               </div>
+              {error && (
+                <p className="text-red-600 text-sm font-medium mt-2">{error}</p>
+              )}
             </CardContent>
 
             <CardFooter className="flex justify-end">
               <Button
                 type="submit"
                 className="rounded-xl bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2"
+                disabled={loading}
               >
-                <IconArticle size={18} />
-                { isEdit ? 'Update Blog' : 'Publish Blog'}
+                {loading ? (
+                  <>
+                    <IconLoader2 className="animate-spin" size={18} />
+                    <span>Publishing...</span>
+                  </>
+                ) : (
+                  <>
+                    <IconArticle size={18} />
+                    <span>{isEdit ? "Update Blog" : "Publish Blog"}</span>
+                  </>
+                )}
               </Button>
             </CardFooter>
           </form>
