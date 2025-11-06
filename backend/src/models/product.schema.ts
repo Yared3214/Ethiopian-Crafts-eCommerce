@@ -47,7 +47,7 @@ const productSchema = new Schema<IProduct>(
             type: String,
             required: true,
             trim: true,
-            enum: ['Art', 'Craft', 'Fashion', 'Home Decor', 'Jewelry', 'Others'],
+            //enum: ['Art', 'Craft', 'Fashion', 'Home Decor', 'Jewelry', 'Others'],
         },
         price: {
             type: Number,
