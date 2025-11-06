@@ -1,9 +1,9 @@
 // src/features/user/userSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Product } from '@/types/product'
+import { ProductResponse } from '@/types/product'
 
 export interface Products {
-    products: Product[];
+    products: ProductResponse[];
 }
 
 const initialState: Products = {  // Correct type for initialState
@@ -14,7 +14,7 @@ const productSlice = createSlice({
     name: 'product',
     initialState,
     reducers: {
-        setProducts: (state, action: PayloadAction<Product[]>) => {
+        setProducts: (state, action: PayloadAction<ProductResponse[]>) => {
             state.products = action.payload;
         },
     },
