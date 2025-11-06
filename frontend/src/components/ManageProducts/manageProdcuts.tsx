@@ -1,289 +1,193 @@
-import { useEffect, useState } from "react";
-import { SkeletonCard } from "../Skeleton/Skeleton";
-import ProductCard from "../products/ProductCard";
+"use client";
+
+import { useEffect, useState, useMemo } from "react";
+import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import useProduct from "@/hooks/useProduct";
-import DeleteButton from "../DeleteButton/deleteButton";
-import { UpdateProductDialog } from "../UpdateProduct/updateProduct";
-import Image from "next/image";
+import { showToast } from "nextjs-toast-notify";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-
-export const sampleProducts = [
-  {
-    _id: "1",
-    title: "Handwoven Cotton Shawl",
-    description:
-      "A beautifully crafted Ethiopian handwoven shawl made from 100% organic cotton, featuring traditional Dorze patterns.",
-    images: ["https://images.unsplash.com/photo-1582555172860-07debf8d86e3?auto=format&fit=crop&w=800&q=80"],
-    price: 45,
-    slug: "handwoven-cotton-shawl",
-    category: "Clothing",
-    materials: ["Cotton"],
-    createdBy: "Artisan A",
-    rating: 4.5,
-    reviews: 10,
-    createdAt: "July 14, 2023",
-    updatedAt: "July 14, 2023",
-    __v: 0,
-  },
-  {
-    _id: "2",
-    title: "Ceramic Coffee Set",
-    description:
-      "Traditional Ethiopian clay coffee set handmade in the highlands, perfect for the classic Buna ceremony.",
-    images: ["https://images.unsplash.com/photo-1584428885051-d80a38d86b39?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1074"],
-    price: 65,
-    slug: "ethiopian-ceramic-coffee-set",
-    category: "Pottery",
-    materials: ["Clay"],
-    createdBy: "Artisan B",
-    rating: 4.8,
-    reviews: 15,
-    createdAt: "July 14, 2023",
-    updatedAt: "July 14, 2023",
-    __v: 1,
-  },
-  {
-    _id: "3",
-    title: "Lalibela Cross Pendant",
-    description:
-      "Intricately designed silver cross pendant inspired by the ancient Lalibela churches — a timeless symbol of Ethiopian faith.",
-    images: ["https://leasabessinia.com/cdn/shop/files/Silberanhaenger5b1.jpg?v=1714512277"],
-    price: 80,
-    slug: "lalibela-cross-pendant",
-    category: "Jewelry",
-    materials: ["Silver"],
-    createdBy: "Artisan C",
-    rating: 4.7,
-    reviews: 8,
-    createdAt: "July 14, 2023",
-    updatedAt: "July 14, 2023",
-    __v: 2,
-  },
-  {
-    _id: "4",
-    title: "Handwoven Basket (Mesob)",
-    description:
-      "A vibrant traditional Ethiopian basket used for serving injera — handmade from natural fibers with geometric patterns.",
-    images: ["https://www.habeshamarketplace.com/wp-content/uploads/2023/11/Mesob-Small-1-17-scaled.jpg"],
-    price: 55,
-    slug: "handwoven-basket-mesob",
-    category: "Home Decor",
-    materials: ["Natural Fibers"],
-    createdBy: "Artisan D",
-    rating: 4.6,
-    reviews: 12,
-    createdAt: "July 14, 2023",
-    updatedAt: "July 14, 2023",
-    __v: 3,
-  },
-  {
-    _id: "5",
-    title: "Leather Shoulder Bag",
-    description:
-      "Elegant Harar-crafted leather shoulder bag, blending timeless Ethiopian craftsmanship with modern design.",
-    images: ["https://i5.walmartimages.com/seo/Men-s-Shoulder-Bags-Male-Genuine-Leather-Bag-Men-s-Messenger-Bags-Business-Handbag-for-Men-Satchel-Crossbody-Bags_59cdf491-defb-4436-9c9b-99a9ce5eaf6e.b5081d08d73d74c309dec15e3a0428f4.jpeg"],
-    price: 120,
-    slug: "ethiopian-leather-bag",
-    category: "Clothing",
-    materials: ["Leather"],
-    createdBy: "Artisan E",
-    rating: 4.9,
-    reviews: 20,
-    createdAt: "July 14, 2023",
-    updatedAt: "July 14, 2023",
-    __v: 4,
-  },
-  {
-    _id: "6",
-    title: "Clay Incense Burner",
-    description:
-      "Hand-sculpted pottery incense burner used in Ethiopian homes for aromatic and spiritual purposes.",
-    images: ["https://garudalife.in/cache/large/product/86447/MDKBSPZUFO8W.webphttps://i.etsystatic.com/40573663/r/il/922024/5058961068/il_570xN.5058961068_o69i.jpg"],
-    price: 25,
-    slug: "ethiopian-clay-incense-burner",
-    category: "Pottery",
-    materials: ["Clay"],
-    createdBy: "Artisan F",
-    rating: 4.3,
-    reviews: 5,
-    createdAt: "July 14, 2023",
-    updatedAt: "July 14, 2023",
-    __v: 5,
-  },
-  {
-    _id: "7",
-    title: "Beaded Bracelet Set",
-    description:
-      "A set of colorful hand-beaded bracelets inspired by traditional Ethiopian jewelry from the Oromo region.",
-    images: ["https://i.etsystatic.com/18888049/r/il/8bb126/3911595705/il_570xN.3911595705_u6md.jpg"],
-    price: 20,
-    slug: "ethiopian-beaded-bracelet-set",
-    category: "Jewelry",
-    materials: ["Beads"],
-    createdBy: "Artisan G",
-    rating: 4.4,
-    reviews: 7,
-    createdAt: "July 14, 2023",
-    updatedAt: "July 14, 2023",
-    __v: 6,
-  },
-  {
-    _id: "8",
-    title: "Hand-carved Wooden Mask",
-    description:
-      "Artistic wooden mask inspired by Ethiopian folklore, crafted by artisans using sustainable wood.",
-    images: ["https://i.ebayimg.com/images/g/bK8AAOSw54NeVXRQ/s-l1200.jpg"],
-    price: 70,
-    slug: "ethiopian-wooden-mask",
-    category: "Home Decor",
-    materials: ["Wood"],
-    createdBy: "Artisan H",
-    rating: 4.5,
-    reviews: 9,
-    createdAt: "July 14, 2023",
-    updatedAt: "July 14, 2023",
-    __v: 7,
-  },
-  {
-    _id: "9",
-    title: "Traditional Cotton Tunic",
-    description:
-      "Lightweight tunic handwoven with organic cotton and finished with colorful tibeb borders, perfect for casual wear.",
-    images: ["https://img.gem.app/344719088/1t/1756501923/traditional-ethiopian-women-dress.jpg"],
-    price: 60,
-    slug: "ethiopian-cotton-tunic",
-    category: "Clothing",
-    materials: ["Cotton"],
-    createdBy: "Artisan I",
-    rating: 4.6,
-    reviews: 11,
-    createdAt: "July 14, 2023",
-    updatedAt: "July 14, 2023",
-    __v: 8,
-  },
-  {
-    _id: "10",
-    title: "Terracotta Vase",
-    description:
-      "Rustic terracotta vase with a matte finish, handcrafted using centuries-old pottery techniques.",
-    images: ["https://www.country-interiors.com/cdn/shop/files/n23-4502.jpg?v=1739802116&width=2400"],
-    price: 40,
-    slug: "ethiopian-terracotta-vase",
-    category: "Home Decor",
-    materials: ["Terracotta"],
-    createdBy: "Artisan J",
-    rating: 4.2,
-    reviews: 6,
-    createdAt: "July 14, 2023",
-    updatedAt: "July 14, 2023",
-    __v: 9,
-  },
-];
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { IconTrash, IconSearch } from "@tabler/icons-react";
+import { UpdateProductDialog } from "../UpdateProduct/updateProduct";
 
 export default function ProductManager() {
-  const { fetchProductsHandler, error, loading } = useProduct();
+  const { fetchProductsHandler, deleteProductHandler, error, loading } = useProduct();
   const products = useSelector((state: RootState) => state.product.products);
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
-  const [searchQuery, setSearchQuery] = useState<string>('');
 
+  const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
 
-  const categories = ['All', 'Art', 'Craft', 'Fashion', 'Home Decor', 'Jewelry', 'Others'];
+  // Extract categories dynamically from fetched products
+  const categories = useMemo(() => {
+    const unique = new Set(products.map((p) => p.category));
+    return ["All", ...Array.from(unique)];
+  }, [products]);
 
+  // Fetch products on mount
   useEffect(() => {
-      if (products.length === 0) {
-        fetchProductsHandler();
-      }
-    }, []); // Empty dependency array ensures it only runs on mount
+    if (products.length === 0) fetchProductsHandler();
+  }, []);
 
-    const filteredProducts = sampleProducts.filter(
-      (product) =>
-        (selectedCategory === 'All' || product.category === selectedCategory) &&
-        product.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    
+  // Filter products by search query and category
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) => {
+      const matchesSearch = product.title.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [products, searchQuery, selectedCategory]);
+
+  const onDelete = async (id: string) => {
+    try {
+      const result = await deleteProductHandler(id);
+      console.log("Delete result:", result);
+      if (result?.success === "true") {
+        await fetchProductsHandler();
+        showToast.success("Product deleted successfully!", {
+          duration: 4000,
+          position: "bottom-right",
+        });
+      } else {
+        showToast.error("Failed to delete product.", {
+          duration: 4000,
+          position: "bottom-right",
+        });
+      }
+    } catch (err: any) {
+      console.error("Error deleting product:", err);
+      showToast.error("Something went wrong while deleting the product.", {
+        duration: 4000,
+        position: "bottom-right",
+      });
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    setLoadingId(id);
+    await onDelete(id);
+    setLoadingId(null);
+  };
 
   return (
-    <div className="flex-1 overflow-y-auto p-6">
-  <div className="mb-6 flex items-center justify-between">
-    <div>
-      <h1 className="text-2xl font-bold tracking-tight">Manage Products</h1>
-      <p className="text-sm text-gray-500">
-        Update or delete products from your store
-      </p>
-    </div>
-  </div>
+    <div className="flex-1 overflow-y-auto space-y-6 p-4">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Manage Products</h1>
+          <p className="text-sm text-gray-500">Search, filter, update & delete products</p>
+        </div>
 
-  {/* Search Bar */}
-<div className="mb-4">
-  <input
-    type="text"
-    placeholder="Search products..."
-    value={searchQuery}
-    onChange={(e) => setSearchQuery(e.target.value)}
-    className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-  />
-</div>
+        {/* Search Bar */}
+        <div className="relative w-full sm:w-72">
+          <IconSearch className="absolute left-2 top-2.5 h-5 w-5 text-gray-500" />
+          <input
+            type="text"
+            placeholder="Search products..."
+            className="pl-9 w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      </div>
 
-
-  {/* Category Filter */}
-  <div className="mb-6 flex gap-3 overflow-x-auto pb-2">
-    {categories.map((cat) => (
-      <button
-        key={cat}
-        onClick={() => setSelectedCategory(cat)}
-        className={`px-4 py-2 rounded-xl border text-sm whitespace-nowrap transition
-          ${
-            selectedCategory === cat
-              ? "bg-blue-600 text-white border-blue-600"
-              : "hover:bg-gray-100 text-gray-700 border-gray-200"
-          }`}
-      >
-        {cat}
-      </button>
-    ))}
-  </div>
-
-  {/* Product Grid */}
-  <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {filteredProducts.map((product) => (
-          <Card key={product._id} className="rounded-2xl shadow-sm bg-white overflow-hidden">
-            
-            {/* Image */}
-            <div className="relative h-40 w-full">
-              <Image
-                src={product.images[0]}
-                alt={product.title}
-                fill
-                className="object-cover"
-              />
-              {/* <span className="absolute top-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-full">
-                {blog.badge}
-              </span> */}
-            </div>
-
-            <CardHeader>
-              <h3 className="text-lg font-semibold leading-tight line-clamp-2">
-                {product.title}
-              </h3>
-              <p className="text-xs text-gray-500">{product.category}</p>
-            </CardHeader>
-
-            <CardContent className="space-y-3">
-              <p className="text-sm text-gray-600 line-clamp-3">
-                {product.description}
-              </p>
-
-              <div className="flex gap-2 justify-end">
-                <UpdateProductDialog product={product}/>
-
-                <DeleteButton product={product} />
-              </div>
-            </CardContent>
-          </Card>
+      {/* Category Filter */}
+      <div className="flex gap-2 overflow-x-auto pb-2">
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setSelectedCategory(cat)}
+            className={`px-4 py-2 rounded-xl border text-sm whitespace-nowrap transition ${
+              selectedCategory === cat
+                ? "bg-blue-600 text-white border-blue-600"
+                : "border-gray-300 text-gray-700 hover:bg-gray-100"
+            }`}
+          >
+            {cat}
+          </button>
         ))}
-</div>
-</div>
+      </div>
+
+      {/* Product Grid */}
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {loading ? (
+          <div className="flex flex-col items-center justify-center w-full py-20 col-span-full">
+            <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-blue-600 mt-4 font-medium">Fetching products...</p>
+          </div>
+        ) : filteredProducts.length === 0 ? (
+          <div className="flex flex-col items-center justify-center w-full py-20 col-span-full text-center">
+            <h3 className="mt-6 text-lg font-semibold text-gray-700">No products found</h3>
+            <p className="text-gray-500 text-sm mt-2">Try adjusting your search or filters.</p>
+          </div>
+        ) : (
+          filteredProducts.map((product) => (
+            <Card key={product._id} className="rounded-2xl shadow-sm bg-white overflow-hidden">
+              {/* Image */}
+              <div className="relative h-40 w-full">
+                {product.images.length > 0 && (
+                  <Image
+                    src={product.images[0]}
+                    alt={product.title}
+                    fill
+                    className="object-cover"
+                  />
+                )}
+              </div>
+
+              <CardHeader>
+                <h3 className="text-lg font-semibold leading-tight line-clamp-2">{product.title}</h3>
+                <p className="text-xs text-gray-500">{product.category}</p>
+              </CardHeader>
+
+              <CardContent className="space-y-3">
+                <p className="text-sm text-gray-600 line-clamp-3">{product.description}</p>
+                <div className="flex gap-2 justify-end">
+                  <UpdateProductDialog product={product} />
+
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="destructive" className="rounded-xl px-3">
+                        <IconTrash size={18} />
+                      </Button>
+                    </AlertDialogTrigger>
+
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Confirm Delete</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Are you sure you want to delete this product? This action cannot be undone.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel className="rounded-xl">Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => handleDelete(product._id)}
+                          className="rounded-xl"
+                        >
+                          {loadingId === product._id ? "Deleting..." : "Delete"}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </div>
+    </div>
   );
 }
