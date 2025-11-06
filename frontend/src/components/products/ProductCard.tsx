@@ -4,12 +4,12 @@ import Image from "next/image";
 import React from "react";
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 import Link from "next/link";
-import { Product } from "@/types/product";
+import { ProductResponse } from "@/types/product";
 import AddtoCart from '@/components/AddToCart/addToCart';
 
 
 interface ProductCardProps {
-  product: Product;
+  product: ProductResponse;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
