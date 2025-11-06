@@ -2,25 +2,29 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import ArtisanInfo from '@/components/ProductDetail/ArtisanInfo';
 import ProductReviews from '@/components/ProductDetail/ProductReviews';
-import { ProductWithDetails, Artisan, Review, Product } from '@/types/product';
-import ProductCard from '@/components/products/ProductCard'
+import { ProductWithDetails, Artisan, Review } from '@/types/product';
 import useProduct from '@/hooks/useProduct';
-import ReviwAndArtisanTabs from '@/components/ProductDetail/ReviewAndArtisanTabs';
 import AddtoCart from '@/components/AddToCart/addToCart';
+import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
 
 const ProductDetailPage = ({ params }: { params: { slug: string } }) => {
   const { slug } = params;
   const { fetchProductBySlugHandler, error, loading } = useProduct();
   const [product, setProduct] = useState<ProductWithDetails | null>(null);
-
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const fetchedProduct = await fetchProductBySlugHandler(slug);
-        if (fetchedProduct) setProduct(fetchedProduct);
+        if (fetchedProduct) {
+          setProduct(fetchedProduct);
+          setSelectedImage(fetchedProduct.product.images[0]);
+        }
       } catch (err) {
         console.error('Error fetching product:', err);
         setProduct(null);
@@ -31,119 +35,169 @@ const ProductDetailPage = ({ params }: { params: { slug: string } }) => {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 flex justify-center items-center bg-white dark:bg-black">
-        <div className="w-10 h-10 border-4 border-t-gray-800 border-gray-300 rounded-full animate-spin">
-        </div>
+      <div className="fixed inset-0 flex justify-center items-center bg-white dark:bg-gray-950">
+        <div className="w-12 h-12 border-4 border-t-transparent border-blue-600 rounded-full animate-spin" />
       </div>
     );
   }
 
-
-  if (error === 'Product not found') {
+  if (!product || error === 'Product not found') {
     return (
-      <div className="container mx-auto py-20 text-center">
-        <h2 className="text-3xl font-semibold text-red-700">Product Not Found</h2>
-        <p className="mt-4 text-gray-600">Sorry, the product you are looking for does not exist.</p>
-        <Link
-          href="/"
-          className="mt-6 inline-block bg-yellow-700 text-white px-6 py-2 rounded-lg hover:bg-yellow-600 transition-colors duration-300"
+      <div className="container mx-auto py-24 text-center space-y-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
         >
-          Go Back Home
-        </Link>
+          <Image
+            src="/assets/empty-box.svg"
+            alt="Product Not Found"
+            width={180}
+            height={180}
+            className="mx-auto opacity-80"
+          />
+          <h2 className="text-3xl font-bold text-red-700 mt-6">Product Not Found</h2>
+          <p className="text-gray-600 mt-2">
+            Sorry, the product you’re looking for doesn’t exist or has been removed.
+          </p>
+          <Link href="/" passHref>
+            <Button className="mt-6 rounded-xl px-6 bg-blue-600 hover:bg-blue-700">
+              Go Back Home
+            </Button>
+          </Link>
+        </motion.div>
       </div>
     );
   }
+
+  const { product: prod, artisan, reviews } = product;
 
   return (
-    <div className="container mx-auto py-10 px-4 space-y-10">
-      {/* Product Title */}
-      <h1 className="text-5xl font-serif font-extrabold text-red-900 mb-6">
-        {product?.product?.title}
-      </h1>
+    <div className="container mx-auto py-12 px-4 md:px-8 space-y-12">
+      {/* Title */}
+      <motion.h1
+        className="text-4xl sm:text-5xl font-serif font-extrabold text-gray-900 dark:text-white mb-10 tracking-tight"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        {prod.title}
+      </motion.h1>
 
-      {/* Product Images */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-        {product?.product?.images.map((image, index) => (
-          <div
-            key={index}
-            className="relative group overflow-hidden rounded-lg shadow-lg hover:scale-105 transition-transform duration-500"
-          >
-            <img
-              src={image}
-              alt={`${product?.product?.title} Image ${index + 1}`}
-              className="w-full h-80 object-cover rounded-lg group-hover:opacity-80 transition-opacity duration-300"
+      {/* Main Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        {/* Product Gallery */}
+        <motion.div
+          className="flex flex-col items-center space-y-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <div className="relative w-full h-[480px] rounded-2xl overflow-hidden shadow-xl bg-gray-100 dark:bg-gray-900">
+            <Image
+              src={selectedImage ?? prod.images[0]}
+              alt={prod.title}
+              fill
+              className="object-cover hover:scale-105 transition-transform duration-700"
             />
-            <div className="absolute inset-0 bg-black bg-opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
           </div>
-        ))}
-      </div>
 
-      {/* Product Rating */}
-      <div className="flex items-center space-x-2 mb-6">
-        <div className="text-xl font-semibold text-gray-800">Rating:</div>
-        <div className="flex items-center">
-          {/* Render Stars */}
-          {[1, 2, 3, 4, 5].map((star) => (
-            <svg
-              key={star}
-              xmlns="http://www.w3.org/2000/svg"
-              // fill={product?.product?.rating >= star ? "currentColor" : "none"}
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              className={`w-6 h-6 text-yellow-500`}
-            // className={`w-6 h-6 ${product?.product?.rating >= star ? "text-yellow-500" : "text-gray-400"}`}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M12 17.5l-6 3.5 1.5-7L2 7h7L12 0l3 7h7l-5.5 6.5L18 21z"
-              />
-            </svg>
-          ))}
-          <span className="ml-2 text-gray-600">{product?.product?.rating || 0} / 5</span>
-        </div>
-      </div>
+          {/* Thumbnails */}
+          <div className="flex gap-3 justify-center flex-wrap mt-2">
+            {prod.images.map((img, idx) => (
+              <button
+                key={idx}
+                onClick={() => setSelectedImage(img)}
+                className={`relative w-20 h-20 rounded-xl overflow-hidden border-2 transition-all duration-300 ${
+                  selectedImage === img
+                    ? 'border-blue-600 ring-2 ring-blue-300'
+                    : 'border-gray-200 hover:border-gray-400 dark:border-gray-700'
+                }`}
+              >
+                <Image src={img} alt={`Thumbnail ${idx}`} fill className="object-cover" />
+              </button>
+            ))}
+          </div>
+        </motion.div>
 
-      {/* Product Description and Purchase Options */}
-      <div className="flex flex-col md:flex-row md:justify-between mb-8 space-y-6 md:space-y-0">
-        <div className="md:w-2/3 space-y-4">
-          <p className="text-sm prose prose-sm dark:prose-invert">{product?.product?.description}</p>
-          <div className="text-md text-gray-600 pt-5 flex items-start">
-            <div className="font-semibold text-lg mr-4">Materials:</div> {/* Styled "Materials" label */}
-            <div className="flex flex-wrap gap-1 pt-1">
-              {product?.product?.materials.map((material, index) => (
+        {/* Product Details */}
+        <motion.div
+          className="flex flex-col justify-between space-y-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.1 }}
+        >
+          {/* Rating */}
+          <div className="flex items-center gap-2">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <svg
+                key={star}
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill={prod.rating >= star ? '#facc15' : 'none'}
+                stroke="#facc15"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 17.5l-6 3.5 1.5-7L2 7h7L12 0l3 7h7l-5.5 6.5L18 21z"
+                />
+              </svg>
+            ))}
+            <span className="text-gray-600 dark:text-gray-400 text-sm ml-2">
+              {prod.rating?.toFixed(1) || '0.0'} / 5
+            </span>
+          </div>
+
+          {/* Description */}
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-[15px]">
+            {prod.description}
+          </p>
+
+          {/* Materials */}
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              Materials
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {prod.materials.map((mat, i) => (
                 <span
-                  key={index}
-                  className="bg-gray-700 text-white rounded-full text-sm px-3 py-[2px] shadow-md"
+                  key={i}
+                  className="bg-blue-100 dark:bg-blue-800/40 text-blue-700 dark:text-blue-300 text-sm px-3 py-[4px] rounded-full shadow-sm"
                 >
-                  {material}
+                  {mat}
                 </span>
               ))}
             </div>
           </div>
-        </div>
-        <div className="md:w-1/3 flex flex-col items-start md:items-end space-y-4">
-          <p className="text-3xl sm:text-4xl font-extrabold text-gray-800 tracking-tight">
-            ${product?.product?.price}
-          </p>
-          {product && <AddtoCart product={product.product} />}
-        </div>
+
+          {/* Price + Add to Cart */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <p className="text-4xl font-bold text-blue-700 dark:text-blue-400 tracking-tight">
+              ${prod.price}
+            </p>
+            <AddtoCart product={prod} />
+          </div>
+        </motion.div>
       </div>
 
       {/* Artisan Info */}
-      <ArtisanInfo artisan={product?.artisan as Artisan} />
-      {/* <ReviwAndArtisanTabs /> */}
-      {/* Product Reviews */}
-      <ProductReviews reviews={product?.reviews as Review[]} />
+      <motion.section
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.15 }}
+      >
+        <ArtisanInfo artisan={artisan as Artisan} />
+      </motion.section>
 
-      {/* Related Products */}
-      <h1 className="text-3xl font-semibold text-gray-800 mb-4">Related Products</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
-        {product?.relatedProducts.map((product) => (
-          <ProductCard key={product.slug} product={product} />
-        ))}
-      </div>
+      {/* Product Reviews */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.25 }}
+      >
+        <ProductReviews reviews={reviews as Review[]} />
+      </motion.section>
     </div>
   );
 };
