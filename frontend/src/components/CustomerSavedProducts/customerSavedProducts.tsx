@@ -5,62 +5,48 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { IconHeart, IconHeartFilled } from "@tabler/icons-react";
-import { useState } from "react";
-
-type Product = {
-  id: string;
-  title: string;
-  price: string;
-  image: string;
-  category: string;
-};
-
-const demoSaved: Product[] = [
-  {
-    id: "P-1",
-    title: "Handmade Pottery Vase",
-    price: "ETB 980",
-    image:
-      "https://www.themudplace.com/cdn/shop/files/preview_images/2f4e88d9033c4b55a07b500bf6b80950.thumbnail.0000000000_1200x1200.jpg?v=1691106391",
-    category: "Pottery",
-  },
-  {
-    id: "P-2",
-    title: "Silk Scarf - Traditional Pattern",
-    price: "ETB 650",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUeCSQx8_vMRdlRco9cSwzzovIeAeneVfA_Q&s",
-    category: "Textiles",
-  },
-  {
-    id: "P-3",
-    title: "Hand-Carved Wooden Tray",
-    price: "ETB 720",
-    image:
-      "https://m.media-amazon.com/images/I/71XUE33UcGL._AC_UF894,1000_QL80_.jpg",
-    category: "Woodwork",
-  },
-];
-
+import { useEffect, useState } from "react";
+import useProduct from "@/hooks/useProduct";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 export default function SavedProducts() {
-  const [savedItems, setSavedItems] = useState(demoSaved);
 
-  const toggleSave = (id: string) => {
-    setSavedItems((prev) => prev.filter((item) => item.id !== id));
-  };
+  const { loading, error, getUserSavedProductsHandler, toggleSavingProductHandler } = useProduct();
+  const savedProducts = useSelector((state: RootState) => state.savedProduct.savedProducts);
+
+  useEffect(() => {
+    if (savedProducts.length === 0) {
+      getUserSavedProductsHandler();
+    }
+  }, []);
+
+  // const toggleSave = async(id: string) => {
+  //   try {
+  //     const res = await toggleSavingProductHandler(product._id) as any;
+  //     console.log("Toggled save product:", res);
+  //     if (res.success) {
+  //       setIsSaved(!isSaved);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error toggling save product:", error);
+  //   }
+  // };
+
+
+
 
   return (
     <div className="flex-1 overflow-y-auto p-6">
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {savedItems.map((item) => (
+      {savedProducts.map((item) => (
         <Card
-          key={item.id}
+          key={item._id}
           className="group border bg-white/95 backdrop-blur-xl rounded-xl shadow-sm hover:shadow-xl transition-all"
         >
           {/* Image */}
           <div className="relative h-44 w-full overflow-hidden rounded-t-xl">
             <Image
-              src={item.image}
+              src={item.images[0]}
               alt={item.title}
               fill
               className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -68,7 +54,7 @@ export default function SavedProducts() {
 
             {/* Heart button */}
             <button
-              onClick={() => toggleSave(item.id)}
+              onClick={() => console.log('item saved')}
               className="absolute top-3 right-3 bg-white rounded-full p-1 shadow hover:scale-105 transition"
             >
               <IconHeartFilled
@@ -96,7 +82,7 @@ export default function SavedProducts() {
         </Card>
       ))}
 
-      {savedItems.length === 0 && (
+      {savedProducts.length === 0 && (
         <div className="text-center text-gray-500 col-span-full py-20">
           <IconHeart size={36} className="mx-auto mb-3 text-gray-400" />
           <p className="text-lg font-medium">No saved items yet</p>
