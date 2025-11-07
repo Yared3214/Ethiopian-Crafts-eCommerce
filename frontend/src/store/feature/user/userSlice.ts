@@ -38,8 +38,28 @@ const userSlice = createSlice({
                 state.isLoggedIn = true;
             }
         },
+        toggle: (state, action: PayloadAction<string[]>) => {
+            const userData = Cookies.get("user");
+            if (userData) {
+              const parsedUserData = JSON.parse(userData);
+              const updatedUserData = {
+                ...parsedUserData,
+                user: {
+                  ...parsedUserData.user,
+                  savedProducts: action.payload, // ✅ update nested field
+                },
+              };
+          
+              // Update cookie
+              Cookies.set("user", JSON.stringify(updatedUserData), { expires: 7 });
+          
+              // Update redux state too
+              state.user = updatedUserData;
+            }
+          },
+          
     },
 });
 
-export const { login, logout, setUserFromCookie } = userSlice.actions;
+export const { login, logout, setUserFromCookie, toggle } = userSlice.actions;
 export default userSlice.reducer;
