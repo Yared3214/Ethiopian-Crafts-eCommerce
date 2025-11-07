@@ -165,7 +165,12 @@ const LoginPage = () => {
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)", // Shadow for depth
           },
         });
+          if (response.user.role === 'admin') {
+            router.push("/admin-dashboard")
+            return
+        } else {
         router.push("/dashboard")
+        }
       }
     } catch (error: any) {
       console.error("error while logging in the user ", error)
