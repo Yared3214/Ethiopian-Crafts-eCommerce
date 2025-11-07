@@ -5,6 +5,7 @@ export interface User {
     fullName: string;
     email: string;
     role: string; // e.g., "user", "admin", etc.
+    savedProducts: string[]; // Array of saved product IDs
     createdAt: string; // ISO date string
     updatedAt: string; // ISO date string
 }
