@@ -13,7 +13,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 
 const ProductListingPage = () => {
-  const { fetchProductsHandler, error, loading } = useProduct();
+  const { fetchProductsHandler, toggleSavingProductHandler, error, loading } = useProduct();
   const products = useSelector((state: RootState) => state.product.products);
 
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -83,7 +83,7 @@ const ProductListingPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <ProductCard product={product} />
+                <ProductCard product={product} toggleSaveProduct={toggleSavingProductHandler} />
               </motion.div>
             ))}
           </motion.div>
