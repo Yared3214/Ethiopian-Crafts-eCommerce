@@ -8,7 +8,13 @@ import {
   updateProduct,
   deleteProduct
 } from '@/api/product/productAPI';
+import {
+  toggleSavingProduct,
+  getUserSavedProducts
+} from '@/api/user/userAPI'
 import { setProducts } from '@/store/feature/product/productSlice';
+import { setSavedProducts } from '@/store/feature/product/savedProductSlice';
+import { toggle } from '@/store/feature/user/userSlice';
 
 
 const useProduct = () => {
@@ -97,6 +103,32 @@ const useProduct = () => {
     }
   };
 
+  const toggleSavingProductHandler = async (productId: string) => {
+  try {
+    setError(null);
+    const res = await toggleSavingProduct(productId);
+    console.log("Saved product:", res);
+    dispatch(toggle(res.savedProducts));
+    return res;
+  } catch (error) {
+    setError((error as any).message || 'Failed to delete product');
+  }
+  };
+  const getUserSavedProductsHandler = async () => {
+    setError(null);
+    setLoading(true);
+    try {
+      const data = await getUserSavedProducts();
+      console.log("Saved products:", data);
+      dispatch(setSavedProducts(data));
+      return data;
+    } catch (error) {
+      setError((error as any).message || 'Failed to delete product');
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   return {
     error,
@@ -106,6 +138,8 @@ const useProduct = () => {
     createProductHandler,
     updateProductHandler,
     deleteProductHandler,
+    toggleSavingProductHandler,
+    getUserSavedProductsHandler
   };
 };
 
