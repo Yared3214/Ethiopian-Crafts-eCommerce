@@ -181,11 +181,51 @@ const updateMyAccount = async (req: AuthenticatedRequest, res: Response): Promis
     }
 };
 
+ const toggleSavedProduct = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
+    const { productId } = req.params;
+    const user = await userService.getUserById(req.user._id);
+  
+    if (!user) {
+      return new ApiError(404, 'User not found').send(res);
+    }
+  
+    const isSaved = user.savedProducts.includes(productId);
+  
+    if (isSaved) {
+      user.savedProducts.pull(productId);
+    } else {
+      user.savedProducts.push(productId);
+    }
+  
+    await user.save();
+  
+    return res.status(200).json({
+      success: true,
+      message: isSaved ? "Removed from saved products" : "Added to saved products",
+      savedProducts: user.savedProducts
+    });
+  };
+  
+  const getSavedProducts = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
+    const user = await userService.getUserById(req.user._id);
+    if (!user) {
+      return new ApiError(404, 'User not found').send(res);
+    }
+
+    const savedProducts = await user.populate('savedProducts');
+    return res.status(200).json({
+      success: true,
+      savedProducts: savedProducts.savedProducts,
+    });
+  }
+
 
 
 module.exports = {
     userRegister,
     getMyProfile,
     deleteMyAccount,
-    updateMyAccount
+    updateMyAccount,
+    toggleSavedProduct,
+    getSavedProducts,
 }

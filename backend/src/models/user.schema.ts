@@ -1,5 +1,5 @@
 // src/models/user.schema.ts
-import { Schema, model, Document } from 'mongoose';
+import mongoose, { Schema, model, Document } from 'mongoose';
 
 
 
@@ -8,6 +8,7 @@ export interface IUser extends Document {
     email: string;
     password: string;
     role: 'user' | 'admin';
+    savedProducts: mongoose.Types.ObjectId[];
 }
 
 const userSchema = new Schema<IUser>({
@@ -34,6 +35,12 @@ const userSchema = new Schema<IUser>({
         default: 'user',
         enum: ['user', 'admin'],
     },
+    savedProducts: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product", // references Product model
+        },
+      ],
 }, { timestamps: true });
 
 export default model<IUser>('User', userSchema);
