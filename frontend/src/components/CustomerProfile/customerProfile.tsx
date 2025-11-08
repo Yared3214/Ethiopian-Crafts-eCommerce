@@ -15,34 +15,75 @@ import {
   IconSettings,
   IconHeartHandshake,
   IconAlertCircle,
+  IconX,
+  IconCheck,
 } from "@tabler/icons-react";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { motion } from "framer-motion";     
+import { motion } from "framer-motion";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import useAuth from "@/hooks/userAuth";
 
 export default function CustomerProfile() {
   const [editing, setEditing] = useState(false);
-  const user = useSelector((state: RootState) => state.user.user?.user); // from cookie (AuthResponse.user)
   const [open, setOpen] = useState(false);
+  const user = useSelector((state: RootState) => state.user.user?.user);
+  const { completeProfile, isLoading } = useAuth();
 
   const personalInfoAvailable = user?.email && user?.phone;
   const addressAvailable = user?.address?.city || user?.address?.country;
   const profileComplete = personalInfoAvailable && addressAvailable;
-  console.log(user);
+
+  const [formData, setFormData] = useState({
+    fullName: user?.fullName || "",
+    email: user?.email || "",
+    phone: user?.phone || "",
+    address: {
+      subcity: user?.address?.subcity || "",
+      city: user?.address?.city || "",
+      country: user?.address?.country || "",
+    },
+  });
 
   const formattedDate = (joinedDate: string) => {
     const date = new Date(joinedDate);
-    const formatted = date.toLocaleDateString("en-US", {
+    return date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
     });
-    
-    return formatted;
-  }
- 
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (["subcity", "city", "country"].includes(name)) {
+      setFormData({
+        ...formData,
+        address: { ...formData.address, [name]: value },
+      });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const handleSave = async () => {
+    await completeProfile(formData);
+    setEditing(false);
+  };
+
+  const handleCancel = () => {
+    setEditing(false);
+    setFormData({
+      fullName: user?.fullName || "",
+      email: user?.email || "",
+      phone: user?.phone || "",
+      address: {
+        subcity: user?.address?.subcity || "",
+        city: user?.address?.city || "",
+        country: user?.address?.country || "",
+      },
+    });
+  };
 
   return (
     <div className="p-6 w-full space-y-8 overflow-y-auto">
@@ -60,68 +101,140 @@ export default function CustomerProfile() {
             </div>
 
             <div>
-              <h2 className="text-2xl font-semibold">{user?.fullName}</h2>
-              <p className="text-gray-500 text-sm">Joined {formattedDate(user?.createdAt)}</p>
+              {editing ? (
+                <Input
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  className="text-lg font-semibold"
+                />
+              ) : (
+                <h2 className="text-2xl font-semibold">{user?.fullName}</h2>
+              )}
+              <p className="text-gray-500 text-sm">
+                Joined {formattedDate(user?.createdAt)}
+              </p>
               <Badge className="mt-2 bg-amber-100 text-amber-800 border border-amber-200">
                 🌟 Gold Member
               </Badge>
             </div>
           </div>
 
-          <Button onClick={() => setEditing(!editing)}>
-            <IconEdit size={18} className="mr-2" />
-            Edit Profile
-          </Button>
+          {/* Action Buttons */}
+          {profileComplete ? (
+            editing ? (
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={handleCancel}
+                  disabled={isLoading}
+                  className="flex items-center gap-1"
+                >
+                  <IconX size={16} /> Cancel
+                </Button>
+                <Button
+                  onClick={handleSave}
+                  disabled={isLoading}
+                  className="flex items-center gap-1"
+                >
+                  <IconCheck size={16} /> {isLoading ? "Saving..." : "Save"}
+                </Button>
+              </div>
+            ) : (
+              <Button onClick={() => setEditing(true)}>
+                <IconEdit size={18} className="mr-2" />
+                Edit Profile
+              </Button>
+            )
+          ) : (
+            <Button onClick={() => setOpen(true)}>Complete Profile</Button>
+          )}
         </CardContent>
       </Card>
 
       {/* Information Sections */}
       <div className="grid md:grid-cols-2 gap-6">
-      {/* Personal Info */}
-      <Card className="border bg-white rounded-xl shadow-sm hover:shadow-md transition">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <IconUser size={20} className="text-amber-600" />
-            Personal Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {personalInfoAvailable ? (
-            <>
-              <div className="flex items-center gap-3 text-gray-700">
-                <IconMail size={18} /> {user?.email}
-              </div>
-              <div className="flex items-center gap-3 text-gray-700">
-                <IconPhone size={18} /> {user?.phone}
-              </div>
-            </>
-          ) : (
-            <EmptyProfileState onClick={() => setOpen(true)} />
-          )}
-        </CardContent>
-      </Card>
+        {/* Personal Info */}
+        <Card className="border bg-white rounded-xl shadow-sm hover:shadow-md transition">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <IconUser size={20} className="text-amber-600" />
+              Personal Information
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {profileComplete ? (
+              editing ? (
+                <>
+                  <Input name="email" value={formData.email} disabled />
+                  <Input
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="Phone"
+                  />
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center gap-3 text-gray-700">
+                    <IconMail size={18} /> {user?.email}
+                  </div>
+                  <div className="flex items-center gap-3 text-gray-700">
+                    <IconPhone size={18} /> {user?.phone}
+                  </div>
+                </>
+              )
+            ) : (
+              <EmptyProfileState onClick={() => setOpen(true)} />
+            )}
+          </CardContent>
+        </Card>
 
-      {/* Address */}
-      <Card className="border bg-white rounded-xl shadow-sm hover:shadow-md transition">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <IconMapPin size={20} className="text-green-600" />
-            Shipping Address
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          {addressAvailable ? (
-            <p className="text-gray-700">
-              {user?.address?.city}, {user?.address?.subcity} <br />
-              {user?.address?.country}
-            </p>
-          ) : (
-            !profileComplete && <EmptyProfileState onClick={() => setOpen(true)} />
-          )}
-        </CardContent>
-      </Card>
+        {/* Address */}
+        <Card className="border bg-white rounded-xl shadow-sm hover:shadow-md transition">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <IconMapPin size={20} className="text-green-600" />
+              Shipping Address
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {profileComplete ? (
+              editing ? (
+                <>
+                  <Input
+                    name="subcity"
+                    value={formData.address.subcity}
+                    onChange={handleChange}
+                    placeholder="Subcity"
+                  />
+                  <Input
+                    name="city"
+                    value={formData.address.city}
+                    onChange={handleChange}
+                    placeholder="City"
+                  />
+                  <Input
+                    name="country"
+                    value={formData.address.country}
+                    onChange={handleChange}
+                    placeholder="Country"
+                  />
+                </>
+              ) : (
+                <p className="text-gray-700">
+                  {user?.address?.city}, {user?.address?.subcity} <br />
+                  {user?.address?.country}
+                </p>
+              )
+            ) : (
+              <EmptyProfileState onClick={() => setOpen(true)} />
+            )}
+          </CardContent>
+        </Card>
+      </div>
 
-      {/* Dialog for completing profile */}
+      {/* Dialog for Completing Profile (for new users) */}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-md bg-white rounded-xl p-6 shadow-lg">
           <DialogHeader>
@@ -132,7 +245,6 @@ export default function CustomerProfile() {
           <ProfileForm email={user?.email} onClose={() => setOpen(false)} />
         </DialogContent>
       </Dialog>
-    </div>
 
       {/* Preferences */}
       <Card className="border bg-white rounded-xl shadow-sm hover:shadow-md transition">
@@ -152,12 +264,6 @@ export default function CustomerProfile() {
             <Badge className="bg-amber-100 text-amber-800">Ceramics</Badge>
             <Badge className="bg-indigo-100 text-indigo-700">Wood Crafts</Badge>
           </div>
-
-          {editing && (
-            <Button variant="outline" size="sm">
-              Update Preferences
-            </Button>
-          )}
         </CardContent>
       </Card>
 
@@ -218,75 +324,35 @@ function EmptyProfileState({ onClick }: { onClick: () => void }) {
   );
 }
 
-
-
-function ProfileForm({ email, onClose }: { email: string, onClose: () => void }) {
+function ProfileForm({ email, onClose }: { email: string; onClose: () => void }) {
   const [formData, setFormData] = useState({
     phone: "",
-    address: {
-      subcity: "",
-    city: "",
-    country: "",
-    },
+    address: { subcity: "", city: "", country: "" },
   });
+  const { completeProfile, isLoading } = useAuth();
 
-  const { completeProfile, isLoading, error } = useAuth();
-
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value,  });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (["subcity", "city", "country"].includes(name)) {
+      setFormData({ ...formData, address: { ...formData.address, [name]: value } });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
-
-  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({...formData, address: {
-      ...formData.address, [e.target.name]: e.target.value,
-    }})
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    const data = await completeProfile(formData);
-
-    console.log('profile completed', data);
+    await completeProfile(formData);
+    onClose();
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <Input
-        name="email"
-        placeholder="Email"
-        value={email}
-        required
-      />
-      <Input
-        name="phone"
-        placeholder="Phone"
-        value={formData.phone}
-        onChange={handlePhoneChange}
-        required
-      />
-      <Input
-        name="subcity"
-        placeholder="Subcity"
-        value={formData.address.subcity}
-        onChange={handleAddressChange}
-        required
-      />
-      <Input
-        name="city"
-        placeholder="City"
-        value={formData.address.city}
-        onChange={handleAddressChange}
-        required
-      />
-      <Input
-        name="country"
-        placeholder="Country"
-        value={formData.address.country}
-        onChange={handleAddressChange}
-        required
-      />
-
+      <Input name="email" value={email} disabled />
+      <Input name="phone" placeholder="Phone" onChange={handleChange} required />
+      <Input name="subcity" placeholder="Subcity" onChange={handleChange} required />
+      <Input name="city" placeholder="City" onChange={handleChange} required />
+      <Input name="country" placeholder="Country" onChange={handleChange} required />
       <div className="flex justify-end gap-3 pt-2">
         <Button variant="outline" onClick={onClose} type="button">
           Cancel
