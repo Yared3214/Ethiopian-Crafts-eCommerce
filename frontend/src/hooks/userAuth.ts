@@ -1,9 +1,9 @@
 // src/hooks/useAuth.ts
 
 import { useDispatch } from 'react-redux';
-import { login, logout } from '../store/feature/user/userSlice';
-import { loginUser, registerUser, forgetPassword, resetPassword } from '../api/user/userAPI';
-import { AuthResponse } from '../types/user';
+import { login, logout, completeProfile_ } from '../store/feature/user/userSlice';
+import { loginUser, registerUser, forgetPassword, resetPassword, completeProfile } from '../api/user/userAPI';
+import { AuthResponse, User } from '../types/user';
 import { useState } from 'react';
 
 
@@ -97,6 +97,21 @@ const useAuth = () => {
         }
     }
 
+    const completeProfileHandler = async (completeProfileData: Partial<User>) => {
+        setError(null)
+        setIsLoading(true)
+        try {
+            const data = await completeProfile(completeProfileData);
+
+            dispatch(completeProfile_(data.completedProfile));
+            return data;
+        } catch (error) {
+            setError((error as any).message || 'Completing profile failed') 
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
 
 
     return {
@@ -105,6 +120,7 @@ const useAuth = () => {
         logoutUser: logoutUserHandler,
         forgetPassword: forgotPasswordHandler,
         resetPassword: resetPasswordHandler,
+        completeProfile: completeProfileHandler,
         error,
         isLoading
     };
