@@ -38,6 +38,22 @@ const userSlice = createSlice({
                 state.isLoggedIn = true;
             }
         },
+        completeProfile_: (state, action: PayloadAction<string[]>) => {
+            const userData = Cookies.get("user");
+            if (userData) {
+                const parsedUserData = JSON.parse(userData);
+                const updatedUserData = {
+                    ...parsedUserData,
+                    user: action.payload
+                }
+
+                // Update cookie
+              Cookies.set("user", JSON.stringify(updatedUserData), { expires: 7 });
+          
+              // Update redux state too
+              state.user = updatedUserData;
+            }
+        },
         toggle: (state, action: PayloadAction<string[]>) => {
             const userData = Cookies.get("user");
             if (userData) {
@@ -61,5 +77,5 @@ const userSlice = createSlice({
     },
 });
 
-export const { login, logout, setUserFromCookie, toggle } = userSlice.actions;
+export const { login, logout, setUserFromCookie, toggle, completeProfile_ } = userSlice.actions;
 export default userSlice.reducer;
