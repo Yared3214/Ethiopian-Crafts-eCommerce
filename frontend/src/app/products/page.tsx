@@ -2,15 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import ProductCard from '@/components/products/ProductCard';
 import FilterSidebar from '@/components/products/FilterSidebar';
 import SortDropdown from '@/components/products/SortDropdown';
 import { RootState } from '@/store/store';
 import useProduct from '@/hooks/useProduct';
-import { SkeletonCard } from '@/components/Skeleton/Skeleton';
-import { motion } from 'framer-motion';
-import Image from 'next/image';
-import { Button } from '@/components/ui/button';
+import ProductList from '@/components/products/ProductList';
 
 const ProductListingPage = () => {
   const { fetchProductsHandler, toggleSavingProductHandler, error, loading } = useProduct();
@@ -65,50 +61,12 @@ const ProductListingPage = () => {
         </div>
 
         {/* Product Grid */}
-        {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <SkeletonCard key={index} />
-            ))}
-          </div>
-        ) : sortedProducts.length > 0 ? (
-          <motion.div
-            layout
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-          >
-            {sortedProducts.map((product) => (
-              <motion.div
-                key={product._id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <ProductCard product={product} toggleSaveProduct={toggleSavingProductHandler} />
-              </motion.div>
-            ))}
-          </motion.div>
-        ) : (
-          <motion.div
-            className="flex flex-col items-center justify-center mt-16 text-center space-y-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4 }}
-          >
-            <h2 className="text-xl font-semibold text-gray-800">
-              No products found
-            </h2>
-            <p className="text-gray-500 max-w-sm">
-              We couldn’t find any products matching your selected category. Try adjusting your filters.
-            </p>
-            <Button
-              onClick={() => setSelectedCategory('All')}
-              variant="outline"
-              className="mt-3"
-            >
-              Clear Filters
-            </Button>
-          </motion.div>
-        )}
+
+        <ProductList 
+        products={sortedProducts} 
+        toggleSaveProduct={toggleSavingProductHandler}
+        onClear={setSelectedCategory}
+        loading={loading} />
       </div>
     </div>
   );
