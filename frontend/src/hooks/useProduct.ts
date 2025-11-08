@@ -109,6 +109,7 @@ const useProduct = () => {
     const res = await toggleSavingProduct(productId);
     console.log("Saved product:", res);
     dispatch(toggle(res.savedProducts));
+    dispatch(setSavedProducts(res.populatedSavedProducts));
     return res;
   } catch (error) {
     setError((error as any).message || 'Failed to delete product');
