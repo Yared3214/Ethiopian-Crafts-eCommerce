@@ -1,7 +1,7 @@
 // src/api/user/userAPI.ts
 
 import axios from 'axios';
-import { AuthResponse } from '../../types/user';
+import { AuthResponse, User } from '../../types/user';
 import store from '@/store/store';
 import { ProductResponse } from '@/types/product';
 
@@ -107,5 +107,27 @@ export const toggleSavingProduct = async (productId: string): Promise<any> => {
     } catch (error: any) {
       console.log("error while saving product", error);
       throw error.response ? error.response.data : new Error("Network error");
+    }
+}
+
+export const completeProfile = async(completeProfileData: Partial<User>) => {
+    try {
+        const token = store.getState().user.user?.tokens.access.token;
+        if (!token) throw new Error("User is not authenticated");
+
+        console.log("completeProfileData: ", completeProfileData);
+
+        const response = await axios.post(`${API_URL}/users/complete-profile`, completeProfileData, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        console.log('completed profile: ', response.data)
+        return response.data;
+    } catch (error: any) {
+        console.log("error while completing your profile", error);
+        throw error.response ? error.response.data : new Error("Network error");
     }
 }
