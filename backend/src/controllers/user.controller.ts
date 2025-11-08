@@ -219,6 +219,22 @@ const updateMyAccount = async (req: AuthenticatedRequest, res: Response): Promis
     });
   }
 
+  const completeProfile = async(req: AuthenticatedRequest, res: Response) => {
+    const completeProfileData = req.body;
+
+    const user = await userService.getUserById(req.user._id);
+    if(!user) {
+        return new ApiError(404, 'User not found').send(res);
+    }
+
+    const completedProfile = await userService.completeProfile(user._id, completeProfileData);
+    return res.status(200).json({
+        success: true,
+        completedProfile
+      }); 
+    
+  }
+
 
 
 module.exports = {
@@ -228,4 +244,5 @@ module.exports = {
     updateMyAccount,
     toggleSavedProduct,
     getSavedProducts,
+    completeProfile,
 }

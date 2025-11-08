@@ -31,6 +31,11 @@ class UserService {
         const result = await User.findByIdAndDelete(userId);
         return result;
     }
+
+    async completeProfile(userId: string, completeProfileData: Partial<IUser>) : Promise<any> {
+        const completedProfile = await User.findByIdAndUpdate(userId, completeProfileData, {new: true});
+        return completedProfile;
+    }
 }
 
 export const userService = new UserService();

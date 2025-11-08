@@ -9,6 +9,12 @@ export interface IUser extends Document {
     password: string;
     role: 'user' | 'admin';
     savedProducts: mongoose.Types.ObjectId[];
+    phone?: string;
+    address?: {
+        country: string;
+        city: string;
+        subcity: string;
+    }
 }
 
 const userSchema = new Schema<IUser>({
@@ -41,6 +47,20 @@ const userSchema = new Schema<IUser>({
           ref: "Product", // references Product model
         },
       ],
+    phone: {
+        type: String,
+    },
+    address: {
+        country: {
+            type: String,
+        },
+        city: {
+            type: String,
+        },
+        subcity: {
+            type: String,
+        }
+    }
 }, { timestamps: true });
 
 export default model<IUser>('User', userSchema);
