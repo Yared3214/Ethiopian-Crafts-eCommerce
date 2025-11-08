@@ -1,7 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -86,19 +91,24 @@ export default function CustomerProfile() {
   };
 
   return (
-    <div className="p-6 w-full space-y-8 overflow-y-auto">
+    <div className="p-8 w-full space-y-10 bg-gradient-to-b from-amber-50 via-white to-white rounded-2xl shadow-sm">
       {/* Profile Header */}
-      <Card className="border bg-white/95 rounded-xl shadow-sm">
+      <Card className="relative border-none bg-white/70 backdrop-blur-md rounded-2xl shadow-md transition-all duration-300 hover:shadow-lg">
         <CardContent className="flex items-center justify-between p-6">
           <div className="flex items-center gap-5">
-            <div className="relative h-20 w-20 rounded-full overflow-hidden border-2 border-amber-400">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 120 }}
+              className="relative h-24 w-24 rounded-full overflow-hidden border-4 border-amber-400 shadow-md"
+            >
               <Image
                 src="https://i.pravatar.cc/150?img=8"
                 alt="User Avatar"
                 fill
                 className="object-cover"
               />
-            </div>
+            </motion.div>
 
             <div>
               {editing ? (
@@ -109,18 +119,19 @@ export default function CustomerProfile() {
                   className="text-lg font-semibold"
                 />
               ) : (
-                <h2 className="text-2xl font-semibold">{user?.fullName}</h2>
+                <h2 className="text-3xl font-bold text-gray-800">
+                  {user?.fullName}
+                </h2>
               )}
-              <p className="text-gray-500 text-sm">
-                Joined {formattedDate(user?.createdAt)}
+              <p className="text-gray-500 text-sm mt-1">
+                Member since {formattedDate(user?.createdAt)}
               </p>
-              <Badge className="mt-2 bg-amber-100 text-amber-800 border border-amber-200">
+              <Badge className="mt-2 bg-gradient-to-r from-amber-200 to-amber-400 text-amber-900 font-semibold">
                 🌟 Gold Member
               </Badge>
             </div>
           </div>
 
-          {/* Action Buttons */}
           {profileComplete ? (
             editing ? (
               <div className="flex gap-2">
@@ -128,117 +139,111 @@ export default function CustomerProfile() {
                   variant="outline"
                   onClick={handleCancel}
                   disabled={isLoading}
-                  className="flex items-center gap-1"
+                  className="flex items-center gap-1 border-gray-300"
                 >
                   <IconX size={16} /> Cancel
                 </Button>
                 <Button
                   onClick={handleSave}
                   disabled={isLoading}
-                  className="flex items-center gap-1"
+                  className="flex items-center gap-1 bg-amber-500 hover:bg-amber-600"
                 >
                   <IconCheck size={16} /> {isLoading ? "Saving..." : "Save"}
                 </Button>
               </div>
             ) : (
-              <Button onClick={() => setEditing(true)}>
-                <IconEdit size={18} className="mr-2" />
-                Edit Profile
+              <Button
+                onClick={() => setEditing(true)}
+                className="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white"
+              >
+                <IconEdit size={18} /> Edit Profile
               </Button>
             )
           ) : (
-            <Button onClick={() => setOpen(true)}>Complete Profile</Button>
+            <Button
+              onClick={() => setOpen(true)}
+              className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white hover:opacity-90"
+            >
+              Complete Profile
+            </Button>
           )}
         </CardContent>
       </Card>
 
       {/* Information Sections */}
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-8">
         {/* Personal Info */}
-        <Card className="border bg-white rounded-xl shadow-sm hover:shadow-md transition">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <IconUser size={20} className="text-amber-600" />
-              Personal Information
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {profileComplete ? (
-              editing ? (
-                <>
-                  <Input name="email" value={formData.email} disabled />
-                  <Input
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    placeholder="Phone"
-                  />
-                </>
-              ) : (
-                <>
-                  <div className="flex items-center gap-3 text-gray-700">
-                    <IconMail size={18} /> {user?.email}
-                  </div>
-                  <div className="flex items-center gap-3 text-gray-700">
-                    <IconPhone size={18} /> {user?.phone}
-                  </div>
-                </>
-              )
+        <AnimatedInfoCard
+          title="Personal Information"
+          icon={<IconUser size={20} className="text-amber-600" />}
+        >
+          {profileComplete ? (
+            editing ? (
+              <>
+                <Input name="email" value={formData.email} disabled />
+                <Input
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="Phone"
+                />
+              </>
             ) : (
-              <EmptyProfileState onClick={() => setOpen(true)} />
-            )}
-          </CardContent>
-        </Card>
+              <>
+                <InfoRow icon={<IconMail />} text={user?.email} />
+                <InfoRow icon={<IconPhone />} text={user?.phone} />
+              </>
+            )
+          ) : (
+            <EmptyProfileState onClick={() => setOpen(true)} />
+          )}
+        </AnimatedInfoCard>
 
         {/* Address */}
-        <Card className="border bg-white rounded-xl shadow-sm hover:shadow-md transition">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <IconMapPin size={20} className="text-green-600" />
-              Shipping Address
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {profileComplete ? (
-              editing ? (
-                <>
-                  <Input
-                    name="subcity"
-                    value={formData.address.subcity}
-                    onChange={handleChange}
-                    placeholder="Subcity"
-                  />
-                  <Input
-                    name="city"
-                    value={formData.address.city}
-                    onChange={handleChange}
-                    placeholder="City"
-                  />
-                  <Input
-                    name="country"
-                    value={formData.address.country}
-                    onChange={handleChange}
-                    placeholder="Country"
-                  />
-                </>
-              ) : (
-                <p className="text-gray-700">
-                  {user?.address?.city}, {user?.address?.subcity} <br />
-                  {user?.address?.country}
-                </p>
-              )
+        <AnimatedInfoCard
+          title="Shipping Address"
+          icon={<IconMapPin size={20} className="text-green-600" />}
+        >
+          {profileComplete ? (
+            editing ? (
+              <>
+                <Input
+                  name="subcity"
+                  value={formData.address.subcity}
+                  onChange={handleChange}
+                  placeholder="Subcity"
+                />
+                <Input
+                  name="city"
+                  value={formData.address.city}
+                  onChange={handleChange}
+                  placeholder="City"
+                />
+                <Input
+                  name="country"
+                  value={formData.address.country}
+                  onChange={handleChange}
+                  placeholder="Country"
+                />
+              </>
             ) : (
-              <EmptyProfileState onClick={() => setOpen(true)} />
-            )}
-          </CardContent>
-        </Card>
+              <p className="text-gray-700 leading-relaxed">
+                {user?.address?.city}, {user?.address?.subcity}
+                <br />
+                {user?.address?.country}
+              </p>
+            )
+          ) : (
+            <EmptyProfileState onClick={() => setOpen(true)} />
+          )}
+        </AnimatedInfoCard>
       </div>
 
-      {/* Dialog for Completing Profile (for new users) */}
+      {/* Dialog for Completing Profile */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-md bg-white rounded-xl p-6 shadow-lg">
+        <DialogContent className="max-w-md bg-white/90 backdrop-blur-xl rounded-2xl p-8 shadow-xl border border-gray-100">
           <DialogHeader>
-            <DialogTitle className="text-lg font-semibold text-gray-800">
+            <DialogTitle className="text-xl font-semibold text-gray-800">
               Complete Your Profile
             </DialogTitle>
           </DialogHeader>
@@ -247,56 +252,76 @@ export default function CustomerProfile() {
       </Dialog>
 
       {/* Preferences */}
-      <Card className="border bg-white rounded-xl shadow-sm hover:shadow-md transition">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <IconHeartHandshake size={20} className="text-rose-600" />
-            Art Preference & Culture
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <p className="text-sm text-gray-600">
-            You love Ethiopian culture & handcrafted items. Let us tailor your experience.
-          </p>
-
-          <div className="flex gap-2 flex-wrap">
-            <Badge className="bg-rose-100 text-rose-700">Traditional Weaving</Badge>
-            <Badge className="bg-amber-100 text-amber-800">Ceramics</Badge>
-            <Badge className="bg-indigo-100 text-indigo-700">Wood Crafts</Badge>
-          </div>
-        </CardContent>
-      </Card>
+      <AnimatedInfoCard
+        title="Art Preference & Culture"
+        icon={<IconHeartHandshake size={20} className="text-rose-600" />}
+      >
+        <p className="text-sm text-gray-600 mb-2">
+          You love Ethiopian culture & handcrafted items.
+        </p>
+        <div className="flex gap-2 flex-wrap">
+          <Badge className="bg-rose-100 text-rose-700">Traditional Weaving</Badge>
+          <Badge className="bg-amber-100 text-amber-800">Ceramics</Badge>
+          <Badge className="bg-indigo-100 text-indigo-700">Wood Crafts</Badge>
+        </div>
+      </AnimatedInfoCard>
 
       {/* Security & Settings */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="border bg-white rounded-xl shadow-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <IconShield size={20} className="text-blue-600" />
-              Security Settings
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Button variant="outline" className="w-full">
-              Change Password
-            </Button>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <AnimatedInfoCard
+          title="Security Settings"
+          icon={<IconShield size={20} className="text-blue-600" />}
+        >
+          <Button variant="outline" className="w-full border-gray-300">
+            Change Password
+          </Button>
+        </AnimatedInfoCard>
 
-        <Card className="border bg-white rounded-xl shadow-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <IconSettings size={20} className="text-gray-700" />
-              Account Settings
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Button variant="outline" className="w-full">
-              Notification Preferences
-            </Button>
-          </CardContent>
-        </Card>
+        <AnimatedInfoCard
+          title="Account Settings"
+          icon={<IconSettings size={20} className="text-gray-700" />}
+        >
+          <Button variant="outline" className="w-full border-gray-300">
+            Notification Preferences
+          </Button>
+        </AnimatedInfoCard>
       </div>
+    </div>
+  );
+}
+
+/* ========== Subcomponents ========== */
+
+function AnimatedInfoCard({
+  title,
+  icon,
+  children,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <motion.div
+      whileHover={{ scale: 1.01 }}
+      transition={{ type: "spring", stiffness: 120 }}
+    >
+      <Card className="border bg-white/80 backdrop-blur-md rounded-2xl shadow-md hover:shadow-lg transition-all duration-300">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-lg font-semibold text-gray-800">
+            {icon} {title}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">{children}</CardContent>
+      </Card>
+    </motion.div>
+  );
+}
+
+function InfoRow({ icon, text }: { icon: React.ReactNode; text: string }) {
+  return (
+    <div className="flex items-center gap-3 text-gray-700">
+      {icon} {text}
     </div>
   );
 }
@@ -324,7 +349,13 @@ function EmptyProfileState({ onClick }: { onClick: () => void }) {
   );
 }
 
-function ProfileForm({ email, onClose }: { email: string; onClose: () => void }) {
+function ProfileForm({
+  email,
+  onClose,
+}: {
+  email: string;
+  onClose: () => void;
+}) {
   const [formData, setFormData] = useState({
     phone: "",
     address: { subcity: "", city: "", country: "" },
