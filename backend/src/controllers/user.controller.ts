@@ -190,20 +190,28 @@ const updateMyAccount = async (req: AuthenticatedRequest, res: Response): Promis
     }
   
     const isSaved = user.savedProducts.includes(productId);
-  
-    if (isSaved) {
-      user.savedProducts.pull(productId);
-    } else {
-      user.savedProducts.push(productId);
-    }
-  
-    await user.save();
-  
-    return res.status(200).json({
-      success: true,
-      message: isSaved ? "Removed from saved products" : "Added to saved products",
-      savedProducts: user.savedProducts
-    });
+
+if (isSaved) {
+  user.savedProducts.pull(productId);
+} else {
+  user.savedProducts.push(productId);
+}
+
+await user.save();
+
+// Clone raw ObjectId list before populating
+const rawSavedProducts = [...user.savedProducts];
+
+// Now populate
+const populatedUser = await user.populate('savedProducts');
+
+return res.status(200).json({
+  success: true,
+  message: isSaved ? "Removed from saved products" : "Added to saved products",
+  savedProducts: rawSavedProducts, // ObjectId array
+  populatedSavedProducts: populatedUser.savedProducts, // Populated product docs
+});
+
   };
   
   const getSavedProducts = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
