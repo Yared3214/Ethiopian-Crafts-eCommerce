@@ -8,6 +8,12 @@ export interface User {
     savedProducts: string[]; // Array of saved product IDs
     createdAt: string; // ISO date string
     updatedAt: string; // ISO date string
+    phone?: string;
+    address?: {
+        city: string;
+        subcity: string;
+        country: string;
+    }
 }
 
 export interface AuthTokens {
