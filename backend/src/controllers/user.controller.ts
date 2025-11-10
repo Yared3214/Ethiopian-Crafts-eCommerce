@@ -181,11 +181,76 @@ const updateMyAccount = async (req: AuthenticatedRequest, res: Response): Promis
     }
 };
 
+ const toggleSavedProduct = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
+    const { productId } = req.params;
+    const user = await userService.getUserById(req.user._id);
+  
+    if (!user) {
+      return new ApiError(404, 'User not found').send(res);
+    }
+  
+    const isSaved = user.savedProducts.includes(productId);
+
+if (isSaved) {
+  user.savedProducts.pull(productId);
+} else {
+  user.savedProducts.push(productId);
+}
+
+await user.save();
+
+// Clone raw ObjectId list before populating
+const rawSavedProducts = [...user.savedProducts];
+
+// Now populate
+const populatedUser = await user.populate('savedProducts');
+
+return res.status(200).json({
+  success: true,
+  message: isSaved ? "Removed from saved products" : "Added to saved products",
+  savedProducts: rawSavedProducts, // ObjectId array
+  populatedSavedProducts: populatedUser.savedProducts, // Populated product docs
+});
+
+  };
+  
+  const getSavedProducts = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
+    const user = await userService.getUserById(req.user._id);
+    if (!user) {
+      return new ApiError(404, 'User not found').send(res);
+    }
+
+    const savedProducts = await user.populate('savedProducts');
+    return res.status(200).json({
+      success: true,
+      savedProducts: savedProducts.savedProducts,
+    });
+  }
+
+  const completeProfile = async(req: AuthenticatedRequest, res: Response) => {
+    const completeProfileData = req.body;
+
+    const user = await userService.getUserById(req.user._id);
+    if(!user) {
+        return new ApiError(404, 'User not found').send(res);
+    }
+
+    const completedProfile = await userService.completeProfile(user._id, completeProfileData);
+    return res.status(200).json({
+        success: true,
+        completedProfile
+      }); 
+    
+  }
+
 
 
 module.exports = {
     userRegister,
     getMyProfile,
     deleteMyAccount,
-    updateMyAccount
+    updateMyAccount,
+    toggleSavedProduct,
+    getSavedProducts,
+    completeProfile,
 }
