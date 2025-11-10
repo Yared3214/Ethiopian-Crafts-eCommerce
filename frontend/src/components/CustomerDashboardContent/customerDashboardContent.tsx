@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +12,10 @@ import {
 import Image from "next/image";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import useProduct from "@/hooks/useProduct";
+import ProductList from "../products/ProductList";
 
 type Order = {
   id: string;
@@ -80,14 +84,30 @@ const demoSaved: Product[] = [
 export default function CustomerDashboardContent() {
   const [orders] = useState<Order[]>(demoOrders);
   const [saved] = useState<Product[]>(demoSaved);
+  const { fetchProductsHandler, toggleSavingProductHandler,getUserSavedProductsHandler, error, loading } = useProduct();
+  const products = useSelector((state: RootState) => state.product.products);
+  const savedProducts = useSelector((state: RootState) => state.savedProduct.savedProducts);
 
   const stats = useMemo(() => {
     return {
       totalOrders: orders.length,
       activeOrders: orders.filter((o) => o.status !== "Delivered").length,
-      savedCount: saved.length,
+      savedCount: savedProducts.length,
     };
   }, [orders, saved]);
+
+  useEffect(() => {
+      if (products.length === 0) {
+        fetchProductsHandler();
+      }
+    }, []);
+
+  // Fetch saved products on mount
+    useEffect(() => {
+      if (savedProducts.length === 0) {
+        getUserSavedProductsHandler();
+      }
+    }, []);
 
   return (
     <div className="h-full w-full p-6 space-y-8 overflow-y-auto bg-gradient-to-b from-white to-stone-50 dark:from-neutral-900 dark:to-neutral-950">
@@ -97,7 +117,7 @@ export default function CustomerDashboardContent() {
         {[
           { label: "Total Orders", value: stats.totalOrders, icon: <IconPackage className="w-5 h-5 text-indigo-600" /> },
           { label: "Active Orders", value: stats.activeOrders, icon: <IconClockHour4 className="w-5 h-5 text-amber-500" /> },
-          { label: "Saved Items", value: stats.savedCount, icon: <IconHeart className="w-5 h-5 text-rose-500" /> },
+          { label: "Saved Items", value: savedProducts.length, icon: <IconHeart className="w-5 h-5 text-rose-500" /> },
         ].map((s, i) => (
           <Card key={i} className="shadow-sm hover:shadow-md transition-all">
             <CardHeader className="flex flex-row items-center gap-2 pb-2">
@@ -161,29 +181,7 @@ export default function CustomerDashboardContent() {
           <CardTitle className="text-lg font-semibold">Recommended For You</CardTitle>
         </CardHeader>
 
-        <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {demoSaved.map((p) => (
-            <div key={p.id} className="rounded-lg overflow-hidden border bg-white dark:bg-neutral-900 hover:shadow-md transition-all">
-
-              <div className="relative h-40 w-full">
-                <Image src={p.image} alt={p.title} fill className="object-cover" />
-              </div>
-
-              <div className="p-3 space-y-1">
-                <div className="font-medium">{p.title}</div>
-                <div className="text-sm text-gray-500">{p.category}</div>
-
-                <div className="mt-2 flex items-center justify-between">
-                  <div className="font-semibold text-sm">{p.price}</div>
-
-                  <Button variant="ghost" size="icon">
-                    <IconHeart className="w-5 h-5 text-rose-500" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </CardContent>
+        <ProductList products={products} toggleSaveProduct={toggleSavingProductHandler} loading={loading}/>
       </Card>
 
     </div>
