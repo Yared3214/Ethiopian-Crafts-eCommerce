@@ -7,6 +7,7 @@ export interface IArtisan extends Document {
     description: string;
     profilePic: string;
     slug: string;
+    status: string;
 }
 
 
@@ -31,6 +32,11 @@ const artisanSchema = new Schema<IArtisan>(
             required: true,
             unique: true,
             trim: true,
+        },
+        status: {
+            type: String,
+            required: true,
+            default: 'active',
         },
     },
     {
