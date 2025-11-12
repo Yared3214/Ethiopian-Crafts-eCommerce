@@ -107,7 +107,6 @@ const useProduct = () => {
   try {
     setError(null);
     const res = await toggleSavingProduct(productId);
-    console.log("Saved product:", res);
     dispatch(toggle(res.savedProducts));
     dispatch(setSavedProducts(res.populatedSavedProducts));
     return res;
@@ -120,7 +119,6 @@ const useProduct = () => {
     setLoading(true);
     try {
       const data = await getUserSavedProducts();
-      console.log("Saved products:", data);
       dispatch(setSavedProducts(data));
       return data;
     } catch (error) {
