@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Product } from "@/types/product";  // Ensure the Product type is correctly imported
+import { ProductResponse } from "@/types/product";  // Ensure the Product type is correctly imported
 
 // Define CartItem and CartState interfaces
 export interface CartItem {
-    product: Product; // Store the entire product object
+    product: ProductResponse; // Store the entire product object
     quantity: number; // Store the quantity of the product in the cart
 }
 

@@ -3,100 +3,109 @@ import Cart, { ICart } from "../models/cart.schema";
 import { Types } from "mongoose";
 import { productService } from "./product.service";
 import ApiError from "../utils/ApiError";
-import { error } from "console";
 
 class CartService {
-    // Method to create a new cart
+    // Create a new cart
     async createCart(userId: Types.ObjectId, items: ICart["items"], totalPrice: number): Promise<ICart> {
         const newCart = new Cart({ user: userId, items, totalPrice });
         return await newCart.save();
     }
 
-    //add item to the cart
-    async addItem(productId: string, quantity: number, userId: Types.ObjectId): Promise<any> {
-        // Step 1: Retrieve the product by ID
+    // Add an item to the cart
+    async addItem(productId: string, quantity: number, userId: Types.ObjectId): Promise<ICart> {
+        // 1. Fetch the product
         const product = await productService.getProductById(productId);
         if (!product) {
-            throw new Error('Product not found');
+            throw new ApiError(404, "Product not found");
         }
 
-        // Step 2: Retrieve the user's cart (create one if it doesn't exist)
-        let cart = await cartService.getCartByUserId(userId);
+        // 2. Get the user's cart (create if not exists)
+        let cart = await this.getCartByUserId(userId);
         if (!cart) {
-            cart = await cartService.createCart(userId, [], 0);
+            cart = await this.createCart(userId, [], 0);
         }
 
-        // Step 3: Check if the product is already in the cart
-        const existingItem = cart.items.find((item) => item.ProductItem.toString() === productId);
+        // 3. Check if the product already exists in cart
+        const existingItem = cart.items.find(
+            (item) => item.ProductItem.toString() === productId
+        );
+
+        // 4. Get product image safely
+        const productImage = Array.isArray(product.images) && product.images.length > 0
+            ? product.images[0]
+            : "";
+
+            console.log("Product Image:", productImage);
 
         if (existingItem) {
-            // Step 4: Update the quantity of the existing item
+            // Update quantity
             existingItem.quantity += quantity;
         } else {
-            // Step 5: Add the product as a new item
+            // Add new item
             cart.items.push({
-                ProductItem: new Types.ObjectId(productId), // Ensure it's stored as ObjectId
+                ProductItem: new Types.ObjectId(productId),
+                productImage, // Safe product image
                 ProductName: product.title,
                 quantity,
-                price: product.price, // Assuming product has a price field
+                price: product.price,
             });
         }
 
-        // Step 6: Recalculate the total price
-        cart.totalPrice = cart.items.reduce((total, item) => total + item.price * item.quantity, 0);
+        // 5. Recalculate total price
+        cart.totalPrice = cart.items.reduce(
+            (total, item) => total + item.price * item.quantity,
+            0
+        );
 
-        // Step 7: Save the updated cart
+        // 6. Save and return
         await cart.save();
-
         return cart;
     }
 
-    // Method to find a cart by user ID
+    // Get cart by user ID
     async getCartByUserId(userId: Types.ObjectId): Promise<ICart | null> {
         return await Cart.findOne({ user: userId });
     }
 
-    //clear the cart
-    async clearCart(userId: Types.ObjectId): Promise<any> {
-        const cart = await this.getCartByUserId(userId)
+    // Clear the cart
+    async clearCart(userId: Types.ObjectId): Promise<ICart | null> {
+        const cart = await this.getCartByUserId(userId);
         if (cart) {
-            cart.items = []
+            cart.items = [];
             cart.totalPrice = 0;
-
             await cart.save();
-
-            return cart;
         }
-
+        return cart;
     }
 
-
-    async deleteCart(userId: Types.ObjectId): Promise<any> {
-        // Find and delete the cart document associated with the userId
+    // Delete the cart
+    async deleteCart(userId: Types.ObjectId): Promise<ICart | null> {
         const deletedCart = await Cart.findOneAndDelete({ user: userId });
         return deletedCart;
     }
 
-    //remove an item from the cart
-    async removeItem(userId: Types.ObjectId, itemIndex: number): Promise<any> {
-        const cart = await this.getCartByUserId(userId)
-        if (cart) {
-            const itemToRemove = cart.items[itemIndex];
-            cart.totalPrice -= itemToRemove.price * itemToRemove.quantity;
+    // Remove a single item from the cart
+    async removeItem(userId: Types.ObjectId, itemIndex: number): Promise<ICart | null> {
+        const cart = await this.getCartByUserId(userId);
+        if (!cart) return null;
 
-            // Remove the item from the cart
-            cart.items.splice(itemIndex, 1);
-
-            // Save the updated cart
-            await cart.save();
-
-            return cart;
+        if (itemIndex < 0 || itemIndex >= cart.items.length) {
+            throw new ApiError(400, "Invalid item index");
         }
 
+        const itemToRemove = cart.items[itemIndex];
+        cart.totalPrice -= itemToRemove.price * itemToRemove.quantity;
+
+        cart.items.splice(itemIndex, 1);
+        await cart.save();
+        return cart;
     }
 
-
-    //delete the cart   
+    //get the cart by cart ID
+    async getCartById(cartId: string): Promise<ICart | null> {
+        return await Cart.findById(cartId);
+    }
+    
 }
 
 export const cartService = new CartService();

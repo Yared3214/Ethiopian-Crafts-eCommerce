@@ -1,11 +1,10 @@
 import express from 'express';
 import { requireSignIn } from '../middlewares/authMiddleware';
-import { createOrder, getOrdersByUser } from '../controllers/order.controller';
+import { getAllUserOrders } from '../controllers/order.controller';
 const router = express.Router();
 
 
 
-router.post('/create/', requireSignIn, createOrder);
-router.get('/', requireSignIn, getOrdersByUser);
+router.get('/user', requireSignIn, getAllUserOrders);
 
 export default router;

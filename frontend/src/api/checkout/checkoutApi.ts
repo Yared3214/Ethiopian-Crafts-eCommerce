@@ -1,0 +1,116 @@
+import axios from "axios";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+// 🧾 Types
+export interface CartItem {
+  productId: string;
+  quantity: number;
+}
+
+export interface CartResponse {
+  data: {
+    _id: string;
+    items: CartItem[];
+    totalAmount: number;
+  };
+  message?: string;
+}
+
+// 🛒 Create Cart
+export const createCartRequest = async (
+  token: string,
+  items: CartItem[]
+): Promise<CartResponse> => {
+  try {
+    const response = await axios.post<CartResponse>(
+      `${API_URL}/cart`,
+      { items },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error("Error creating cart:", error);
+    throw error.response ? error.response.data : new Error("Network error");
+  }
+};
+
+// 📦 Get Cart (Read)
+export const getCartRequest = async (token: string): Promise<CartResponse> => {
+  try {
+    const response = await axios.get<CartResponse>(`${API_URL}/cart`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error("Error fetching cart:", error);
+    throw error.response ? error.response.data : new Error("Network error");
+  }
+};
+
+// ✏️ Update Cart Item (e.g., change quantity)
+export const updateCartItemRequest = async (
+  token: string,
+  productId: string,
+  quantity: number
+): Promise<CartResponse> => {
+  try {
+    const response = await axios.put<CartResponse>(
+      `${API_URL}/cart/${productId}`,
+      { quantity },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error("Error updating cart item:", error);
+    throw error.response ? error.response.data : new Error("Network error");
+  }
+};
+
+// ❌ Delete Cart Item
+export const deleteCartItemRequest = async (
+  token: string,
+  productId: string
+): Promise<CartResponse> => {
+  try {
+    const response = await axios.delete<CartResponse>(
+      `${API_URL}/cart/${productId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error("Error deleting cart item:", error);
+    throw error.response ? error.response.data : new Error("Network error");
+  }
+};
+
+// 🧹 Clear Entire Cart
+export const clearCartRequest = async (token: string): Promise<CartResponse> => {
+  try {
+    const response = await axios.delete<CartResponse>(`${API_URL}/cart`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error("Error clearing cart:", error);
+    throw error.response ? error.response.data : new Error("Network error");
+  }
+};

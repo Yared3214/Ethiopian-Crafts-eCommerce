@@ -1,66 +1,101 @@
-// src/models/artisan.schema.ts
-import mongoose, { Schema, model, Document } from 'mongoose';
+import mongoose, { Schema, model, Document, Types } from "mongoose";
 
-
-export interface IOrder extends Document {
-    user: mongoose.Schema.Types.ObjectId; // reference to User
-    items: [
-        {
-            product: mongoose.Schema.Types.ObjectId; // reference to Product
-            title: string;
-            price: number;
-            quantity: number;
-            image?: string;
-        }
-    ]
-    totalAmount: number;
-    status: string;
+// 🧾 Order Item Interface
+export interface IOrderItem {
+  ProductItem: Types.ObjectId; // reference to Product
+  ProductName?: string; // product title/name
+  productImage?: string; // product image URL
+  quantity: number;
+  price?: number;
 }
 
+// 🧾 Order Interface
+export interface IOrder extends Document {
+  user: Types.ObjectId; // reference to User
+  cartId: Types.ObjectId; // reference to Cart
+  OrderItems: IOrderItem[];
+  total_price: number;
+  tx_ref?: string; // transaction reference (optional)
+  payment_status: "pending" | "paid" | "failed";
+  order_status: "pending" | "processing" | "completed" | "cancelled";
+  createdAt: Date;
+  updatedAt: Date;
+}
 
-const orderSchema = new Schema<IOrder>(
-    {
-        user: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true,
-        },
-        items: [
-            {
-                product: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: 'Product',
-                    required: true,
-                },
-                title: {
-                    type: String,
-                    required: true,
-                },
-                price: {
-                    type: Number,
-                    required: true,
-                },
-                quantity: {
-                    type: Number,
-                    required: true,
-                },
-                image: {
-                    type: String,
-                    required: true,
-                },
-            }
-        ],
-        totalAmount: {
-            type: Number,
-            required: true,
-        },
-        status: {
-            type: String,
-            required: true,
-            default: 'pending',
-        },
+// 🧱 OrderItem Schema
+const OrderItemSchema = new Schema<IOrderItem>(
+  {
+    ProductItem: {
+      type: Schema.Types.ObjectId,
+      ref: "Product",
+      required: true,
     },
-    {
-        timestamps: true,
-    }
+    ProductName: {
+      type: String,
+      trim: true,
+    },
+    productImage: {
+      type: String,
+      trim: true,
+    },
+    quantity: {
+      type: Number,
+      required: true,
+      min: 1,
+      default: 1,
+    },
+    price: {
+      type: Number,
+      default: 0,
+    },
+  },
+  { _id: false }
 );
-export default model<IOrder>('Order', orderSchema);
+
+// 🧱 Order Schema
+const OrderSchema = new Schema<IOrder>(
+  {
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    cartId: {
+      type: Schema.Types.ObjectId,
+      ref: "Cart",
+      required: true,
+    },
+    OrderItems: {
+      type: [OrderItemSchema],
+      required: true,
+      default: [],
+    },
+    total_price: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    tx_ref: {
+      type: String,
+      default: "",
+    },
+    payment_status: {
+      type: String,
+      enum: ["pending", "paid", "failed"],
+      default: "pending",
+    },
+    order_status: {
+      type: String,
+      enum: ["pending", "processing", "completed", "cancelled"],
+      default: "pending",
+    },
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+  }
+);
+
+// 🧩 Model Export
+const Order = model<IOrder>("Order", OrderSchema);
+export default Order;

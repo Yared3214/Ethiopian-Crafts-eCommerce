@@ -279,7 +279,7 @@ const LoginPage = () => {
           </button>
 
           <div className="flex justify-between items-center text-sm mt-4">
-            <Link href="/forgotpassword" className="text-white hover:underline">Forgot Password?</Link>
+            <Link href="/forgot-password" className="text-white hover:underline">Forgot Password?</Link>
             <p className="text-white">Don't have an account? <Link href="/signup" className="hover:underline">Sign Up</Link></p>
           </div>
         </form>
