@@ -62,6 +62,43 @@ export const resetPassword = async (token: string, password: string): Promise<an
     }
 }
 
+export const getAllUsers = async(): Promise<User[]> => {
+    try {
+        const token = store.getState().user.user?.tokens.access.token;
+        if(!token) throw new Error("User is not authenticated");
+
+        const response = await axios.get(`${API_URL}/users/get/all`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        return response.data.users;
+    } catch (error: any) {
+        console.log("error while getting users", error)
+        // Throwing error to be caught in the hook
+        throw error.response ? error.response.data : new Error('Network error');
+    }
+}
+
+export const toggleActivateUser = async(userId: string): Promise<any> => {
+    try {
+        const token = store.getState().user.user?.tokens.access.token;
+        if(!token) throw new Error("User is not authenticated");
+
+        const response = await axios.post(`${API_URL}/users/toggle-activate/${userId}`, {}, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        console.log("error while toggle activating user", error)
+        // Throwing error to be caught in the hook
+        throw error.response ? error.response.data : new Error('Network error');
+    }
+}
+
 export const getUserSavedProducts = async (): Promise<ProductResponse[]> => {
     try {
         const token = store.getState().user.user?.tokens.access.token;
