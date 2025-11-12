@@ -117,9 +117,10 @@ export default function EditUserModal({ user }: EditUserModalProps) {
     try {
       if (uploadedFile) {
         const formData = new FormData();
-        formData.append("image", uploadedFile);
+        formData.append("profilePic", uploadedFile); // ← MATCHES BACKEND
         formData.append("fullName", form.fullName);
         formData.append("description", form.description);
+  
         await updateArtisanHandler(form.slug, formData);
       } else {
         const artisanData: Partial<ArtisansResponse> = {
@@ -128,8 +129,8 @@ export default function EditUserModal({ user }: EditUserModalProps) {
         };
         await updateArtisanHandler(form.slug, artisanData);
       }
-    } catch (err) {
-      console.error("Update failed:", err);
+    } catch (err: any) {
+      console.error("Update failed:", err.message);
     } finally {
       setOpen(false);
     }
