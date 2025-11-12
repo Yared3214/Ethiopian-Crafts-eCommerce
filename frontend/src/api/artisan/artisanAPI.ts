@@ -50,7 +50,7 @@ export const updateArtisanBySlug = async(slug: string, ArtisanData: Partial<Arti
 
         const response = await axios.put(`${API_URL}/artisan/update/${slug}`, ArtisanData, {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "multipart/form-data",
                 Authorization: `Bearer ${token}`,
             },
         });
