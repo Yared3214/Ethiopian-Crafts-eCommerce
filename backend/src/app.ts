@@ -8,6 +8,8 @@ import productRoutes from './routes/product.routes';
 import reviewRoutes from './routes/review.routes';
 import cartRoutes from './routes/cart.routes'
 import blogRoutes from './routes/blog.routes'
+import checkoutRoutes from './routes/checkout.routes';
+import orderRoutes from './routes/order.routes';
 
 import cors from 'cors'; // Import CORS
 import colors from 'colors';
@@ -41,6 +43,8 @@ app.use('/api/product', productRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/blog', blogRoutes);
+app.use('/api/checkout', checkoutRoutes);
+app.use('/api/orders', orderRoutes);
 
 // Start the server
 app.listen(PORT, () => {
