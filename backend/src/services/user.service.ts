@@ -8,6 +8,10 @@ class UserService {
         return newUser;
     }
 
+    async getAllUsers (): Promise<IUser[]> {
+        return await User.find();
+    }
+
     // Get a user by email
     async getUserByEmail(email: string): Promise<any> {
         const user = await User.findOne({ email });
