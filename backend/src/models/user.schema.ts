@@ -8,6 +8,7 @@ export interface IUser extends Document {
     email: string;
     password: string;
     role: 'user' | 'admin';
+    status: string;
     savedProducts: mongoose.Types.ObjectId[];
     phone?: string;
     address?: {
@@ -40,6 +41,11 @@ const userSchema = new Schema<IUser>({
         required: true,
         default: 'user',
         enum: ['user', 'admin'],
+    },
+    status: {
+        type: String,
+        required: true,
+        default: 'active'
     },
     savedProducts: [
         {
