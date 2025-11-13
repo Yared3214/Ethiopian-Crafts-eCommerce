@@ -11,6 +11,7 @@ import {
     IconSettingsCog,
     IconShoppingBagPlus,
     IconUsers,
+    IconPackage
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -27,6 +28,7 @@ import AdminAnalyticsDashboard from "@/components/AdminDashboardContent/adminDas
 import AddArtisanForm from "@/components/AddArtisan/addArtisan";
 import ManageCustomers from "@/components/ManageCustomers/manageCustomers";
 import ManageArtisans from "@/components/ManageArtisans/manageArtisans";
+import ManageOrders from "@/components/ManageOrders/manageOrders";
 
 const DashboardPage: React.FC = () => {
     const [open, setOpen] = useState(false);
@@ -87,6 +89,14 @@ const DashboardPage: React.FC = () => {
             value: "manage-blogs",
         },
         {
+            label: "Manage Orders",
+            href: "#",
+            icon: (
+                <IconPackage className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
+            ),
+            value: "manage-orders",
+        },
+        {
             label: "Manage Users",
             href: "#",
             icon: (
@@ -144,6 +154,7 @@ const DashboardPage: React.FC = () => {
               onClick={(e) => handleLinkClick(link.value, e)}
             />
           ))}
+          
         </div>
       </div>
 
@@ -174,6 +185,7 @@ const DashboardPage: React.FC = () => {
     {activeLink === "add-artisan" && <AddArtisanForm />}
     {activeLink === "manage-products" && <ProductManager />}
     {activeLink === "manage-blogs" && <BlogManager />}
+    {activeLink === "manage-orders" && <ManageOrders />}
     {activeLink === "manage-customers" && <ManageCustomers />}
     {activeLink === "manage-artisans" && <ManageArtisans />}
   </div>
