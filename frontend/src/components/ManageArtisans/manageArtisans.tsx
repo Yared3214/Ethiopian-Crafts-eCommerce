@@ -15,8 +15,8 @@ export default function ManageArtisans() {
       }
     }, [artisans, fetchAllArtisans]);
   
-    if (loading) return <div className="p-6">Loading artisans...</div>;
-    if (error) return <div className="p-6 text-red-500">Error: {error}</div>;
+    // if (loading) return <div className="p-6">Loading artisans...</div>;
+    // if (error) return <div className="p-6 text-red-500">Error: {error}</div>;
   
     return (
       <div>

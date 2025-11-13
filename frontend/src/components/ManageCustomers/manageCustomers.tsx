@@ -20,8 +20,8 @@ export default function ManageCustomers() {
     //     fetchAllCustomers();
     // },[toggleActivateCustomer, fetchAllCustomers])
 
-        if (loading) return <div className="p-6">Loading customers...</div>;
-        if (error) return <div className="p-6 text-red-500">Error: {error}</div>;
+        // if (loading) return <div className="p-6">Loading customers...</div>;
+        // if (error) return <div className="p-6 text-red-500">Error: {error}</div>;
 
     return(
         <div>
