@@ -42,7 +42,9 @@ class OrderService {
    * Get all orders (Admin)
    */
   async getAllOrders(): Promise<IOrder[]> {
-    return await Order.find().sort({ createdAt: -1 });
+    return await Order.find().sort({ createdAt: -1 })
+    .populate('user', 'fullName email address')
+    .populate('OrderItems.ProductItem', 'ProductName price');
   }
 
   /**
@@ -50,8 +52,7 @@ class OrderService {
    */
   async getOrderById(orderId: string): Promise<IOrder | null> {
     return await Order.findById(orderId)
-      .populate('user', 'fullName email')
-      .populate('OrderItems.productItem', 'ProductName price');
+      .populate('user', 'fullName email');
   }
 
   // get order by cart ID
@@ -63,7 +64,9 @@ class OrderService {
    * Update order status
    */
   async updateOrderById(orderId: string, order_status: string): Promise<IOrder | null> {
-    return await Order.findByIdAndUpdate(orderId, { order_status }, { new: true });
+    return await Order.findByIdAndUpdate(orderId, { order_status }, { new: true })
+    .populate('user', 'fullName email address')
+    .populate('OrderItems.ProductItem', 'ProductName price');
   }
 }
 
