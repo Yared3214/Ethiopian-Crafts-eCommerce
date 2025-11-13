@@ -84,6 +84,9 @@ export const updateOrderStatus = async (req: authenticatedRequest, res: Response
         res.status(200).json({
             status: 'success',
             message: 'Order status updated successfully',
+            data: {
+                updatedOrder,
+            },
         });
     } catch (error: any) {
         console.error('Error updating order status:', error);
@@ -129,6 +132,7 @@ export const getAllOrders = async (_req: authenticatedRequest, res: Response): P
 
         res.status(200).json({
             status: 'success',
+            message: 'All orders retrieved successfully',
             data: { orders: sortedOrders },
         });
     } catch (error: any) {
