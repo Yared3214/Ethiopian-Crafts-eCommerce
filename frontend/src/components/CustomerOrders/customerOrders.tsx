@@ -10,6 +10,7 @@ import {
   IconCircleCheck,
   IconClock,
   IconShoppingBag,
+  IconSend,
 } from "@tabler/icons-react";
 import { getAllUserOrdersRequest } from "@/api/order/orderAPI";
 import { motion, AnimatePresence } from "framer-motion";
@@ -36,7 +37,8 @@ type Order = {
 const statusStyle = {
   pending: { label: "Pending", icon: <IconClock size={16} />, gradient: "bg-gradient-to-r from-yellow-300 via-yellow-200 to-amber-300 text-yellow-900" },
   processing: { label: "Processing", icon: <IconTruck size={16} />, gradient: "bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-300 text-blue-900" },
-  completed: { label: "Completed", icon: <IconCircleCheck size={16} />, gradient: "bg-gradient-to-r from-green-400 via-emerald-300 to-teal-300 text-green-900" },
+  shipped: { label: "Shipped", icon: <IconSend size={16} />, gradient: "bg-gradient-to-r from-indigo-400 via-indigo-300 to-blue-300 text-indigo-900" },
+  delivered: { label: "Delivered", icon: <IconCircleCheck size={16} />, gradient: "bg-gradient-to-r from-green-400 via-emerald-300 to-teal-300 text-green-900" },
   cancelled: { label: "Cancelled", icon: <IconBox size={16} />, gradient: "bg-gradient-to-r from-rose-400 via-pink-300 to-rose-200 text-rose-900" },
 };
 
