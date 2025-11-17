@@ -11,6 +11,7 @@ const {
     completeProfile,
     getAllUsers,
     toggleActivateUser,
+    saveFcmToken,
  } = require("../controllers/user.controller")
 const router = express.Router();
 
@@ -20,6 +21,7 @@ router.post('/register', userRegister);
 router.get('/my-profile', requireSignIn, getMyProfile)
 router.delete('/delete', requireSignIn, deleteMyAccount);
 router.put('/update/myaccount', requireSignIn, updateMyAccount);
+router.put('/save-fcmToken', requireSignIn, saveFcmToken);
 router.post('/toggle-save-product/:productId', requireSignIn, toggleSavedProduct);
 router.get('/saved-products', requireSignIn, getSavedProducts);
 router.post('/complete-profile', requireSignIn, completeProfile);
