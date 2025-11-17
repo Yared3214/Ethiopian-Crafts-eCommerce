@@ -65,7 +65,7 @@ class OrderService {
    */
   async updateOrderById(orderId: string, order_status: string): Promise<IOrder | null> {
     return await Order.findByIdAndUpdate(orderId, { order_status }, { new: true })
-    .populate('user', 'fullName email address')
+    .populate('user', 'fullName email address fcmToken')
     .populate('OrderItems.ProductItem', 'ProductName price');
   }
 }
