@@ -196,6 +196,22 @@ const updateMyAccount = async (req: AuthenticatedRequest, res: Response): Promis
     }
 };
 
+const saveFcmToken = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
+    try {
+        const { fcmToken } = req.body;
+        const userId = req.user._id;
+        const updatedUser =  await userService.updateUser(userId, { fcmToken });
+        return res.status(200).json({
+            success: true,
+            message: 'FCM token saved successfully',
+            updatedUser
+        });
+    } catch (error) {
+        console.error('Error saving FCM token:', error);
+        return new ApiError(500, 'Error saving FCM token').send(res);
+    }
+};
+
  const toggleSavedProduct = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     const { productId } = req.params;
     const user = await userService.getUserById(req.user._id);
@@ -282,4 +298,5 @@ module.exports = {
     completeProfile,
     getAllUsers,
     toggleActivateUser,
+    saveFcmToken,
 }
