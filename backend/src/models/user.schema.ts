@@ -9,6 +9,7 @@ export interface IUser extends Document {
     password: string;
     role: 'user' | 'admin';
     status: string;
+    fcmToken?: string;
     savedProducts: mongoose.Types.ObjectId[];
     phone?: string;
     address?: {
@@ -54,6 +55,9 @@ const userSchema = new Schema<IUser>({
         },
       ],
     phone: {
+        type: String,
+    },
+    fcmToken: {
         type: String,
     },
     address: {
