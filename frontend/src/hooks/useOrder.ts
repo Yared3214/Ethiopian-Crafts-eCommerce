@@ -1,3 +1,4 @@
+import { sendOrderStatusNotification } from '@/api/notification/notificationApi'
 import { getAllOrdersRequest, updateOrderStatusRequest } from '@/api/order/orderAPI'
 import { setOrders, updateOrders } from '@/store/feature/order/orderSlice'
 import store from '@/store/store'
@@ -33,6 +34,11 @@ const useOrder = () => {
         try {
             const token = store.getState().user.user?.tokens.access.token as string;
             const data = await updateOrderStatusRequest(token, orderId, order_status);
+            if (data) {
+                console.log("sending notification to user with fcm token:", data);
+                const notification = await sendOrderStatusNotification(data.data?.updatedOrder.user.fcmToken,order_status);
+                console.log("Notification response:", notification);
+            }
             dispatch(updateOrders(data.data?.updatedOrder));
             return data;
         } catch (error) {
