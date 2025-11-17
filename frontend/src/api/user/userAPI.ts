@@ -62,6 +62,25 @@ export const resetPassword = async (token: string, password: string): Promise<an
     }
 }
 
+export const saveFcmToken = async (fcmToken: string): Promise<any> => {
+    try {
+        const token = store.getState().user.user?.tokens.access.token;
+        if(!token) throw new Error("User is not authenticated");
+        const response = await axios.put(`${API_URL}/users/save-fcmToken`, { fcmToken }, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        console.log('save fcm token', response.data)
+        return response.data; // Assuming the response contains a success message
+    } catch (error: any) {
+        console.log("error while saving fcm token", error)
+        // Throwing error to be caught in the hook
+        throw error.response ? error.response.data : new Error('Network error');
+    }
+}
+
 export const getAllUsers = async(): Promise<User[]> => {
     try {
         const token = store.getState().user.user?.tokens.access.token;
