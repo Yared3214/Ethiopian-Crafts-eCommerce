@@ -338,18 +338,17 @@ export default function ManageOrders() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                
-                if(statusChange?.id) {
-                  console.log('updating order status with the fields: ', statusChange?.id, statusChange?.status)
-                  handleUpdateStatus(statusChange?.id, statusChange?.status);
-                }
-                setStatusChange(null);
-              }}
-            >
-              Confirm
-            </AlertDialogAction>
+            <Button
+            onClick={async () => {
+              if (statusChange?.id) {
+                await handleUpdateStatus(statusChange.id, statusChange.status);
+                setStatusChange(null); // close manually AFTER update completes
+              }
+            }}
+          >
+            {loading ? "Updating..." : "Confirm"}
+          </Button>
+
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
