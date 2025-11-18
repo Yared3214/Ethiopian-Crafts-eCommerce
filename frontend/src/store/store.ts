@@ -7,6 +7,7 @@ import blogReducer from './feature/blog/blogSlice';
 import artisanReducer from './feature/artisan/artisanSlice'
 import customersReducer from './feature/user/customersSlice'
 import orderReducer from './feature/order/orderSlice'
+import notificationReducer from './feature/notification/notificationSlice'
 
 const store = configureStore({
     reducer: {
@@ -18,6 +19,7 @@ const store = configureStore({
         cart: cartReducer,
         blog: blogReducer,
         order: orderReducer,
+        notification: notificationReducer,
     },
 });
 
