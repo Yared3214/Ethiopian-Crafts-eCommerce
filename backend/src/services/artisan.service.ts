@@ -18,6 +18,10 @@ class ArtisanService {
         return await Artisan.findOne({ slug });
     }
 
+    async getArtisanById(userId: string): Promise<IArtisan | null> {
+        return await Artisan.findOne({_id: userId});
+    }
+ 
 
     //update artisan
     async updateArtisan(slug: string, data: { fullName: string; description: string; profilePic: string }): Promise<IArtisan | null> {

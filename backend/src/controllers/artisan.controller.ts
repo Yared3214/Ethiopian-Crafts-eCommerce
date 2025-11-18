@@ -66,7 +66,7 @@ export const createArtisan = async (req: Request, res: Response): Promise<any> =
 export const getAllArtisans = async (req: Request, res: Response): Promise<any> => {
     try {
         const artisans = await artisanservice.getAllArtisans();
-        res.status(200).json({
+        return res.status(200).json({
             status: 'success',
             message: 'Artisans retrieved successfully',
             artisans,
@@ -119,24 +119,26 @@ export const updateArtisan = async (req: Request, res: Response): Promise<any> =
         }
 
         // Check if file was uploaded
+        let updatedArtisan;
         if (req.file) {
             const imageUrl = await uploadImage(req.file.buffer);
-            await artisanservice.updateArtisan(slug, {
+            updatedArtisan = await artisanservice.updateArtisan(slug, {
                 fullName,
                 description,
                 profilePic: imageUrl,
             });
         } else {
-            await artisanservice.updateArtisan(slug, {
+            updatedArtisan = await artisanservice.updateArtisan(slug, {
                 fullName,
                 description,
                 profilePic: artisan.profilePic,
             });
         }
 
-        res.status(200).json({
+        return res.status(200).json({
             status: 'success',
             message: 'Artisan updated successfully',
+            updatedArtisan,
         });
     } catch (error) {
         console.error('Error updating artisan:', error);
@@ -163,4 +165,19 @@ export const deleteArtisan = async (req: Request, res: Response): Promise<any> =
         console.error('Error deleting artisan:', error);
         return new ApiError(500, 'Internal server error').send(res);
     }
+}
+
+export const toggleActivateArtisan = async(req: Request, res: Response) : Promise<any> => {
+        const userId = req.params.userId;
+        const artisan = await artisanservice.getArtisanById(userId);
+        if (!artisan) {
+            return new ApiError(404, 'Artisan not found').send(res);
+        }
+        artisan.status = artisan.status === 'active' ? 'suspended' : 'active';
+        await artisan.save();
+        return res.status(200).json({
+            status: "success",
+            message: "Artisan activated or deactivated successfully",
+            artisan,
+        });
 }

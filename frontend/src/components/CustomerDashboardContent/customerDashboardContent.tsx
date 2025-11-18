@@ -40,7 +40,8 @@ type Order = {
 const statusStyle = {
   pending: { label: "Pending", gradient: "bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900" },
   processing: { label: "Processing", gradient: "bg-gradient-to-r from-blue-400 to-blue-600 text-blue-50" },
-  completed: { label: "Completed", gradient: "bg-gradient-to-r from-green-400 to-green-600 text-green-50" },
+  shipped: { label: "Shipped", gradient: "bg-gradient-to-r from-indigo-400 to-indigo-600 text-indigo-50" },
+  delivered: { label: "Delivered", gradient: "bg-gradient-to-r from-green-400 to-green-600 text-green-50" },
   cancelled: { label: "Cancelled", gradient: "bg-gradient-to-r from-rose-400 to-rose-600 text-rose-50" },
 };
 

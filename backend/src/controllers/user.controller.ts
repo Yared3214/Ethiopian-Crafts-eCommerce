@@ -96,6 +96,21 @@ const getMyProfile = async (req: AuthenticatedRequest, res: Response): Promise<a
     }
 };
 
+const getAllUsers = async(req: AuthenticatedRequest, res: Response): Promise<any> => {
+    try {
+        const users = await userService.getAllUsers();
+        return res.status(201).json({
+            status: "success",
+            message: "users retrieved successfully",
+            users,
+        });
+    } catch (error: any) {
+        console.error(error);
+        return new ApiError(500, "Error while retrieving users").send(res);
+    }
+} 
+
+
 
 // delete my account
 // delete api/users/delete
@@ -181,6 +196,22 @@ const updateMyAccount = async (req: AuthenticatedRequest, res: Response): Promis
     }
 };
 
+const saveFcmToken = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
+    try {
+        const { fcmToken } = req.body;
+        const userId = req.user._id;
+        const updatedUser =  await userService.updateUser(userId, { fcmToken });
+        return res.status(200).json({
+            success: true,
+            message: 'FCM token saved successfully',
+            updatedUser
+        });
+    } catch (error) {
+        console.error('Error saving FCM token:', error);
+        return new ApiError(500, 'Error saving FCM token').send(res);
+    }
+};
+
  const toggleSavedProduct = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     const { productId } = req.params;
     const user = await userService.getUserById(req.user._id);
@@ -239,10 +270,22 @@ return res.status(200).json({
     return res.status(200).json({
         success: true,
         completedProfile
-      }); 
-    
+      });
+    }
+    const toggleActivateUser = async (req: AuthenticatedRequest, res: Response) => {
+        const userId = req.params.userId;
+        const user = await userService.getUserById(userId);
+        if (!user) {
+            return new ApiError(404, 'User not found').send(res);
+        }
+        user.status = user.status === 'active' ? 'suspended' : 'active';
+        await user.save();
+        return res.status(200).json({
+            status: "success",
+            message: "user activated or deactivated successfully",
+            user,
+        });
   }
-
 
 
 module.exports = {
@@ -253,4 +296,7 @@ module.exports = {
     toggleSavedProduct,
     getSavedProducts,
     completeProfile,
+    getAllUsers,
+    toggleActivateUser,
+    saveFcmToken,
 }
