@@ -8,7 +8,11 @@ const {
     updateMyAccount, 
     toggleSavedProduct, 
     getSavedProducts, 
-    completeProfile } = require("../controllers/user.controller")
+    completeProfile,
+    getAllUsers,
+    toggleActivateUser,
+    saveFcmToken,
+ } = require("../controllers/user.controller")
 const router = express.Router();
 
 // Register a new user
@@ -17,9 +21,12 @@ router.post('/register', userRegister);
 router.get('/my-profile', requireSignIn, getMyProfile)
 router.delete('/delete', requireSignIn, deleteMyAccount);
 router.put('/update/myaccount', requireSignIn, updateMyAccount);
+router.put('/save-fcmToken', requireSignIn, saveFcmToken);
 router.post('/toggle-save-product/:productId', requireSignIn, toggleSavedProduct);
 router.get('/saved-products', requireSignIn, getSavedProducts);
-router.post('/complete-profile', requireSignIn, completeProfile)
+router.post('/complete-profile', requireSignIn, completeProfile);
+router.get('/get/all', requireSignIn, adminMiddleware, getAllUsers);
+router.post('/toggle-activate/:userId', requireSignIn, adminMiddleware, toggleActivateUser)
 
 
 

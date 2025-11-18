@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { AuroraBackground } from "@/components/ui/aurora-background";
 import { HeroParallax } from "@/components/ui/hero-parallax";
@@ -7,8 +7,33 @@ import AppleCardsCarousel from '@/components/Carousel/carousel'
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards";
 import Image from "next/image";
+import useFcmToken from "@/hooks/useFcmToken";
+import { Button } from "@/components/ui/button";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import axios from "axios";
+import { saveFcmToken } from "@/api/user/userAPI";
 
 const HomePage: React.FC = () => {
+  const { token } = useFcmToken();
+  const user = useSelector((state: RootState) => state.user.user?.user);
+
+  useEffect(() => {
+    if (!token || !user) return;
+  
+    const saveToken = async () => {
+      try {
+        console.log('saving fcm token to db....')
+        const response = await saveFcmToken(token);
+        console.log("FCM token saved successfully!", response);
+      } catch (err) {
+        console.error("Failed to save token:", err);
+      }
+    };
+  
+    saveToken();
+  }, [token, user]);
+
 
   const words = `Celebrate Ethiopian Artistry`;
   const products = [

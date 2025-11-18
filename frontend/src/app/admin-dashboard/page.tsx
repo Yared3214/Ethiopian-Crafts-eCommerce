@@ -7,9 +7,11 @@ import {
     IconArticle,
     IconBrandTabler,
     IconEdit,
+    IconPalette,
     IconSettingsCog,
     IconShoppingBagPlus,
     IconUsers,
+    IconPackage
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -23,15 +25,10 @@ import AddProduct from "@/components/AddProduct/addProduct";
 import BlogManager from "@/components/ManageBlogs/manageBlogs";
 import AddBlog from "@/components/AddBlog/addBlog";
 import AdminAnalyticsDashboard from "@/components/AdminDashboardContent/adminDashboardContent";
-import UserManager from "@/components/ManageUsers/manageUsers";
-
-// Components for different sections
-// const DashboardContent = () => (
-//     <div className="p-2 md:p-10 rounded-tl-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 flex flex-col gap-2 flex-1 w-full h-full">
-//         <h2>Dashboard Content</h2>
-//         <p>Here is some content for the dashboard.</p>
-//     </div>
-// );
+import AddArtisanForm from "@/components/AddArtisan/addArtisan";
+import ManageCustomers from "@/components/ManageCustomers/manageCustomers";
+import ManageArtisans from "@/components/ManageArtisans/manageArtisans";
+import ManageOrders from "@/components/ManageOrders/manageOrders";
 
 const DashboardPage: React.FC = () => {
     const [open, setOpen] = useState(false);
@@ -67,6 +64,15 @@ const DashboardPage: React.FC = () => {
             value: "add-blog",
         },
         {
+            label: "Add Artisan",
+            href: "#",
+            icon: (
+                // <IconBrandTabler className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+                <IconPalette className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
+            ),
+            value: "add-artisan",
+        },
+        {
             label: "Manage Products",
             href: "#",
             icon: (
@@ -83,12 +89,28 @@ const DashboardPage: React.FC = () => {
             value: "manage-blogs",
         },
         {
+            label: "Manage Orders",
+            href: "#",
+            icon: (
+                <IconPackage className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
+            ),
+            value: "manage-orders",
+        },
+        {
             label: "Manage Users",
             href: "#",
             icon: (
                 <IconUsers  className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
             ),
-            value: "manage-users",
+            value: "manage-customers",
+        },
+        {
+            label: "Manage Artisans",
+            href: "#",
+            icon: (
+                <IconUsers  className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
+            ),
+            value: "manage-artisans",
         },
     ];
 
@@ -132,6 +154,7 @@ const DashboardPage: React.FC = () => {
               onClick={(e) => handleLinkClick(link.value, e)}
             />
           ))}
+          
         </div>
       </div>
 
@@ -159,9 +182,12 @@ const DashboardPage: React.FC = () => {
     {activeLink === "dashboard" && <AdminAnalyticsDashboard />}
     {activeLink === "add-product" && <AddProduct />}
     {activeLink === "add-blog" && <AddBlog />}
+    {activeLink === "add-artisan" && <AddArtisanForm />}
     {activeLink === "manage-products" && <ProductManager />}
     {activeLink === "manage-blogs" && <BlogManager />}
-    {activeLink === "manage-users" && <UserManager />}
+    {activeLink === "manage-orders" && <ManageOrders />}
+    {activeLink === "manage-customers" && <ManageCustomers />}
+    {activeLink === "manage-artisans" && <ManageArtisans />}
   </div>
 </div>
 

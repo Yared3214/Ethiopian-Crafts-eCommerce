@@ -4,7 +4,6 @@
 
 import { useEffect } from "react"; // Import useEffect
 import Header from "@/components/Header/Header"; // Adjust the path to your Header component
-import Footer from "@/components/Footer/footer"; // Adjust the path to your Footer component
 import { Provider, useDispatch } from "react-redux"; // Import useDispatch
 import store from "@/store/store"; // Adjust the path to your Redux store
 import localFont from "next/font/local";

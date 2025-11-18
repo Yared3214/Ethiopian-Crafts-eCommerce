@@ -1,5 +1,6 @@
 import axios from "axios";
 import store from "@/store/store";
+import { User } from "@/types/user";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -14,13 +15,22 @@ export interface OrderItem {
 
 export interface Order {
     _id: string;
-    user: string;
+    user: {
+        _id: string;
+        fullName: string;
+        email: string;
+        address: {
+            country: string;
+            city: string;
+            subcity: string;
+        }
+    };
     cartId: string;
     OrderItems: OrderItem[];
     total_price: number;
     tx_ref?: string;
     payment_status: "pending" | "paid" | "failed";
-    order_status: "pending" | "processing" | "completed" | "cancelled";
+    order_status: "pending" | "processing" | "shipped" | "delivered" | "cancelled";
     createdAt: string;
     updatedAt: string;
 }
@@ -31,6 +41,7 @@ export interface OrderResponse {
     data?: {
         order?: Order;
         orders?: Order[];
+        updatedOrders?: Order[];
     };
 }
 
@@ -64,7 +75,8 @@ export interface OrderResponse {
 // 📦 Get All Orders (Admin)
 export const getAllOrdersRequest = async (token: string): Promise<OrderResponse> => {
     try {
-        const response = await axios.get<OrderResponse>(`${API_URL}/orders`, {
+        if (!token) throw new Error("User is not authenticated");
+        const response = await axios.get<OrderResponse>(`${API_URL}/orders/get/all`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -121,11 +133,11 @@ export const getOrderByIdRequest = async (
 export const updateOrderStatusRequest = async (
     token: string,
     orderId: string,
-    order_status: "pending" | "processing" | "completed" | "cancelled"
+    order_status: "pending" | "processing" | "shipped" | "delivered" | "cancelled"
 ): Promise<OrderResponse> => {
     try {
         const response = await axios.put<OrderResponse>(
-            `${API_URL}/orders/${orderId}`,
+            `${API_URL}/orders/update-status/${orderId}`,
             { order_status },
             {
                 headers: {

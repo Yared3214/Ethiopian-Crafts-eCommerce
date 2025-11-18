@@ -8,6 +8,8 @@ export interface IUser extends Document {
     email: string;
     password: string;
     role: 'user' | 'admin';
+    status: string;
+    fcmToken?: string;
     savedProducts: mongoose.Types.ObjectId[];
     phone?: string;
     address?: {
@@ -41,6 +43,11 @@ const userSchema = new Schema<IUser>({
         default: 'user',
         enum: ['user', 'admin'],
     },
+    status: {
+        type: String,
+        required: true,
+        default: 'active'
+    },
     savedProducts: [
         {
           type: mongoose.Schema.Types.ObjectId,
@@ -48,6 +55,9 @@ const userSchema = new Schema<IUser>({
         },
       ],
     phone: {
+        type: String,
+    },
+    fcmToken: {
         type: String,
     },
     address: {
