@@ -2,6 +2,14 @@ import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+// Helper to safely extract error message
+const parseAxiosError = (error: unknown): string | object => {
+    if (axios.isAxiosError(error)) {
+      return error.response?.data || error.message;
+    }
+    return 'Network error';
+  };
+
 // 🧾 Types
 export interface CartItem {
   productId: string;
@@ -34,9 +42,9 @@ export const createCartRequest = async (
       }
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error creating cart:", error);
-    throw error.response ? error.response.data : new Error("Network error");
+    throw parseAxiosError(error);
   }
 };
 
@@ -49,9 +57,9 @@ export const getCartRequest = async (token: string): Promise<CartResponse> => {
       },
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error fetching cart:", error);
-    throw error.response ? error.response.data : new Error("Network error");
+    throw parseAxiosError(error);
   }
 };
 
@@ -73,9 +81,9 @@ export const updateCartItemRequest = async (
       }
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error updating cart item:", error);
-    throw error.response ? error.response.data : new Error("Network error");
+    throw parseAxiosError(error);
   }
 };
 
@@ -94,9 +102,9 @@ export const deleteCartItemRequest = async (
       }
     );
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error deleting cart item:", error);
-    throw error.response ? error.response.data : new Error("Network error");
+    throw parseAxiosError(error);
   }
 };
 
@@ -109,8 +117,8 @@ export const clearCartRequest = async (token: string): Promise<CartResponse> => 
       },
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error clearing cart:", error);
-    throw error.response ? error.response.data : new Error("Network error");
+    throw parseAxiosError(error);
   }
 };

@@ -11,11 +11,12 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { UserProps } from "./EditUserModal";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Bell } from "lucide-react";
+import { User } from "@/types/user";
+import { ArtisansResponse } from "@/types/artisan";
 
-export default function NotifyUserModal({ user }: { user: UserProps }) {
+export default function NotifyUserModal({ user }: { user: User | ArtisansResponse }) {
   const [message, setMessage] = useState("");
   const [subject, setSubject] = useState("");
   const [open, setOpen] = useState(false);
@@ -43,7 +44,7 @@ export default function NotifyUserModal({ user }: { user: UserProps }) {
       <DialogContent className="p-6 rounded-xl border border-indigo-200/60">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-            <Bell className="text-indigo-600" size={20} /> Notify {user.name}
+            <Bell className="text-indigo-600" size={20} /> Notify {user.fullName}
           </DialogTitle>
           <p className="text-sm text-gray-500">
             Send an important announcement or reminder to this user.

@@ -3,6 +3,14 @@ import store from "@/store/store";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+// Helper to safely extract error message
+const parseAxiosError = (error: unknown): string | object => {
+    if (axios.isAxiosError(error)) {
+      return error.response?.data || error.message;
+    }
+    return 'Network error';
+  };
+
 // --------------------------
 // Add or Create Cart Item
 // --------------------------
@@ -23,9 +31,9 @@ export const createCartRequest = async (productId: string, quantity: number) => 
     );
 
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error creating cart item:", error);
-    throw error.response ? error.response.data : new Error("Network error");
+    throw parseAxiosError(error);
   }
 };
 
@@ -44,9 +52,9 @@ export const getCartRequest = async () => {
     });
 
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error fetching cart:", error);
-    throw error.response ? error.response.data : new Error("Network error");
+    throw parseAxiosError(error);
   }
 };
 
@@ -71,9 +79,9 @@ export const removeCartItemRequest = async (productId: string) => {
     );
 
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error deleting cart item:", error);
-    throw error.response ? error.response.data : new Error("Network error");
+    throw parseAxiosError(error);
   }
 };
 
@@ -96,8 +104,8 @@ export const clearCartRequest = async () => {
     );
 
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error clearing cart:", error);
-    throw error.response ? error.response.data : new Error("Network error");
+    throw parseAxiosError(error);
   }
 };

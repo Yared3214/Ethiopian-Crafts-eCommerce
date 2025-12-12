@@ -20,7 +20,7 @@ const ForgotPassword = () => {
         setSuccessMessage(true); // Trigger success message
       }
     }
-    catch (error: any) {
+    catch (error: unknown) {
       console.error("error while logging in the user ", error)
     }
   };

@@ -4,26 +4,45 @@ import store from "../../store/store";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+// Helper to safely extract error message
+const parseAxiosError = (error: unknown): string | object => {
+    if (axios.isAxiosError(error)) {
+      return error.response?.data || error.message;
+    }
+    return 'Network error';
+  };
+
+interface DeleteResponse {
+  status: string;
+  message: string;
+}
+
+interface FetchSingleBlogResponse {
+  status: string;
+  message: string;
+  blog: BlogResponse;
+}
+
 // ✅ Fetch all blogs
 export const fetchBlogs = async (): Promise<BlogResponse[]> => {
   try {
     const response = await axios.get(`${API_URL}/blog`);
     console.log("blog responsessss", response.data);
     return response.data.blogs as BlogResponse[];
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error while getting all blogs", error);
-    throw error.response ? error.response.data : new Error("Network error");
+    throw parseAxiosError(error);
   }
 };
 
 // ✅ Fetch single blog by slug
-export const fetchSingleBlog = async (slug: string): Promise<BlogResponse> => {
+export const fetchSingleBlog = async (slug: string): Promise<FetchSingleBlogResponse> => {
   try {
     const response = await axios.get(`${API_URL}/blog/single/${slug}`);
-    return response.data as BlogResponse;
-  } catch (error: any) {
+    return response.data;
+  } catch (error: unknown) {
     console.error("Error while getting single blog", error);
-    throw error.response ? error.response.data : new Error("Network error");
+    throw parseAxiosError(error);
   }
 };
 
@@ -54,9 +73,9 @@ export const createBlog = async (blogData: Blog): Promise<Blog> => {
     });
 
     return response.data.blog as Blog; // backend returns { status, message, blog }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error creating blog:", error);
-    throw error.response ? error.response.data : new Error("Network error");
+    throw parseAxiosError(error);
   }
 };
 
@@ -92,15 +111,15 @@ export const updateBlog = async (
     });
 
     return response.data.blog as Blog; // backend should return updated blog
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error updating blog:", error);
-    throw error.response ? error.response.data : new Error("Network error");
+    throw parseAxiosError(error);
   }
 };
 
 
 //delete blog by slug
-export const deleteBlog = async (slug: string): Promise<any> => {
+export const deleteBlog = async (slug: string): Promise<DeleteResponse> => {
   try {
     // Get token from Redux store
     const token = store.getState().user.user?.tokens.access.token;
@@ -111,8 +130,8 @@ export const deleteBlog = async (slug: string): Promise<any> => {
       },
     });
     return response.data; // backend should return deleted blog
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error deleting blog:", error);
-    throw error.response ? error.response.data : new Error("Network error");
+    throw parseAxiosError(error);
   }
 }

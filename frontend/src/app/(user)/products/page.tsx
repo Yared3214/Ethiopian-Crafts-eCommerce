@@ -9,7 +9,7 @@ import useProduct from '@/hooks/useProduct';
 import ProductList from '@/components/products/ProductList';
 
 const ProductListingPage = () => {
-  const { fetchProductsHandler, toggleSavingProductHandler, error, loading } = useProduct();
+  const { fetchProductsHandler, toggleSavingProductHandler, loading } = useProduct();
   const products = useSelector((state: RootState) => state.product.products);
 
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -21,7 +21,7 @@ const ProductListingPage = () => {
     if (products.length === 0) {
       fetchProductsHandler();
     }
-  }, []);
+  }, [fetchProductsHandler, products]);
 
   const filteredProducts = products.filter(
     (product) => selectedCategory === 'All' || product.category === selectedCategory

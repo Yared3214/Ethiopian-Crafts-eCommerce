@@ -23,9 +23,11 @@ const useAuth = () => {
             const data: AuthResponse = await loginUser(email, password);
             dispatch(login(data)); // Dispatch the login action with user data
             return data;
-        } catch (error) {
+        } catch (error: unknown) {
+            const message =
+                error instanceof Error ? error.message : "Login failed";
             // Set error message in state
-            setError((error as any).message || 'Login failed');
+            setError(message);
         } finally {
             setIsLoading(false)
         }
@@ -46,9 +48,11 @@ const useAuth = () => {
             const data = await registerUser(fullName, email, password);
             console.log("registerd user-data", data);
             return data;
-        } catch (error) {
+        } catch (error: unknown) {
+            const message =
+                error instanceof Error ? error.message : "Registration failed";
             // Set error message in state
-            setError((error as any).message || 'Registration failed');
+            setError(message);
         } finally {
             setIsLoading(false)
         }
@@ -69,9 +73,10 @@ const useAuth = () => {
             const data = await forgetPassword(email);
             return data;
         }
-        catch (error: any) {
-            console.log("error while forgetting the password", error)
-            setError((error as any).message || 'Forgetting failed');
+        catch (error: unknown) {
+            const message =
+                error instanceof Error ? error.message : "Forgetting failed";
+            setError(message);
         } finally {
             setIsLoading(false)
         }
@@ -90,8 +95,10 @@ const useAuth = () => {
 
             const data = await resetPassword(token, password);
             return data;
-        } catch (error) {
-            setError((error as any).message || 'Reset failed');
+        } catch (error: unknown) {
+            const message =
+                error instanceof Error ? error.message : "Reset failed";
+            setError(message);
         } finally {
             setIsLoading(false)
         }
@@ -105,8 +112,10 @@ const useAuth = () => {
 
             dispatch(completeProfile_(data.completedProfile));
             return data;
-        } catch (error) {
-            setError((error as any).message || 'Completing profile failed') 
+        } catch (error: unknown) {
+            const message =
+                error instanceof Error ? error.message : "Completing profile failed";
+            setError(message) 
         } finally {
             setIsLoading(false);
         }

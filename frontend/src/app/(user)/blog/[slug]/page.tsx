@@ -7,13 +7,14 @@ import { useParams } from "next/navigation";
 import useBlog from "@/hooks/useblog";
 import { IconArrowLeft } from "@tabler/icons-react";
 import Link from "next/link";
+import { BlogResponse } from "@/types/blog";
 
 const BlogDetailPage: React.FC = () => {
   const { slug } = useParams() as { slug: string };
   const { fetchBlogBySlugHandler, error, loading } = useBlog();
 
   // Blog state
-  const [blog, setBlog] = useState<any>(null);
+  const [blog, setBlog] = useState<BlogResponse | null>(null);
 
   // Fetch blog on mount or slug change
   useEffect(() => {
@@ -21,7 +22,7 @@ const BlogDetailPage: React.FC = () => {
       try {
         setBlog(null); // Reset blog state while fetching
         const fetchedBlog = await fetchBlogBySlugHandler(slug);
-        setBlog(fetchedBlog);
+        if (fetchedBlog) setBlog(fetchedBlog?.blog);
       } catch (err) {
         console.error("Error fetching blog:", err);
         // Optionally, handle error state here if needed
@@ -31,7 +32,7 @@ const BlogDetailPage: React.FC = () => {
     if (slug) {
       fetchBlog();
     }
-  }, []);
+  }, [fetchBlogBySlugHandler, slug]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-yellow-50 via-white to-orange-50 dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-950 text-gray-900 dark:text-gray-100">
@@ -65,11 +66,11 @@ const BlogDetailPage: React.FC = () => {
             className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-neutral-800"
           >
             {/* Image Banner */}
-            {blog.blog.image && (
+            {blog.image && (
               <div className="relative h-[400px] w-full">
                 <Image
-                  src={blog.blog.image}
-                  alt={blog.blog.title}
+                  src={blog.image}
+                  alt={blog.title}
                   fill
                   priority
                   className="object-cover"
@@ -77,10 +78,10 @@ const BlogDetailPage: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                 <div className="absolute bottom-6 left-6 text-white">
                   <span className="px-4 py-1 bg-gradient-to-r from-yellow-500 to-orange-600 text-sm rounded-full font-medium shadow-md">
-                    {blog.blog.badge}
+                    {blog.badge}
                   </span>
                   <h1 className="text-3xl text-white md:text-5xl font-bold mt-3 drop-shadow-md leading-tight">
-                    {blog.blog.title}
+                    {blog.title}
                   </h1>
                 </div>
               </div>
@@ -89,7 +90,7 @@ const BlogDetailPage: React.FC = () => {
             {/* Article Body */}
             <div className="p-8 md:p-12 prose prose-lg dark:prose-invert max-w-none">
               <div
-                dangerouslySetInnerHTML={{ __html: blog.blog.description }}
+                dangerouslySetInnerHTML={{ __html: blog.description }}
               />
             </div>
 

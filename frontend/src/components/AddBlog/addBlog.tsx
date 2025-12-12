@@ -3,11 +3,12 @@
 import BlogForm from "../BlogForm/blogForm";
 import useBlog from "../../hooks/useblog";
 import { showToast } from "nextjs-toast-notify"; // ✅ make sure this is correctly imported
+import { Blog } from "@/types/blog";
 
 export default function AddBlog() {
     const { createBlogHandler, loading, error } = useBlog();
 
-    const handleAddBlog = async (data: any) => {
+    const handleAddBlog = async (data: Blog) => {
         try {
             const result = await createBlogHandler(data);
 
@@ -21,7 +22,7 @@ export default function AddBlog() {
                     sound: false,
                 });
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
            console.error("❌ Error adding blog:", err);
         }
     };

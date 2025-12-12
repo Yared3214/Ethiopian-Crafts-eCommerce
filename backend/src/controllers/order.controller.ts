@@ -125,7 +125,7 @@ export const getOrderById = async (req: authenticatedRequest, res: Response): Pr
 /**
  * Get All Orders (Admin)
  */
-export const getAllOrders = async (_req: authenticatedRequest, res: Response): Promise<void> => {
+export const    getAllOrders = async (_req: authenticatedRequest, res: Response): Promise<void> => {
     try {
         const orders = await orderService.getAllOrders();
         const sortedOrders = orders.sort((a: any, b: any) => b.createdAt - a.createdAt);

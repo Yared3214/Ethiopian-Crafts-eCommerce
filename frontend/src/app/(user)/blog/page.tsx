@@ -11,7 +11,7 @@ import * as cheerio from 'cheerio';
 
 
 const BlogPage: React.FC = () => {
-  const { fetchBlogsHandler, error, loading } = useBlog();
+  const { fetchBlogsHandler, loading } = useBlog();
   const blogs = useSelector((state: RootState) => state.blog.blogs);
 
   // State for selected category
@@ -20,11 +20,7 @@ const BlogPage: React.FC = () => {
   // Fetch blogs on mount
   useEffect(() => {
     fetchBlogsHandler();
-  }, []);
-
-  // const categories = Array.from(
-  //   new Set(sampleBlogs.map((blog) => blog.category || "Uncategorized"))
-  // );
+  }, [fetchBlogsHandler]);
 
   // Categories derived from blog data
   const categories = Array.from(

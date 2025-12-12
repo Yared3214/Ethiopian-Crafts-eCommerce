@@ -3,11 +3,12 @@
 import ProductForm from "../ProductForm/productForm";
 import useProduct from "../../hooks/useProduct"; // make sure this hook exists
 import { showToast } from "nextjs-toast-notify";
+import { Product } from "@/types/product";
 
 export default function AddProduct() {
   const { createProductHandler, loading, error } = useProduct();
 
-  const handleAddProduct = async (data: any) => {
+  const handleAddProduct = async (data: Product) => {
     try {
       console.log("the error is here", error);
       const result = await createProductHandler(data);
@@ -22,11 +23,17 @@ export default function AddProduct() {
           sound: false,
         });
       }
-    } catch (err: any) {
-      showToast.error(err.message || "Failed to add product", {
+    } catch (err) {
+      let message = "Failed to add product";
+
+      if (err instanceof Error) {
+        message = err.message;
+      }
+
+      showToast.error(message, {
         duration: 4000,
         position: "bottom-right",
-      }); console.error("❌ Error adding product:", err);
+      });
     }
   };
 

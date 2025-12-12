@@ -1,6 +1,5 @@
 // src/features/artisan/artisanSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ArtisansResponse } from '@/types/artisan';
 import { Order } from '@/api/order/orderAPI';
 
 export interface Orders {
@@ -18,7 +17,7 @@ const orderSlice = createSlice({
         setOrders: (state, action: PayloadAction<Order[]>) => {
             state.orders = action.payload;
         },
-        updateOrders: (state, action: PayloadAction<ArtisansResponse>) => {
+        updateOrders: (state, action: PayloadAction<Order>) => {
                     const updated = action.payload;
                     const order = state.orders.find(u => u._id === updated._id);
                     if (order) {

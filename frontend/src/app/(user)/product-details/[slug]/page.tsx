@@ -31,7 +31,7 @@ const ProductDetailPage = ({ params }: { params: { slug: string } }) => {
       }
     };
     fetchProduct();
-  }, [slug]);
+  }, [slug, fetchProductBySlugHandler]);
 
   if (loading) {
     return (
