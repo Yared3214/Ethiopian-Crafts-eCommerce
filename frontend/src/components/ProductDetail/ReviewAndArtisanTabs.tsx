@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { Tabs } from "@/components/ui/tabs";
 import ArtisanInfo from "./ArtisanInfo";
 import ProductReviews from "./ProductReviews";

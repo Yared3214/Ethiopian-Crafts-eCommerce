@@ -164,7 +164,7 @@ export const SidebarLink = ({
 }: {
   link: Links;
   className?: string;
-  onClick?: () => void; // Define onClick as an optional function
+  onClick?: (e: React.MouseEvent) => void; // Define onClick as an optional function
   isActive?: boolean; // ✅ add this
   props?: LinkProps;
 }) => {

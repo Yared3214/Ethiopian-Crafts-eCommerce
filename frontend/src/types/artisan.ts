@@ -1,4 +1,4 @@
-import { Product } from '@/types/product'
+import { ProductResponse } from '@/types/product'
 
 // types.ts
 export interface Artisan {
@@ -21,7 +21,7 @@ export interface ArtisanResponse {
         updatedAt: string;
         __v: number;  
     };
-    products: Product[];
+    products: ProductResponse[];
 }
 
 export interface ArtisansResponse {

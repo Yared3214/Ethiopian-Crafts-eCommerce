@@ -51,13 +51,16 @@ export default function CustomerProfile() {
     },
   });
 
-  const formattedDate = (joinedDate: string) => {
+  const formattedDate = (joinedDate?: string) => {
+    if (!joinedDate) return "N/A";
+  
     const date = new Date(joinedDate);
     return date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
     });
   };
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -191,7 +194,7 @@ export default function CustomerProfile() {
             ) : (
               <>
                 <InfoRow icon={<IconMail />} text={user?.email} />
-                <InfoRow icon={<IconPhone />} text={user?.phone} />
+                <InfoRow icon={<IconPhone />} text={user?.phone ?? "N/A"} />
               </>
             )
           ) : (
@@ -247,7 +250,7 @@ export default function CustomerProfile() {
               Complete Your Profile
             </DialogTitle>
           </DialogHeader>
-          <ProfileForm email={user?.email} onClose={() => setOpen(false)} />
+          <ProfileForm email={user?.email ?? ""} onClose={() => setOpen(false)} />
         </DialogContent>
       </Dialog>
 

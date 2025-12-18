@@ -19,7 +19,9 @@ const useNotification = () => {
             console.log("notifications: ", data.data.notifications);
             dispatch(setNotifications(data.data.notifications));
         } catch (error) {
-            setError((error as any).message || 'Failed to fetch notifications')
+            const message =
+                error instanceof Error ? error.message : "Failed to fetch notifications";
+            setError(message)
         } finally {
             setLoading(false);
         }
@@ -33,7 +35,9 @@ const useNotification = () => {
             await markNotificationAsRead_(id);
             dispatch(markNotificationAsRead(id));
         } catch (error) {
-            setError((error as any).message || 'Failed to mark notification as read')
+            const message =
+                error instanceof Error ? error.message : "Failed to mark notification as read";
+            setError(message)
         } finally {
             setLoading(false);
         }
@@ -48,7 +52,9 @@ const useNotification = () => {
             await markAllNotificationsAsRead_(userId);
             dispatch(markAllNotificationsAsRead());
         } catch (error) {
-            setError((error as any).message || 'Failed to mark all notifications as read')
+            const message =
+                error instanceof Error ? error.message : "Failed to mark all notifications as read";
+            setError(message)
         } finally {
             setLoading(false);
         }

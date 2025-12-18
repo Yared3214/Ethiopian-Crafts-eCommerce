@@ -5,7 +5,6 @@ import store from '@/store/store'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-
 const useOrder = () => {
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState<boolean>(false)
@@ -19,8 +18,10 @@ const useOrder = () => {
             const data = await getAllOrdersRequest(token);
             console.log("orders: ", data);
             dispatch(setOrders(data.data?.orders));
-        } catch (error) {
-            setError((error as any).message || 'Failed to fetch orders')
+        } catch (error: unknown) {
+            const message =
+                error instanceof Error ? error.message : "Failed to fetch orders";
+            setError(message);
         } finally {
             setLoading(false);
         }
@@ -49,8 +50,10 @@ const useOrder = () => {
             }
             dispatch(updateOrders(data.data?.updatedOrder));
             return data;
-        } catch (error) {
-            setError((error as any).message || 'Failed to update order status')
+        } catch (error: unknown) {
+            const message =
+                error instanceof Error ? error.message : "Failed to update order status";
+            setError(message)
         } finally {
             setLoading(false);
         }

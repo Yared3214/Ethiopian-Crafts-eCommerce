@@ -8,10 +8,8 @@ import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards";
 import Image from "next/image";
 import useFcmToken from "@/hooks/useFcmToken";
-import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import axios from "axios";
 import { saveFcmToken } from "@/api/user/userAPI";
 
 const HomePage: React.FC = () => {
@@ -35,7 +33,6 @@ const HomePage: React.FC = () => {
   }, [token, user]);
 
 
-  const words = `Celebrate Ethiopian Artistry`;
   const products = [
     {
       title: "Handwoven Basket",
@@ -269,7 +266,9 @@ const HomePage: React.FC = () => {
 
           {/* Image Section */}
           <div className="w-full md:w-1/2">
-            <img
+            <Image
+            width={400}
+            height={400}
               src="https://cdn.gamma.app/m3rdunp6aj4a2ph/generated-images/7NqdB8vojwt2nzi684dKU.jpg"
               alt="Ethiopian Art"
               className="rounded-lg shadow-xl hover:scale-105 transition-transform duration-300 ease-in-out"
@@ -277,8 +276,6 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </div>
-
-
     </div>
   );
 };

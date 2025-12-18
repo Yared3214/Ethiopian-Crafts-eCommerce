@@ -7,7 +7,6 @@ import Link from 'next/link';
 import useAuth from '@/hooks/userAuth'; // Import your useAuth hook
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
-import { ErrorMessage } from "@hookform/error-message"
 
 
 const LoginPage = () => {
@@ -40,7 +39,7 @@ const LoginPage = () => {
         router.push("/dashboard")
         }
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("error while logging in the user ", error)
     }
   };
@@ -148,7 +147,7 @@ const LoginPage = () => {
 
           <div className="flex justify-between items-center text-sm mt-4">
             <Link href="/forgot-password" className="text-white hover:underline">Forgot Password?</Link>
-            <p className="text-white">Don't have an account? <Link href="/signup" className="hover:underline">Sign Up</Link></p>
+            <p className="text-white">Don&apos;t have an account? <Link href="/signup" className="hover:underline">Sign Up</Link></p>
           </div>
         </form>
 

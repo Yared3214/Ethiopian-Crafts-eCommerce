@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { ArtisanResponse } from '@/types/artisan';
 import useArtisan from '@/hooks/useArtisan';
 import ProductCard from '@/components/products/ProductCard';
@@ -21,7 +20,7 @@ const ArtisanProfilePage = ({ params }: { params: { slug: string } }) => {
       }
     };
     fetchArtisan();
-  }, [slug]);
+  }, [slug, fetchSingleArtisan]);
 
   if (loading) {
     return <div className="text-center text-gray-500">Loading artisan details...</div>;

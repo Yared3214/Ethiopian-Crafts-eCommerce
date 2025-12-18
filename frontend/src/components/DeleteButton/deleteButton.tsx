@@ -16,7 +16,6 @@ import { IconTrash } from "@tabler/icons-react";
 const DeleteButton = ({product}: {product: Product}) => {
   const onClick = () => {
     // Placeholder for delete functionality
-    console.log(`Delete product with id: ${product._id}`);
   }
   return(
   <AlertDialog>

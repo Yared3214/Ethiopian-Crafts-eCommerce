@@ -1,8 +1,15 @@
 import axios from "axios";
 import store from "@/store/store";
-import { User } from "@/types/user";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+// Helper to safely extract error message
+const parseAxiosError = (error: unknown): string | object => {
+    if (axios.isAxiosError(error)) {
+      return error.response?.data || error.message;
+    }
+    return 'Network error';
+  };
 
 // 🧱 Types
 export interface OrderItem {
@@ -19,6 +26,7 @@ export interface Order {
         _id: string;
         fullName: string;
         email: string;
+        fcmToken: string;
         address: {
             country: string;
             city: string;
@@ -45,6 +53,22 @@ export interface OrderResponse {
     };
 }
 
+interface GetAllOrdersRequestResponse {
+    status: string;
+    message?: string;
+    data: {
+        orders: Order[];
+    };
+}
+
+interface UpdateOrderStatusRequestResponse {
+    status: string;
+    message?: string;
+    data: {
+        updatedOrder: Order;
+    };
+}
+
 /* ========================================================
    🛍️ ORDER API REQUESTS
 ======================================================== */
@@ -68,43 +92,43 @@ export interface OrderResponse {
 //     return response.data;
 //   } catch (error: any) {
 //     console.error("Error creating order:", error);
-//     throw error.response ? error.response.data : new Error("Network error");
+//     throw parseAxiosError(error);
 //   }
 // };
 
 // 📦 Get All Orders (Admin)
-export const getAllOrdersRequest = async (token: string): Promise<OrderResponse> => {
+export const getAllOrdersRequest = async (token: string): Promise<GetAllOrdersRequestResponse> => {
     try {
         if (!token) throw new Error("User is not authenticated");
-        const response = await axios.get<OrderResponse>(`${API_URL}/orders/get/all`, {
+        const response = await axios.get<GetAllOrdersRequestResponse>(`${API_URL}/orders/get/all`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
         return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error fetching all orders:", error);
-        throw error.response ? error.response.data : new Error("Network error");
+        throw parseAxiosError(error);
     }
 };
 
 // 👤 Get Orders for Logged-In User
-export const getAllUserOrdersRequest = async (): Promise<OrderResponse> => {
+export const getAllUserOrdersRequest = async (): Promise<GetAllOrdersRequestResponse> => {
     try {
 
         const token = store.getState().user.user?.tokens.access.token;
         if (!token) throw new Error("User is not authenticated");
 
-        const response = await axios.get<OrderResponse>(`${API_URL}/orders/user`, {
+        const response = await axios.get<GetAllOrdersRequestResponse>(`${API_URL}/orders/user`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
         console.log("Fetched user orders response:", response.data);
         return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error fetching user orders:", error);
-        throw error.response ? error.response.data : new Error("Network error");
+        throw parseAxiosError(error);
     }
 };
 
@@ -123,9 +147,9 @@ export const getOrderByIdRequest = async (
             }
         );
         return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error fetching order by ID:", error);
-        throw error.response ? error.response.data : new Error("Network error");
+        throw parseAxiosError(error);
     }
 };
 
@@ -134,9 +158,9 @@ export const updateOrderStatusRequest = async (
     token: string,
     orderId: string,
     order_status: "pending" | "processing" | "shipped" | "delivered" | "cancelled"
-): Promise<OrderResponse> => {
+): Promise<UpdateOrderStatusRequestResponse> => {
     try {
-        const response = await axios.put<OrderResponse>(
+        const response = await axios.put<UpdateOrderStatusRequestResponse>(
             `${API_URL}/orders/update-status/${orderId}`,
             { order_status },
             {
@@ -147,8 +171,8 @@ export const updateOrderStatusRequest = async (
             }
         );
         return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error updating order status:", error);
-        throw error.response ? error.response.data : new Error("Network error");
+        throw parseAxiosError(error);
     }
 };

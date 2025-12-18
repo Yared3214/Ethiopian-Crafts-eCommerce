@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Product } from '@/types/product';
 import {
   fetchProducts,
@@ -24,7 +24,7 @@ const useProduct = () => {
 
 
   // ✅ Fetch all products
-  const fetchProductsHandler = async () => {
+  const fetchProductsHandler = useCallback(async () => {
     setError(null);
     setLoading(true);
     try {
@@ -32,28 +32,32 @@ const useProduct = () => {
       console.log("Fetched products:", data);
       dispatch(setProducts(data));
       return data;
-    } catch (error) {
-      setError((error as any).message || 'Failed to fetch products');
+    } catch (error: unknown) {
+      const message =
+          error instanceof Error ? error.message : "Failed to fetch products";
+      setError(message);
     } finally {
       setLoading(false);
     }
-  };
+  },[dispatch]);
 
 
   // ✅ Fetch single product by slug or id
-  const fetchProductBySlugHandler = async (slug: string) => {
+  const fetchProductBySlugHandler = useCallback(async (slug: string) => {
     setError(null);
     setLoading(true);
     try {
       const data = await fetchSingleProduct(slug); // Expecting Product
       console.log("Fetched single product:", data);
       return data;
-    } catch (error) {
-      setError((error as any).message || 'Failed to fetch product');
+    } catch (error: unknown) {
+      const message =
+          error instanceof Error ? error.message : "Failed to fetch product";
+      setError(message);
     } finally {
       setLoading(false);
     }
-  };
+  },[]);
 
 
 
@@ -65,9 +69,10 @@ const useProduct = () => {
       const data = await createProduct(productData); // Expecting Product
       console.log("Created product:", data);
       return data;
-    } catch (error) {
-      console.error("Error creatinggg product:", (error as any).message);
-      setError((error as any).message || 'Failed to create product');
+    } catch (error: unknown) {
+      const message =
+          error instanceof Error ? error.message : "Failed to create product";
+      setError(message);
     } finally {
       setError(null);
       setLoading(true);
@@ -81,8 +86,10 @@ const useProduct = () => {
       const updatedProduct = await updateProduct(id, productData); // Expecting Product
       console.log("Updated product:", updatedProduct);
       return updatedProduct;
-    } catch (error) {
-      setError((error as any).message || 'Failed to update product');
+    } catch (error: unknown) {
+      const message =
+          error instanceof Error ? error.message : "Failed to update product";
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -96,8 +103,10 @@ const useProduct = () => {
       const deletedProduct = await deleteProduct(id); // Expecting Product
       console.log("Deleted product:", deletedProduct);
       return deletedProduct;
-    } catch (error) {
-      setError((error as any).message || 'Failed to delete product');
+    } catch (error: unknown) {
+      const message =
+          error instanceof Error ? error.message : "Failed to delete product";
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -110,8 +119,10 @@ const useProduct = () => {
     dispatch(toggle(res.savedProducts));
     dispatch(setSavedProducts(res.populatedSavedProducts));
     return res;
-  } catch (error) {
-    setError((error as any).message || 'Failed to delete product');
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Failed to save or unsave product";
+    setError(message);
   }
   };
   const getUserSavedProductsHandler = async () => {
@@ -121,8 +132,10 @@ const useProduct = () => {
       const data = await getUserSavedProducts();
       dispatch(setSavedProducts(data));
       return data;
-    } catch (error) {
-      setError((error as any).message || 'Failed to delete product');
+    } catch (error: unknown) {
+      const message =
+      error instanceof Error ? error.message : "Failed to fetch user saved product";
+      setError(message);
     } finally {
       setLoading(false);
     }

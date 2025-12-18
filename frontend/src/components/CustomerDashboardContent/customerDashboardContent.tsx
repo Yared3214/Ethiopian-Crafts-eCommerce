@@ -30,7 +30,7 @@ type Order = {
   _id: string;
   OrderItems: OrderItem[];
   total_price: number;
-  order_status: "pending" | "processing" | "completed" | "cancelled";
+  order_status: "pending" | "processing" | "shipped" | "delivered" | "cancelled";
   createdAt: string;
 };
 
@@ -88,7 +88,7 @@ export default function CustomerDashboardContent() {
   const stats = useMemo(() => {
     return {
       totalOrders: orders.length,
-      activeOrders: orders.filter((o) => o.order_status !== "completed").length,
+      activeOrders: orders.filter((o) => o.order_status !== "delivered").length,
       savedCount: savedProducts.length,
     };
   }, [orders, savedProducts]);
