@@ -16,6 +16,7 @@ export default function AddArtisanForm() {
     fullName: "",
     description: "",
     profilePic: "",
+    slug: "",
   });
 
   const [profilePic, setProfilePic] = useState<File>( {} as File);
@@ -52,7 +53,7 @@ export default function AddArtisanForm() {
                             sound: false,
                         });
                     }
-    } catch (err: any) {
+    } catch (err: unknown) {
         console.error("❌ Error adding blog:", err);
      }
   };

@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select";
 import Image from "next/image";
 import { User } from "@/types/user";
-import { ArtisansResponse } from "@/types/artisan";
+import { Artisan, ArtisansResponse } from "@/types/artisan";
 import useArtisan from "@/hooks/useArtisan";
 
 // ------------------------------------------------------------------
@@ -123,7 +123,7 @@ export default function EditUserModal({ user }: EditUserModalProps) {
   
         await updateArtisanHandler(form.slug, formData);
       } else {
-        const artisanData: Partial<ArtisansResponse> = {
+        const artisanData: Partial<Artisan> = {
           fullName: form.fullName,
           description: form.description,
         };

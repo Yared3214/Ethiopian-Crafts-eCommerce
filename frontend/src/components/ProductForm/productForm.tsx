@@ -11,7 +11,7 @@ import { Product } from "@/types/product";
 
 interface ProductFormProps {
   initialData?: Partial<Product>;
-  onSubmit: (data: Partial<Product>) => void; // just send the object
+  onSubmit: (data: Product) => void; // just send the object
   loading?: boolean;
   error?: string | null;
 }

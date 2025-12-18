@@ -5,7 +5,6 @@ import useAuth from '@/hooks/userAuth'; // Import your useAuth hook
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import logo from '@/assets/logo.jpg'; // Assuming you have a logo image in the public directory
-import loginImage from '@/assets/login (2).jpg'; // You can change this to another image if needed
 import Image from 'next/image';
 import Link from 'next/link'; // Import Link from Next.js
 
@@ -20,7 +19,7 @@ const SignUp = () => {
     e.preventDefault(); // Prevent the default form submission behavior
     try {
       const response = await registerUser(name, email, password); // Call the login function from the useAuth hook
-      if (response.success) {
+      if (response && response.success) {
         toast("Registration successful!", {
           style: {
             backgroundColor: "#22c55e", // Green background for success
@@ -34,7 +33,7 @@ const SignUp = () => {
         router.push("/signin");
       }
     }
-    catch (error: any) {
+    catch (error: unknown) {
       console.error("error while registering the user ", error);
     }
   };

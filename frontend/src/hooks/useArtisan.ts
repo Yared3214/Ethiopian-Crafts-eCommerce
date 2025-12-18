@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { createArtisans, fetchArtisan, fetchArtisans, toggleActivateUser, updateArtisanBySlug } from '@/api/artisan/artisanAPI'
 import { useDispatch } from 'react-redux'
 import { setArtisans, updateArtisan } from '@/store/feature/artisan/artisanSlice'
-import { Artisan, ArtisanResponse } from '@/types/artisan'
+import { Artisan } from '@/types/artisan'
 
 
 const useArtisan = () => {
@@ -16,25 +16,29 @@ const useArtisan = () => {
         try {
             const data = await createArtisans(ArtisanData);
             return data;
-        } catch (error) {
-            setError((error as any).message || 'Failed to create artisan')
+        } catch (error: unknown) {
+            const message =
+                error instanceof Error ? error.message : "Failed to create artisan";
+            setError(message)
         } finally {
             setLoading(false)  // Set loading to false after fetching
         }
     }
 
-    const fetchSingleArtisan = async (slug: string) => {
+    const fetchSingleArtisan = useCallback(async (slug: string) => {
         setError(null)
         setLoading(true)  // Set loading to true before fetching
         try {
             const data = await fetchArtisan(slug)  // Expecting an array of Product
             return data;
-        } catch (error) {
-            setError((error as any).message || 'Failed to fetch artisan')
+        } catch (error: unknown) {
+            const message =
+                error instanceof Error ? error.message : "Failed to fetch artisan";
+            setError(message)
         } finally {
             setLoading(false)  // Set loading to false after fetching
         }
-    }
+    },[]);
 
     const fetchAllArtisans = async() => {
         setError(null)
@@ -44,8 +48,10 @@ const useArtisan = () => {
             console.log(data);
             dispatch(setArtisans(data));
             return data;
-        } catch (error) {
-            setError((error as any).message || 'Failed to fetch artisans')
+        } catch (error: unknown) {
+            const message =
+                error instanceof Error ? error.message : "Failed to fetch artisans";
+            setError(message)
         } finally {
             setLoading(false)  // Set loading to false after fetching
         }
@@ -58,8 +64,10 @@ const useArtisan = () => {
                 const data = await toggleActivateUser(userId);
                 console.log("user activated or deactivated: ", data.artisan);
                 dispatch(updateArtisan(data.artisan));
-            } catch (error) {
-                setError((error as any).message || 'Failed to activate or deactivate artisan')
+            } catch (error: unknown) {
+                const message =
+                    error instanceof Error ? error.message : "Failed to activate or deactivate artisan";
+                setError(message);
              } finally {
                 setLoading(false);
              }
@@ -73,8 +81,10 @@ const useArtisan = () => {
             console.log('updated artisan', data.updatedArtisan);
             dispatch(updateArtisan(data.updatedArtisan));
             return data;
-        } catch (error) {
-            setError((error as any).message || 'Failed to update artisan')
+        } catch (error: unknown) {
+            const message =
+                error instanceof Error ? error.message : "Failed to update artisan";
+            setError(message)
             } finally {
             setLoading(false);
             }

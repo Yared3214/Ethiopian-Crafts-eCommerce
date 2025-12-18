@@ -8,10 +8,11 @@ import { ProductResponse } from "@/types/product";
 import AddtoCart from "@/components/AddToCart/addToCart";
 import { Bookmark, BookmarkCheck } from "lucide-react"; // TikTok-like save icons
 import store from "@/store/store";
+import { ToggleSavingProductResponse } from "@/api/user/userAPI";
 
 interface ProductCardProps {
   product: ProductResponse;
-  toggleSaveProduct: (productId: string) => Promise<any>;
+  toggleSaveProduct?: (productId: string) => Promise<ToggleSavingProductResponse>;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, toggleSaveProduct }) => {
@@ -22,15 +23,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, toggleSaveProduct })
 
   useEffect(() => {
     setIsSaved(checkIfSaved);
-  }, [product._id, savedProducts]);
+  }, [product._id, savedProducts, checkIfSaved]);
 
   const toggleSave = async () => {
     try {
-      const res = await toggleSaveProduct(product._id) as any;
-      console.log("Toggled save product:", res);
-      if (res.success) {
-        setIsSaved(!isSaved);
+      if(toggleSaveProduct) {
+        const res = await toggleSaveProduct(product._id);
+        console.log("Toggled save product:", res);
+        if (res.success) {
+          setIsSaved(!isSaved);
+        }
       }
+      
     } catch (error) {
       console.error("Error toggling save product:", error);
     }

@@ -3,7 +3,6 @@ import { setCustomers, updateCustomer } from '@/store/feature/user/customersSlic
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-
 const useCustomer = () => {
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState<boolean>(false)
@@ -16,8 +15,10 @@ const useCustomer = () => {
             const data = await getAllUsers();
             console.log("users: ", data);
             dispatch(setCustomers(data));
-        } catch (error) {
-            setError((error as any).message || 'Failed to fetch users')
+        } catch (error: unknown) {
+            const message =
+                error instanceof Error ? error.message : "Failed to fetch users";
+            setError(message)
         } finally {
             setLoading(false);
         }
@@ -30,8 +31,10 @@ const useCustomer = () => {
             const data = await toggleActivateUser(userId);
             console.log("user activated or deactivated: ", data.user);
             dispatch(updateCustomer(data.user));
-        } catch (error) {
-            setError((error as any).message || 'Failed to activate or deactivate user')
+        } catch (error: unknown) {
+            const message =
+                error instanceof Error ? error.message : "Failed to activate or deactivate user";
+            setError(message)
          } finally {
             setLoading(false);
          }

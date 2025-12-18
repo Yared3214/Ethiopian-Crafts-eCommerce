@@ -4,14 +4,27 @@ import store from "../../store/store";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+// Helper to safely extract error message
+const parseAxiosError = (error: unknown): string | object => {
+    if (axios.isAxiosError(error)) {
+      return error.response?.data || error.message;
+    }
+    return 'Network error';
+  };
+
+interface DeleteProductResponse {
+  success: boolean;
+  message: string;
+}
+
 // ✅ Fetch all products
 export const fetchProducts = async (): Promise<ProductResponse[]> => {
   try {
     const response = await axios.get(`${API_URL}/product`);
     return response.data.products as ProductResponse[];
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error while getting all products", error);
-    throw error.response ? error.response.data : new Error("Network error");
+    throw parseAxiosError(error);
   }
 };
 
@@ -21,9 +34,9 @@ export const fetchSingleProduct = async (slug: string): Promise<ProductWithDetai
   try {
     const response = await axios.get(`${API_URL}/product/single/${slug}`);
     return response.data.data as ProductWithDetails;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error while getting single product", error);
-    throw error.response ? error.response.data : new Error("Network error");
+    throw parseAxiosError(error);
   }
 };
 
@@ -55,9 +68,9 @@ export const createProduct = async (productData: Product): Promise<Product> => {
     });
 
     return response.data.product as Product;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error creating product:", error);
-    throw error.response ? error.response.data : new Error("Network error");
+    throw parseAxiosError(error);
   }
 };
 
@@ -93,14 +106,14 @@ export const updateProduct = async (
     });
 
     return response.data.product as Product;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error updating product:", error);
-    throw error.response ? error.response.data : new Error("Network error");
+    throw parseAxiosError(error);
   }
 };
 
 // ✅ Delete product by id
-export const deleteProduct = async (id: string): Promise<any> => {
+export const deleteProduct = async (id: string): Promise<DeleteProductResponse> => {
   try {
     const token = store.getState().user.user?.tokens.access.token;
     if (!token) throw new Error("User is not authenticated");
@@ -112,8 +125,8 @@ export const deleteProduct = async (id: string): Promise<any> => {
     });
 
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error deleting product:", error);
-    throw error.response ? error.response.data : new Error("Network error");
+    throw parseAxiosError(error);
   }
 };

@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Blog } from '@/types/blog';
 import {
   fetchBlogs,
@@ -16,7 +16,7 @@ const useBlog = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   // ✅ Fetch all blogs
-  const fetchBlogsHandler = async () => {
+  const fetchBlogsHandler = useCallback(async () => {
     setError(null);
     setLoading(true);
     try {
@@ -24,27 +24,31 @@ const useBlog = () => {
       console.log("Fetched blogs:", data);
       dispatch(setBlogs(data));
       return data;
-    } catch (error) {
-      setError((error as any).message || 'Failed to fetch blogs');
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Failed to fetch blogs";
+      setError(message);
     } finally {
       setLoading(false);
     }
-  };
+  },[dispatch]);
 
   // ✅ Fetch single blog by slug
-  const fetchBlogBySlugHandler = async (slug: string) => {
+  const fetchBlogBySlugHandler = useCallback(async (slug: string) => {
     setError(null);
     setLoading(true);
     try {
       const data = await fetchSingleBlog(slug); // Expecting Blog
       console.log("Fetched single blog:", data);
       return data;
-    } catch (error) {
-      setError((error as any).message || 'Failed to fetch blog');
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Failed to fetch blog";
+      setError(message);
     } finally {
       setLoading(false);
     }
-  };
+  },[]);
 
   // ✅ Create new blog
   const createBlogHandler = async (blogData: Blog) => {
@@ -54,8 +58,10 @@ const useBlog = () => {
       const data = await createBlog(blogData); // Expecting Blog
       console.log("Created blog:", data);
       return data;
-    } catch (error) {
-      setError((error as any).message || 'Failed to create blog');
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Failed to create blog";
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -69,8 +75,10 @@ const useBlog = () => {
       const updatedBlog = await updateBlog(slug, blogData); // Expecting Blog
       console.log("Updated blog:", updatedBlog);
       return updatedBlog;
-    } catch (error) {
-      setError((error as any).message || 'Failed to update blog');
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Failed to update blog";
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -78,7 +86,6 @@ const useBlog = () => {
 
   const deleteBlogHandler = async (slug: string) => {
     // Implement delete blog logic similarly
-    setError
     setError(null);
     setLoading(true);
     try {
@@ -86,8 +93,10 @@ const useBlog = () => {
       console.log("Deleted blog:", deletedBlog);
       return deletedBlog;
     } 
-    catch (error) {
-      setError((error as any).message || 'Failed to delete blog');
+    catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Failed to delete blog";
+      setError(message);
     } finally {
       setLoading(false);
     }

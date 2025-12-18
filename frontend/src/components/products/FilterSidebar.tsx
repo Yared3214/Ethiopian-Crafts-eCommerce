@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { FiChevronDown } from 'react-icons/fi'; // Import a better dropdown icon
 import { FaFolderOpen } from 'react-icons/fa';
 
-
 interface FilterSidebarProps {
   categories: string[];
   selectedCategory: string;

@@ -7,7 +7,6 @@ const AppleCardsCarousel: React.FC = () => {
     const cards = data.map((card, index) => (
         <Card key={card.src} card={card} index={index} />
     ));
-
     
     return (
         <div className="w-full h-full py-20">
