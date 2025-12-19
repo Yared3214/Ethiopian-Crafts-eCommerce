@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic"; // 🔥 CRITICAL FIX
+
 import React, { useEffect, useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import {
@@ -15,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { logout } from "@/store/feature/user/userSlice";
 import { useDispatch } from "react-redux";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
 import CustomerDashboardContent from "@/components/CustomerDashboardContent/customerDashboardContent";
 import PurchasedProducts from "@/components/CustomerOrders/customerOrders";
 import SavedProducts from "@/components/CustomerSavedProducts/customerSavedProducts";
@@ -42,70 +45,74 @@ const DashboardPage: React.FC = () => {
     {
       label: "Overview",
       href: "#",
-      icon: <IconLayoutDashboard className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />,
+      icon: (
+        <IconLayoutDashboard className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />
+      ),
       value: "overview",
     },
     {
       label: "Notifications",
       href: "#",
-      icon: <Bell className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />,
+      icon: (
+        <Bell className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />
+      ),
       value: "notifications",
     },
     {
       label: "Orders",
       href: "#",
-      icon: <IconPackage className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />,
+      icon: (
+        <IconPackage className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />
+      ),
       value: "orders",
     },
     {
       label: "Saved",
       href: "#",
-      icon: <IconHeart className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />,
+      icon: (
+        <IconHeart className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />
+      ),
       value: "saved",
     },
     {
       label: "Profile",
       href: "#",
-      icon: <IconUser className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />,
+      icon: (
+        <IconUser className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />
+      ),
       value: "profile",
     },
   ];
 
-  // Update URL search params & UI state
   const setTabParam = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("tab", value);
-
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   const handleLinkClick = (linkValue: string, event?: React.MouseEvent) => {
-    if (event) event.preventDefault(); // prevent unwanted navigation
+    event?.preventDefault();
 
     if (linkValue === "logout") {
-      handleLogout();
+      dispatch(logout());
+      router.replace("/signin");
       return;
     }
 
     setActiveLink(linkValue);
-    setTabParam(linkValue); // <— UPDATE SEARCH PARAMS
-  };
-
-  const handleLogout = () => {
-    dispatch(logout());
-    router.replace("/signin");
+    setTabParam(linkValue);
   };
 
   return (
     <div
       className={cn(
-        "flex flex-col md:flex-row w-full h-[99.5vh] overflow-hidden",
+        "flex h-[99.5vh] w-full overflow-hidden",
         "bg-gradient-to-br from-gray-50 to-gray-100 dark:from-neutral-900 dark:to-neutral-950"
       )}
     >
       <Sidebar open={open} setOpen={setOpen}>
         <SidebarBody className="justify-between gap-8 p-4">
-          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+          <div className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
             <Link
               href="/"
               className="text-lg font-semibold tracking-tight text-neutral-800 dark:text-neutral-200"
@@ -125,13 +132,13 @@ const DashboardPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="pt-3 border-t border-neutral-200/60 dark:border-neutral-700/50">
+          <div className="border-t border-neutral-200/60 pt-3 dark:border-neutral-700/50">
             <SidebarLink
               link={{
                 label: "Logout",
                 href: "#",
                 icon: (
-                  <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+                  <IconArrowLeft className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />
                 ),
               }}
               onClick={(e) => handleLinkClick("logout", e)}
@@ -140,17 +147,12 @@ const DashboardPage: React.FC = () => {
         </SidebarBody>
       </Sidebar>
 
-      <div
-        className="flex flex-1 bg-white dark:bg-neutral-900 
-          border-l border-neutral-200 dark:border-neutral-800 
-          shadow-inner rounded-l-2xl overflow-y-auto"
-      >
+      <div className="flex flex-1 overflow-y-auto rounded-l-2xl border-l border-neutral-200 bg-white shadow-inner dark:border-neutral-800 dark:bg-neutral-900">
         {activeLink === "overview" && <CustomerDashboardContent />}
         {activeLink === "orders" && <PurchasedProducts />}
         {activeLink === "saved" && <SavedProducts />}
         {activeLink === "profile" && <CustomerProfile />}
         {activeLink === "notifications" && <NotificationCenter />}
-
       </div>
     </div>
   );
