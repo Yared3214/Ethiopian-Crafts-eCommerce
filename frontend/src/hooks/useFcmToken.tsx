@@ -6,65 +6,65 @@ import { fetchToken, getMessagingInstance } from "../../firebase";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-async function getNotificationPermissionAndToken(): Promise<string | null> {
+export interface UseFcmTokenReturn {
+  token: string | null;
+  notificationPermissionStatus: NotificationPermission | null;
+}
+
+async function getPermissionAndToken(): Promise<string | null> {
   if (!("Notification" in window)) return null;
 
   if (Notification.permission === "granted") {
-    return await fetchToken();
+    return fetchToken();
   }
 
   if (Notification.permission !== "denied") {
     const permission = await Notification.requestPermission();
     if (permission === "granted") {
-      return await fetchToken();
+      return fetchToken();
     }
   }
 
   return null;
 }
 
-export interface UseFcmTokenReturn {
-  fcmToken: string | null;
-  notificationPermissionStatus: NotificationPermission | null;
-}
-
 const useFcmToken = (): UseFcmTokenReturn => {
   const router = useRouter();
 
-  const [fcmToken, setFcmToken] = useState<string | null>(null);
-  const [notificationPermissionStatus, setNotificationPermissionStatus] =
+  const [token, setToken] = useState<string | null>(null);
+  const [notificationPermissionStatus, setPermissionStatus] =
     useState<NotificationPermission | null>(null);
 
-  const retryLoadToken = useRef(0);
+  const retryCount = useRef(0);
   const isLoading = useRef(false);
 
   const loadToken = async () => {
     if (isLoading.current) return;
     isLoading.current = true;
 
-    const token = await getNotificationPermissionAndToken();
+    const fcmToken = await getPermissionAndToken();
 
     if (Notification.permission === "denied") {
-      setNotificationPermissionStatus("denied");
+      setPermissionStatus("denied");
       isLoading.current = false;
       return;
     }
 
-    if (!token) {
-      if (retryLoadToken.current >= 3) {
-        alert("Unable to load FCM token. Please refresh the page.");
+    if (!fcmToken) {
+      if (retryCount.current >= 3) {
+        console.warn("FCM token could not be loaded.");
         isLoading.current = false;
         return;
       }
 
-      retryLoadToken.current += 1;
+      retryCount.current += 1;
       isLoading.current = false;
       await loadToken();
       return;
     }
 
-    setNotificationPermissionStatus(Notification.permission);
-    setFcmToken(token);
+    setPermissionStatus(Notification.permission);
+    setToken(fcmToken);
     isLoading.current = false;
   };
 
@@ -78,15 +78,13 @@ const useFcmToken = (): UseFcmTokenReturn => {
   useEffect(() => {
     let unsubscribe: Unsubscribe | null = null;
 
-    const setupListener = async () => {
-      if (!fcmToken) return;
+    const listen = async () => {
+      if (!token) return;
 
-      const messagingInstance = await getMessagingInstance();
-      if (!messagingInstance) return;
+      const instance = await getMessagingInstance();
+      if (!instance) return;
 
-      const { messaging } = messagingInstance;
-
-      unsubscribe = onMessage(messaging, (payload) => {
+      unsubscribe = onMessage(instance.messaging, (payload) => {
         if (Notification.permission !== "granted") return;
 
         const link = payload.fcmOptions?.link || payload.data?.link;
@@ -106,7 +104,7 @@ const useFcmToken = (): UseFcmTokenReturn => {
         const notification = new Notification(
           payload.notification?.title || "New Notification",
           {
-            body: payload.notification?.body || "You have a new message",
+            body: payload.notification?.body || "",
             data: link ? { url: link } : undefined,
           }
         );
@@ -124,15 +122,13 @@ const useFcmToken = (): UseFcmTokenReturn => {
       });
     };
 
-    setupListener();
+    listen();
 
-    return () => {
-      unsubscribe?.();
-    };
-  }, [fcmToken, router]);
+    return () => unsubscribe?.();
+  }, [token, router]);
 
   return {
-    fcmToken,
+    token,
     notificationPermissionStatus,
   };
 };
