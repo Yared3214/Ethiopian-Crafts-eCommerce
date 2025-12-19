@@ -48,8 +48,9 @@ export default function EditUserModal({ user }: EditUserModalProps) {
   const [form, setForm] = useState<User | ArtisansResponse>(user);
   const [open, setOpen] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState<string | undefined>(undefined);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { updateArtisanHandler, loading, error } = useArtisan();
+  const { updateArtisanHandler } = useArtisan();
 
   const isArtisan = !isUser(form);
 
@@ -58,6 +59,7 @@ export default function EditUserModal({ user }: EditUserModalProps) {
     if (open) {
       setForm(user);           // ← Reset to current user
       setAvatarPreview(undefined); // ← Clear old preview
+      setAvatarFile(null);
       // Reset file input
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
@@ -94,12 +96,12 @@ export default function EditUserModal({ user }: EditUserModalProps) {
     reader.onloadend = () => {
       const result = reader.result as string;
       setAvatarPreview(result);
+      setAvatarFile(image);
 
       // Store the file in form state (you can later send it to API)
       setForm((prev) => ({
         ...prev,
         // We'll keep a `file` field for upload later
-        // @ts-ignore – we add a temporary property
         image,
       }));
     };
@@ -112,12 +114,10 @@ export default function EditUserModal({ user }: EditUserModalProps) {
       return;
     }
   
-    const uploadedFile = (form as any).image as File | undefined;
-  
     try {
-      if (uploadedFile) {
+      if (avatarFile) {
         const formData = new FormData();
-        formData.append("profilePic", uploadedFile); // ← MATCHES BACKEND
+        formData.append("profilePic", avatarFile); // ← MATCHES BACKEND
         formData.append("fullName", form.fullName);
         formData.append("description", form.description);
   
@@ -129,8 +129,12 @@ export default function EditUserModal({ user }: EditUserModalProps) {
         };
         await updateArtisanHandler(form.slug, artisanData);
       }
-    } catch (err: any) {
-      console.error("Update failed:", err.message);
+    } catch (err: unknown) {
+      let errorMessage = "An unknown error occurred.";
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      console.error("Update failed:", errorMessage);
     } finally {
       setOpen(false);
     }

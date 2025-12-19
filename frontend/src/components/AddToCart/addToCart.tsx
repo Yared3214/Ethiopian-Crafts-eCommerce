@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { ProductResponse } from "@/types/product";
 import { showToast } from "nextjs-toast-notify";
 import { createCartRequest } from "@/api/cart/cartAPI";
+import axios from "axios";
 
 interface ProductCardProps {
   product: ProductResponse;
@@ -47,12 +48,20 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       window.dispatchEvent(new Event("cartUpdated"));
 
       setIsDialogOpen(false);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to add to cart:", error);
+
+      let errorMessage = "Failed to add item to cart";
+
+      if (axios.isAxiosError(error)) {
+        errorMessage = error.response?.data?.message || errorMessage;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
 
       // ✅ Error toast
       showToast.error(
-        error?.response?.data?.message || "Failed to add item to cart",
+        errorMessage,
         {
           duration: 4000,
           position: "bottom-right",
@@ -81,7 +90,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <DialogTitle>Add to Cart</DialogTitle>
           <DialogDescription>
             Specify the quantity of the item you wish to add to your cart. Click
-            "Add" when done.
+            &quot;Add&quot; when done.
           </DialogDescription>
         </DialogHeader>
 

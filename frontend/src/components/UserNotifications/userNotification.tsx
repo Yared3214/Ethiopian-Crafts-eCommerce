@@ -1,7 +1,7 @@
 // app/dashboard/notifications/page.tsx or any page
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { Notification } from "@/api/notification/notificationApi";
@@ -61,7 +60,7 @@ const groupNotifications = (notifications: Notification[]) => {
 };
 
 export default function NotificationCenter() {
-  const { fetchUserNotifications, markAsRead, markAllAsRead, loading, error } = useNotification();
+  const { fetchUserNotifications, markAsRead, markAllAsRead } = useNotification();
   const notifications = useSelector((state: RootState) => state.notification.notifications);
   // const [notifications, setNotifications] = useState(userNotifications);
   const unreadCount = notifications?.filter((n) => !n.read).length;
@@ -70,7 +69,7 @@ export default function NotificationCenter() {
           if (!notifications || notifications.length === 0) {
             fetchUserNotifications();
           }
-        }, []);
+        }, [notifications, fetchUserNotifications]);
 
   const handleMarkAsRead = async(id: string) => {
     await markAsRead(id);
@@ -217,7 +216,7 @@ export default function NotificationCenter() {
               <div className="bg-gray-100 dark:bg-neutral-800 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Bell className="h-12 w-12 text-gray-400" />
               </div>
-              <h3 className="text-2xl font-semibold mb-2">You're all caught up!</h3>
+              <h3 className="text-2xl font-semibold mb-2">You&#39;re all caught up!</h3>
               <p className="text-muted-foreground text-lg">
                 No new notifications at the moment.
               </p>

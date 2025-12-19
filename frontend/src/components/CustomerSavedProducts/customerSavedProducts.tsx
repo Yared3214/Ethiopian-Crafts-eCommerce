@@ -12,7 +12,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
 export default function SavedProducts() {
-  const { loading, error, getUserSavedProductsHandler, toggleSavingProductHandler } = useProduct();
+  const { getUserSavedProductsHandler, toggleSavingProductHandler } = useProduct();
   const savedProducts = useSelector((state: RootState) => state.savedProduct.savedProducts);
   const user = useSelector((state: RootState) => state.user.user?.user); // from cookie (AuthResponse.user)
 
@@ -21,12 +21,12 @@ export default function SavedProducts() {
     if (savedProducts.length === 0) {
       getUserSavedProductsHandler();
     }
-  }, []);
+  }, [getUserSavedProductsHandler, savedProducts.length]);
 
   // 🧠 Handle save/unsave toggle
   const handleToggleSave = async (productId: string) => {
     try {
-      const res = await toggleSavingProductHandler(productId) as any;
+      const res = await toggleSavingProductHandler(productId);
       console.log("Toggled save product:", res);
     } catch (error) {
       console.error("Error toggling save product:", error);

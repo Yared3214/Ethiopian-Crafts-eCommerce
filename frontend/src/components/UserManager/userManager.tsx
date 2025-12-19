@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
@@ -227,8 +227,8 @@ export default function UserManager<T extends Entity>({
           </div>
 
           <div className="ml-auto flex gap-2">
-            {role === "artisan" && <EditUserModal user={selectedOriginal as any} />}
-            <NotifyUserModal user={selectedOriginal as any} />
+            {role === "artisan" && <EditUserModal user={selectedOriginal} />}
+            <NotifyUserModal user={selectedOriginal} />
 
             {selectedNormalised.status === "active" ? (
               <Button

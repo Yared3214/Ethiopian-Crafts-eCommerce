@@ -5,7 +5,8 @@ export interface Blog {
   description: string;
   category: string;
   badge: string;
-  image: File;
+  image: File | string;
+  slug?: string;
 }
 
 export interface BlogResponse {

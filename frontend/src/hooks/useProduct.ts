@@ -10,7 +10,8 @@ import {
 } from '@/api/product/productAPI';
 import {
   toggleSavingProduct,
-  getUserSavedProducts
+  getUserSavedProducts,
+  ToggleSavingProductResponse
 } from '@/api/user/userAPI'
 import { setProducts } from '@/store/feature/product/productSlice';
 import { setSavedProducts } from '@/store/feature/product/savedProductSlice';
@@ -112,7 +113,7 @@ const useProduct = () => {
     }
   };
 
-  const toggleSavingProductHandler = async (productId: string) => {
+  const toggleSavingProductHandler = async(productId: string): Promise< ToggleSavingProductResponse> => {
   try {
     setError(null);
     const res = await toggleSavingProduct(productId);
@@ -123,9 +124,11 @@ const useProduct = () => {
     const message =
       error instanceof Error ? error.message : "Failed to save or unsave product";
     setError(message);
+    return Promise.reject(new Error(message));
   }
   };
-  const getUserSavedProductsHandler = async () => {
+
+  const getUserSavedProductsHandler = useCallback(async () => {
     setError(null);
     setLoading(true);
     try {
@@ -139,7 +142,7 @@ const useProduct = () => {
     } finally {
       setLoading(false);
     }
-  };
+  },[dispatch]);
 
 
   return {

@@ -29,7 +29,7 @@ type Order = {
   _id: string;
   OrderItems: OrderItem[];
   total_price: number;
-  order_status: "pending" | "processing" | "completed" | "cancelled";
+  order_status: "pending" | "processing" | "shipped" | "delivered" | "cancelled";
   createdAt: string;
 };
 
@@ -53,8 +53,12 @@ export default function PurchasedProducts() {
       try {
         const res = await getAllUserOrdersRequest();
         setOrders(res.data?.orders || []);
-      } catch (err: any) {
-        setError(err.message || "Failed to load orders");
+      } catch (err: unknown) {
+        let errorMessage = "Failed to load orders";
+        if (err instanceof Error) {
+          errorMessage = err.message || errorMessage;
+        }
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -79,7 +83,7 @@ export default function PurchasedProducts() {
         {orders.map((order) => {
           const firstItem = order.OrderItems[0];
           const title = firstItem?.ProductName || "Product";
-          const image = firstItem?.productImage || "https://via.placeholder.com/400x300";
+          // const image = firstItem?.productImage || "https://via.placeholder.com/400x300";
           const placedAt = new Date(order.createdAt).toLocaleDateString();
           const formattedPrice = new Intl.NumberFormat("en-ET", { style: "currency", currency: "ETB", minimumFractionDigits: 2 }).format(order.total_price);
           const status = statusStyle[order.order_status];

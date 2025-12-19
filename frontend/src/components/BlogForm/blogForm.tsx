@@ -23,7 +23,7 @@ export default function BlogForm({
   error = null,
 }: BlogFormProps) {
 
-  const [image, setImage] = useState<File>(initialData?.image || {} as File);
+  const [image, setImage] = useState<File | null>(initialData?.image instanceof File ? initialData.image : null);
   const [preview, setPreview] = useState<string>({} as string);
   const [formData, setFormData] = useState({
     title: initialData?.title || "",
@@ -53,7 +53,7 @@ export default function BlogForm({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ ...formData, image });
+    onSubmit({ ...formData, image: image || "" });
   };
 
   const isEdit = Boolean(initialData);

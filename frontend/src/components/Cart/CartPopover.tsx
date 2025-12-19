@@ -10,7 +10,7 @@ import {
   clearCartRequest,
 } from "@/api/cart/cartAPI";
 import { showToast } from "nextjs-toast-notify";
-import useCheckout from "@/hooks/useCheckout"; // import your hook
+import useCheckout from "@/hooks/useCheckout";
 
 interface CartItem {
   _id: string;
@@ -35,7 +35,7 @@ const CartPopover: React.FC = () => {
       const data = await getCartRequest();
       setCartItems(data.items || []);
       setTotalPrice(data.totalPrice || 0);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to fetch cart:", error);
       showToast.error("Failed to fetch cart items.", {
         duration: 4000,
@@ -69,7 +69,7 @@ const CartPopover: React.FC = () => {
         position: "bottom-right",
       });
       fetchCart();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error removing item:", error);
       showToast.error("Failed to remove item.", {
         duration: 4000,
@@ -87,7 +87,7 @@ const CartPopover: React.FC = () => {
         position: "bottom-right",
       });
       fetchCart();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error clearing cart:", error);
       showToast.error("Failed to clear cart.", {
         duration: 4000,
@@ -112,9 +112,15 @@ const CartPopover: React.FC = () => {
           position: "bottom-right",
         });
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Checkout error:", error);
-      showToast.error(error.message || "Checkout failed", {
+
+      let errorMessage = "Checkout failed";
+
+      if (error instanceof Error) {
+        errorMessage = error.message || errorMessage;
+      }
+      showToast.error(errorMessage, {
         duration: 4000,
         position: "bottom-right",
       });

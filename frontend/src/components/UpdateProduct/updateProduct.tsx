@@ -13,12 +13,13 @@ import { useState } from "react";
 import { showToast } from "nextjs-toast-notify";
 import ProductForm from "../ProductForm/productForm";
 import useProduct from "@/hooks/useProduct";
+import { Product, ProductResponse } from "@/types/product";
 
-export function UpdateProductDialog({ product }: { product: any }) {
+export function UpdateProductDialog({ product }: { product: ProductResponse }) {
   const [open, setOpen] = useState(false);
   const { fetchProductsHandler, updateProductHandler, loading, error } = useProduct();
 
-  const handleUpdateProduct = async (data: any) => {
+  const handleUpdateProduct = async (data: Partial<Product>) => {
     try {
       const result = await updateProductHandler(product._id, data); // ✅ use _id not id
 
@@ -36,7 +37,7 @@ export function UpdateProductDialog({ product }: { product: any }) {
 
         setOpen(false); // ✅ close dialog after success
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("❌ Error updating product:", err);
       showToast.error("Failed to update product", {
         duration: 4000,

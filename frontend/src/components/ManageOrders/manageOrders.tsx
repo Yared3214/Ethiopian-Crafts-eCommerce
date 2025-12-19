@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import { format } from "date-fns";
-import { Search, Package, Truck, CheckCircle, XCircle, AlertCircle, ChevronDown, Download, Printer } from "lucide-react";
+import { Search, Package, Truck, CheckCircle, XCircle, AlertCircle, Download, Printer } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -23,7 +23,7 @@ import { Order } from "@/api/order/orderAPI";
 
 export default function ManageOrders() {
   // const [orders] = useState<Order[]>(sampleOrders);
-  const { fetchAllOrders, updateOrderStatus, error, loading } = useOrder();
+  const { fetchAllOrders, updateOrderStatus, loading } = useOrder();
   const orders = useSelector((state: RootState) => state.order.orders);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");

@@ -10,10 +10,9 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog"
-import { Product } from "@/types/product";
 import { IconTrash } from "@tabler/icons-react";
 
-const DeleteButton = ({product}: {product: Product}) => {
+const DeleteButton = () => {
   const onClick = () => {
     // Placeholder for delete functionality
   }
