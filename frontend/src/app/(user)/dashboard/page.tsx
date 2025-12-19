@@ -1,6 +1,6 @@
 "use client";
 
-export const dynamic = "force-dynamic"; // 🔥 CRITICAL FIX
+export const dynamic = "force-dynamic"; // ⚡ Prevent SSG / prerender errors
 
 import React, { useEffect, useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
@@ -84,6 +84,7 @@ const DashboardPage: React.FC = () => {
     },
   ];
 
+  // Update URL search params & UI state
   const setTabParam = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("tab", value);
