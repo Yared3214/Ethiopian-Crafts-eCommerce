@@ -1,7 +1,12 @@
 import { getApp, getApps, initializeApp } from "firebase/app";
-import { getMessaging, getToken, isSupported } from "firebase/messaging";
+import {
+  getMessaging,
+  getToken,
+  isSupported,
+  Messaging,
+} from "firebase/messaging";
 
-// Replace the following with your app's Firebase project configuration
+// 🔐 Firebase config (env vars must exist)
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN!,
@@ -12,27 +17,39 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID!,
 };
 
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+// ✅ Initialize app safely (Next.js compatible)
+export const app =
+  getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
-const messaging = async () => {
+/**
+ * Returns a messaging instance only if supported
+ * (prevents SSR / unsupported browser crashes)
+ */
+export const getMessagingInstance = async (): Promise<{
+  messaging: Messaging;
+} | null> => {
   const supported = await isSupported();
-  return supported ? getMessaging(app) : null;
+  if (!supported) return null;
+
+  const messaging = getMessaging(app);
+  return { messaging };
 };
 
-export const fetchToken = async () => {
+/**
+ * Fetch FCM token
+ */
+export const fetchToken = async (): Promise<string | null> => {
   try {
-    const fcmMessaging = await messaging();
-    if (fcmMessaging) {
-      const token = await getToken(fcmMessaging, {
-        vapidKey: process.env.NEXT_PUBLIC_FIREBASE_FCM_VAPID_KEY,
-      });
-      return token;
-    }
-    return null;
-  } catch (err) {
-    console.error("An error occurred while fetching the token:", err);
+    const messagingInstance = await getMessagingInstance();
+    if (!messagingInstance) return null;
+
+    const token = await getToken(messagingInstance.messaging, {
+      vapidKey: process.env.NEXT_PUBLIC_FIREBASE_FCM_VAPID_KEY,
+    });
+
+    return token ?? null;
+  } catch (error) {
+    console.error("Error fetching FCM token:", error);
     return null;
   }
 };
-
-export { app, messaging };

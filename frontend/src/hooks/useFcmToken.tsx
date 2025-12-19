@@ -9,31 +9,35 @@ import { toast } from "sonner";
 async function getNotificationPermissionAndToken(): Promise<string | null> {
   if (!("Notification" in window)) return null;
 
-  // Permission already granted
-  if (Notification.permission === "granted") return await fetchToken();
+  if (Notification.permission === "granted") {
+    return await fetchToken();
+  }
 
-  // Ask for permission if not denied
   if (Notification.permission !== "denied") {
     const permission = await Notification.requestPermission();
-    if (permission === "granted") return await fetchToken();
+    if (permission === "granted") {
+      return await fetchToken();
+    }
   }
 
   return null;
 }
 
-interface UseFcmTokenReturn {
+export interface UseFcmTokenReturn {
   fcmToken: string | null;
   notificationPermissionStatus: NotificationPermission | null;
 }
 
 const useFcmToken = (): UseFcmTokenReturn => {
   const router = useRouter();
-  const [notificationPermissionStatus, setNotificationPermissionStatus] = useState<NotificationPermission | null>(null);
+
   const [fcmToken, setFcmToken] = useState<string | null>(null);
+  const [notificationPermissionStatus, setNotificationPermissionStatus] =
+    useState<NotificationPermission | null>(null);
+
   const retryLoadToken = useRef(0);
   const isLoading = useRef(false);
 
-  // Load FCM token
   const loadToken = async () => {
     if (isLoading.current) return;
     isLoading.current = true;
@@ -48,10 +52,11 @@ const useFcmToken = (): UseFcmTokenReturn => {
 
     if (!token) {
       if (retryLoadToken.current >= 3) {
-        alert("Unable to load token, please refresh the browser.");
+        alert("Unable to load FCM token. Please refresh the page.");
         isLoading.current = false;
         return;
       }
+
       retryLoadToken.current += 1;
       isLoading.current = false;
       await loadToken();
@@ -64,10 +69,12 @@ const useFcmToken = (): UseFcmTokenReturn => {
   };
 
   useEffect(() => {
-    if ("Notification" in window) loadToken();
-  }, [loadToken]);
+    if ("Notification" in window) {
+      loadToken();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // Listen for foreground messages
   useEffect(() => {
     let unsubscribe: Unsubscribe | null = null;
 
@@ -84,45 +91,50 @@ const useFcmToken = (): UseFcmTokenReturn => {
 
         const link = payload.fcmOptions?.link || payload.data?.link;
 
-        // Toast notification
-        if (link) {
-          toast.info(`${payload.notification?.title}: ${payload.notification?.body}`, {
-            action: {
-              label: "Visit",
-              onClick: () => router.push(link),
-            },
-          });
-        } else {
-          toast.info(`${payload.notification?.title}: ${payload.notification?.body}`);
-        }
+        toast.info(
+          `${payload.notification?.title}: ${payload.notification?.body}`,
+          link
+            ? {
+                action: {
+                  label: "Visit",
+                  onClick: () => router.push(link),
+                },
+              }
+            : undefined
+        );
 
-        // Browser notification
-        const n = new Notification(payload.notification?.title || "New message", {
-          body: payload.notification?.body || "This is a new message",
-          data: link ? { url: link } : undefined,
-        });
+        const notification = new Notification(
+          payload.notification?.title || "New Notification",
+          {
+            body: payload.notification?.body || "You have a new message",
+            data: link ? { url: link } : undefined,
+          }
+        );
 
-        n.onclick = function (event: Event) {
+        notification.onclick = (event) => {
           event.preventDefault();
+          const target = event.target as Notification & {
+            data?: { url?: string };
+          };
 
-          // 'this' is the Notification instance
-          const target = event.target as Notification & { data?: { url?: string } };
-          const url = target.data?.url;
-
-          if (url) {
-            router.push(url);
+          if (target.data?.url) {
+            router.push(target.data.url);
           }
         };
-
       });
     };
 
     setupListener();
 
-    return () => unsubscribe?.();
+    return () => {
+      unsubscribe?.();
+    };
   }, [fcmToken, router]);
 
-  return { fcmToken, notificationPermissionStatus };
+  return {
+    fcmToken,
+    notificationPermissionStatus,
+  };
 };
 
 export default useFcmToken;
