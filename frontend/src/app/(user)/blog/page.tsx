@@ -97,7 +97,7 @@ const BlogPage: React.FC = () => {
                 key={i}
                 title={item.title}
                 description={plainText}
-                imageSrc={item.image}
+                imageSrc={item.image as string}
                 slug={item.slug}
                 icon={<IconArrowWaveRightUp className="h-4 w-4 text-neutral-500" />}
                 className={i !== 0 && i % 3 === 0 ? "md:col-span-2" : ""}

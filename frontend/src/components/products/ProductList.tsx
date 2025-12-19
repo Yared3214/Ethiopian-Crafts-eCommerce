@@ -3,11 +3,12 @@ import { SkeletonCard } from '@/components/Skeleton/Skeleton';
 import { motion } from 'framer-motion';
 import ProductCard from '@/components/products/ProductCard';
 import { Button } from '@/components/ui/button';
+import { ToggleSavingProductResponse } from "@/api/user/userAPI";
 
 
 interface ProductListProps {
   products: ProductResponse[];
-  toggleSaveProduct: (productId: string) => Promise<any>;
+  toggleSaveProduct: (productId: string) => Promise< ToggleSavingProductResponse>;
   onClear?: (category: string) => void;
   loading: boolean;
 }

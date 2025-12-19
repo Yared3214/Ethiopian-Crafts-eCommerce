@@ -6,7 +6,7 @@ import useArtisan from "@/hooks/useArtisan";
 
 // ManageArtisans.tsx
 export default function ManageArtisans() {
-    const { fetchAllArtisans, toggleActivateArtisanHandler, loading, error } = useArtisan();
+    const { fetchAllArtisans, toggleActivateArtisanHandler } = useArtisan();
     const artisans = useSelector((state: RootState) => state.artisan.artisans);
   
     useEffect(() => {

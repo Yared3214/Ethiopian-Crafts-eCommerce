@@ -2,9 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useSelector } from "react-redux";
@@ -80,7 +78,7 @@ export default function CustomerDashboardContent() {
   useEffect(() => {
     if (products.length === 0) fetchProductsHandler();
     if (savedProducts.length === 0) getUserSavedProductsHandler();
-  }, []);
+  }, [products.length, savedProducts.length, fetchProductsHandler, getUserSavedProductsHandler]);
 
   // -----------------------------
   // Stats Computation

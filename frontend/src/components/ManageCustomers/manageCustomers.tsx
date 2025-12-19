@@ -5,7 +5,7 @@ import useCustomer from "@/hooks/useCustomer";
 import { useEffect } from "react";
 
 export default function ManageCustomers() {
-    const { fetchAllCustomers, toggleActivateCustomer, loading, error } = useCustomer();
+    const { fetchAllCustomers, toggleActivateCustomer } = useCustomer();
     const customers = useSelector((state: RootState) => state.customer.customers,
     shallowEqual); // from cookie (AuthResponse.user)
 

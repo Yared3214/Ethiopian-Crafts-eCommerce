@@ -13,14 +13,15 @@ import { useState } from "react";
 import BlogForm from "../BlogForm/blogForm";
 import useBlog from "@/hooks/useblog";
 import { showToast } from "nextjs-toast-notify";
+import { Blog } from "@/types/blog";
 
-export function UpdateBlogDialog({ blog }: { blog: any }) {
+export function UpdateBlogDialog({ blog }: { blog:  Blog}) {
   const [open, setOpen] = useState(false);
   const { fetchBlogsHandler, updateBlogHandler, loading, error } = useBlog();
 
-  const handleUpdateBlog = async (data: any) => {
+  const handleUpdateBlog = async (data: Partial<Blog>) => {
     try {
-      const result = await updateBlogHandler(blog.slug, data);
+      const result = await updateBlogHandler(blog.slug ?? '', data);
 
       if (result) {
         await fetchBlogsHandler(); // Refresh blog list after update
@@ -36,7 +37,7 @@ export function UpdateBlogDialog({ blog }: { blog: any }) {
 
         setOpen(false); // ✅ close dialog after success
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("❌ Error updating blog:", err);
     }
   };
