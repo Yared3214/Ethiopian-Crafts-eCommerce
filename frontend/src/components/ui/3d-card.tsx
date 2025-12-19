@@ -68,7 +68,7 @@ export const CardItem = ({
   as?: React.ElementType;
   children: React.ReactNode;
   className?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }) => {
   return (
     <Tag

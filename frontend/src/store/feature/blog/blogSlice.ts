@@ -1,9 +1,9 @@
 // src/features/blog/blogSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { BlogResponse } from '@/types/blog';
+import { Blog } from '@/types/blog';
 
 export interface Blogs {
-    blogs: BlogResponse[];
+    blogs: Blog[];
 }
 
 const initialState: Blogs = {  // Correct type for initialState
@@ -14,7 +14,7 @@ const blogSlice = createSlice({
     name: 'blog',
     initialState,
     reducers: {
-        setBlogs: (state, action: PayloadAction<BlogResponse[]>) => {
+        setBlogs: (state, action: PayloadAction<Blog[]>) => {
             state.blogs = action.payload;
         },
     },

@@ -1,7 +1,7 @@
 import { getUserNotifications, markAllNotificationsAsRead_, markNotificationAsRead_ } from '@/api/notification/notificationApi'
 import { markAllNotificationsAsRead, markNotificationAsRead, setNotifications } from '@/store/feature/notification/notificationSlice'
 import store from '@/store/store'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 
@@ -10,7 +10,7 @@ const useNotification = () => {
     const [loading, setLoading] = useState<boolean>(false)
     const dispatch = useDispatch();
 
-    const fetchUserNotifications = async() => {
+    const fetchUserNotifications = useCallback(async() => {
         setError(null)
         setLoading(true);
         try {
@@ -25,7 +25,7 @@ const useNotification = () => {
         } finally {
             setLoading(false);
         }
-    }
+    },[dispatch]);
 
     const markAsRead = async(id: string) => {
         setError(null)

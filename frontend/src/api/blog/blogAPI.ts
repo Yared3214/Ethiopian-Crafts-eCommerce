@@ -24,11 +24,11 @@ interface FetchSingleBlogResponse {
 }
 
 // ✅ Fetch all blogs
-export const fetchBlogs = async (): Promise<BlogResponse[]> => {
+export const fetchBlogs = async (): Promise<Blog[]> => {
   try {
     const response = await axios.get(`${API_URL}/blog`);
     console.log("blog responsessss", response.data);
-    return response.data.blogs as BlogResponse[];
+    return response.data.blogs as Blog[];
   } catch (error: unknown) {
     console.error("Error while getting all blogs", error);
     throw parseAxiosError(error);

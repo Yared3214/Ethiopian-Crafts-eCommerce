@@ -23,7 +23,7 @@ import { IconTrash, IconSearch } from "@tabler/icons-react";
 import { UpdateProductDialog } from "../UpdateProduct/updateProduct";
 
 export default function ProductManager() {
-  const { fetchProductsHandler, deleteProductHandler, error, loading } = useProduct();
+  const { fetchProductsHandler, deleteProductHandler, loading } = useProduct();
   const products = useSelector((state: RootState) => state.product.products);
 
   const [loadingId, setLoadingId] = useState<string | null>(null);
@@ -39,7 +39,7 @@ export default function ProductManager() {
   // Fetch products on mount
   useEffect(() => {
     if (products.length === 0) fetchProductsHandler();
-  }, []);
+  }, [products.length, fetchProductsHandler]);
 
   // Filter products by search query and category
   const filteredProducts = useMemo(() => {
@@ -54,7 +54,7 @@ export default function ProductManager() {
     try {
       const result = await deleteProductHandler(id);
       console.log("Delete result:", result);
-      if (result?.success === "true") {
+      if (result?.success === true) {
         await fetchProductsHandler();
         showToast.success("Product deleted successfully!", {
           duration: 4000,
@@ -66,7 +66,7 @@ export default function ProductManager() {
           position: "bottom-right",
         });
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error deleting product:", err);
       showToast.error("Something went wrong while deleting the product.", {
         duration: 4000,

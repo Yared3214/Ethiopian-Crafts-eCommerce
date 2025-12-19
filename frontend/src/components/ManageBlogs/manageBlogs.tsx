@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import useBlog from "@/hooks/useblog";
-import { BlogResponse } from "@/types/blog";
 import { showToast } from "nextjs-toast-notify"
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -26,13 +25,13 @@ import { IconTrash, IconSearch } from "@tabler/icons-react";
 import { UpdateBlogDialog } from "../UpdateBlog/updateBlog";
 
 export default function BlogManager() {
-  const { fetchBlogsHandler, deleteBlogHandler, error, loading } = useBlog();
+  const { fetchBlogsHandler, deleteBlogHandler, loading } = useBlog();
   const blogs = useSelector((state: RootState) => state.blog.blogs);
 
   // Fetch blogs on mount
   useEffect(() => {
     fetchBlogsHandler();
-  }, []);
+  }, [fetchBlogsHandler]);
 
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -79,7 +78,7 @@ export default function BlogManager() {
           position: "bottom-right",
         });
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("❌ Error deleting blog:", err);
       showToast.error("Something went wrong while deleting the blog.", {
         duration: 4000,
@@ -231,7 +230,7 @@ export default function BlogManager() {
                           Cancel
                         </AlertDialogCancel>
                         <AlertDialogAction
-                          onClick={() => handleDelete(blog.slug)}
+                          onClick={() => handleDelete(blog.slug ?? '')}
                           className="rounded-xl"
                         >
                           {loadingId === blog.slug ? "Deleting..." : "Delete"}
