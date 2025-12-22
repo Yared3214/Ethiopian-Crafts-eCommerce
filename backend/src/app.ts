@@ -20,7 +20,7 @@ const PORT = process.env.PORT || 3000;
 // Define CORS options
 const corsOptions = {
     origin: [
-        'https://ethiopian-crafts-e-commerce.vercel.app/', // Replace with your frontend URL
+        'https://ethiopian-crafts-e-commerce.vercel.app', // Replace with your frontend URL
         'http://localhost:3000',            // Allow local development (if applicable)
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
