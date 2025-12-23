@@ -1,7 +1,11 @@
 import { getApp, getApps, initializeApp } from "firebase/app";
-import { getMessaging, getToken, isSupported } from "firebase/messaging";
+import {
+  getMessaging,
+  getToken,
+  isSupported,
+  Messaging,
+} from "firebase/messaging";
 
-// Replace the following with your app's Firebase project configuration
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN!,
@@ -12,27 +16,36 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID!,
 };
 
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+export const app =
+  getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
-const messaging = async () => {
+/**
+ * Safe messaging getter (SSR + unsupported browser safe)
+ */
+export const getMessagingInstance = async (): Promise<{
+  messaging: Messaging;
+} | null> => {
   const supported = await isSupported();
-  return supported ? getMessaging(app) : null;
+  if (!supported) return null;
+
+  return { messaging: getMessaging(app) };
 };
 
-export const fetchToken = async () => {
+/**
+ * Fetch FCM token
+ */
+export const fetchToken = async (): Promise<string | null> => {
   try {
-    const fcmMessaging = await messaging();
-    if (fcmMessaging) {
-      const token = await getToken(fcmMessaging, {
-        vapidKey: process.env.NEXT_PUBLIC_FIREBASE_FCM_VAPID_KEY,
-      });
-      return token;
-    }
-    return null;
+    const instance = await getMessagingInstance();
+    if (!instance) return null;
+
+    const token = await getToken(instance.messaging, {
+      vapidKey: process.env.NEXT_PUBLIC_FIREBASE_FCM_VAPID_KEY,
+    });
+
+    return token ?? null;
   } catch (err) {
-    console.error("An error occurred while fetching the token:", err);
+    console.error("Error fetching FCM token:", err);
     return null;
   }
 };
-
-export { app, messaging };

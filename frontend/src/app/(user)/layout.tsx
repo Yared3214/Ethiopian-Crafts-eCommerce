@@ -1,36 +1,35 @@
 "use client";
 
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import useFcmToken from "@/hooks/useFcmToken";
 import { RootState } from "@/store/store";
-import { useEffect } from "react";
 import { saveFcmToken } from "@/api/user/userAPI";
 
-export default function FirebaseLayout({ children }: { children: React.ReactNode }) {
-
+export default function FirebaseLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { token } = useFcmToken();
 
   const user = useSelector((state: RootState) => state.user.user?.user);
 
   useEffect(() => {
-      if (!token || !user) return;
-    
-      const saveToken = async () => {
-        try {
-          console.log('saving fcm token to db....')
-          const response = await saveFcmToken(token);
-          console.log("FCM token saved successfully!", response);
-        } catch (err) {
-          console.error("Failed to save token:", err);
-        }
-      };
-    
-      saveToken();
-    }, [token, user]);
+    if (!token || !user) return;
 
-  return (
-    <>
-      {children}
-    </>
-  );
+    const persistToken = async () => {
+      try {
+        console.log("Saving FCM token to DB...");
+        await saveFcmToken(token);
+        console.log("FCM token saved successfully");
+      } catch (err) {
+        console.error("Failed to save FCM token:", err);
+      }
+    };
+
+    persistToken();
+  }, [token, user]);
+
+  return <>{children}</>;
 }
